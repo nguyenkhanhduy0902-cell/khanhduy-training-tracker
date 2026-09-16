@@ -241,6 +241,30 @@
       .pwa-install.show{display:inline-flex}
     }
 
+    /* V5 Cloud Sync */
+    .cloud-status-btn{gap:7px}
+    .cloud-status-btn.syncing{border-color:#38bdf8;color:#7dd3fc}
+    .cloud-status-btn.synced{border-color:#34d399;color:#6ee7b7}
+    .cloud-status-btn.warn{border-color:#f59e0b;color:#fbbf24}
+    .cloud-status-btn.error{border-color:#fb7185;color:#fda4af}
+    .cloud-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    .cloud-card .field{margin-bottom:12px}
+    .cloud-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .cloud-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800}
+    .cloud-badge.ok{border-color:rgba(52,211,153,.45);color:#6ee7b7;background:rgba(16,185,129,.08)}
+    .cloud-badge.warn{border-color:rgba(245,158,11,.45);color:#fbbf24;background:rgba(245,158,11,.08)}
+    .cloud-badge.err{border-color:rgba(251,113,133,.45);color:#fda4af;background:rgba(244,63,94,.08)}
+    .cloud-help{font-size:12px;color:var(--muted);line-height:1.55;margin-top:8px}
+    .cloud-help code{color:#7dd3fc}
+    .cloud-sep{height:1px;background:var(--border);margin:16px 0}
+    .toggle-line{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700}
+    .toggle-line input{width:18px;height:18px}
+    @media(max-width:760px){
+      .cloud-grid{grid-template-columns:1fr}
+      .cloud-status-btn span{display:none}
+      .cloud-status-btn{width:44px;padding:0;justify-content:center}
+    }
+
   </style>
 </head>
 <body>
@@ -248,11 +272,12 @@
     <header class="topbar">
       <div class="brand">
         <div class="logo">KD</div>
-        <div><h1>KHANHDUY</h1><small>TRAINING TRACKER V4 • Train smarter. Build better.</small></div>
+        <div><h1>KHANHDUY</h1><small>TRAINING TRACKER V5 • Cloud Sync</small></div>
       </div>
       <nav class="nav" id="nav"></nav>
       <div class="top-actions">
         <button class="btn ghost pwa-install" id="installBtn">⬇ <span>Cài app</span></button>
+        <button class="btn ghost cloud-status-btn" id="cloudStatusBtn" title="Đồng bộ cloud">☁ <span id="cloudStatusText">Local</span></button>
         <button class="btn ghost" id="backupBtn">💾 <span>Backup</span></button>
         <button class="btn ghost top-icon-btn mobile-only" id="mobileDataBtn" aria-label="Dữ liệu">⚙</button>
       </div>
@@ -284,6 +309,7 @@
   <script>
   (() => {
     const STORAGE_KEY = 'gymTrackerV1';
+    const CLOUD_KEY = 'gymTrackerCloudV1';
     const navItems = [
       ['dashboard','Dashboard'],['workout','Buổi tập'],['schedule','Lịch tập'],['volume','Volume'],['history','Nhật ký'],['data','Dữ liệu']
     ];
@@ -367,7 +393,7 @@
         currentDay: dayFromDate(new Date()),
         currentWorkout: null,
         settings:{ indirectFactor:0.5 },
-        version: 4
+        version: 5
       };
     }
     function migrateState(x){
@@ -385,11 +411,14 @@
         if(ex.group==='Đùi sau/Mông') ex.group='Đùi sau';
         if(ex.indirect==null) ex.indirect=defaultIndirectFor(ex);
       }));
-      x.version=4;
+      x.version=5;
       return x;
     }
+    let cloud = loadCloudConfig();
+    let cloudSyncTimer = null;
+    let cloudBusy = false;
     let state = migrateState(loadState());
-    saveState();
+    saveState({cloudDirty:false});
     let activePage = 'dashboard';
 
     function loadState(){
@@ -401,7 +430,141 @@
         return parsed;
       }catch(e){ return defaultState(); }
     }
-    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function saveState(opts={}){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      if(opts.cloudDirty===false) return;
+      cloud.dirty=true; saveCloudConfig(); scheduleCloudSync(); updateCloudStatus();
+    }
+    function defaultCloudConfig(){
+      return {
+        projectUrl:'', publishableKey:'', email:'', session:null, autoSync:true, ready:false,
+        dirty:false, lastRemoteUpdatedAt:null, conflict:false, lastError:'', lastSyncAt:null
+      };
+    }
+    function loadCloudConfig(){
+      try{
+        const raw=localStorage.getItem(CLOUD_KEY);
+        if(!raw) return defaultCloudConfig();
+        return Object.assign(defaultCloudConfig(),JSON.parse(raw));
+      }catch(e){return defaultCloudConfig();}
+    }
+    function saveCloudConfig(){ localStorage.setItem(CLOUD_KEY,JSON.stringify(cloud)); }
+    function cleanCloudUrl(v=''){ return String(v).trim().replace(/\/+$/,''); }
+    function cloudConfigured(){ return !!(cloud.projectUrl && cloud.publishableKey); }
+    function cloudLoggedIn(){ return !!(cloud.session && cloud.session.access_token && cloud.session.user_id); }
+    function setCloudSession(data){
+      if(!data || !data.access_token){ cloud.session=null; saveCloudConfig(); return; }
+      const expiresIn=Number(data.expires_in||3600);
+      cloud.session={
+        access_token:data.access_token, refresh_token:data.refresh_token||cloud.session?.refresh_token||'',
+        expires_at:Date.now()+expiresIn*1000, user_id:data.user?.id||cloud.session?.user_id||''
+      };
+      saveCloudConfig(); updateCloudStatus();
+    }
+    async function ensureCloudToken(){
+      if(!cloudLoggedIn()) throw new Error('Chưa đăng nhập cloud.');
+      if((cloud.session.expires_at||0)-Date.now()>60000) return cloud.session.access_token;
+      if(!cloud.session.refresh_token) throw new Error('Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.');
+      const r=await fetch(`${cloud.projectUrl}/auth/v1/token?grant_type=refresh_token`,{
+        method:'POST',headers:{'apikey':cloud.publishableKey,'Content-Type':'application/json'},
+        body:JSON.stringify({refresh_token:cloud.session.refresh_token})
+      });
+      const data=await r.json().catch(()=>({}));
+      if(!r.ok) throw new Error(data.msg||data.error_description||data.message||'Không thể làm mới phiên đăng nhập.');
+      setCloudSession(data); return cloud.session.access_token;
+    }
+    function cloudHeaders(token,extra={}){
+      return Object.assign({'apikey':cloud.publishableKey,'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},extra);
+    }
+    async function cloudFetchRow(){
+      if(!cloudConfigured()) throw new Error('Chưa cấu hình Supabase.');
+      const token=await ensureCloudToken();
+      const uid=encodeURIComponent(cloud.session.user_id);
+      const r=await fetch(`${cloud.projectUrl}/rest/v1/tracker_state?select=state,updated_at&user_id=eq.${uid}`,{headers:cloudHeaders(token)});
+      const data=await r.json().catch(()=>[]);
+      if(!r.ok) throw new Error(data.message||data.hint||'Không đọc được dữ liệu cloud.');
+      return Array.isArray(data)&&data.length?data[0]:null;
+    }
+    async function cloudPush(force=false){
+      if(cloudBusy) return false;
+      if(!navigator.onLine){ updateCloudStatus(); return false; }
+      if(!cloudConfigured()||!cloudLoggedIn()) return false;
+      cloudBusy=true; cloud.lastError=''; updateCloudStatus();
+      try{
+        const remote=await cloudFetchRow();
+        if(remote && !force && cloud.lastRemoteUpdatedAt && remote.updated_at!==cloud.lastRemoteUpdatedAt){
+          cloud.conflict=true; saveCloudConfig(); updateCloudStatus();
+          toast('Có thay đổi trên thiết bị khác. Vào Dữ liệu → Đồng bộ cloud.');
+          return false;
+        }
+        if(remote && !force && !cloud.lastRemoteUpdatedAt && !cloud.ready){
+          cloud.conflict=true; saveCloudConfig(); updateCloudStatus();
+          return false;
+        }
+        const token=await ensureCloudToken();
+        const payload={user_id:cloud.session.user_id,state:state};
+        const r=await fetch(`${cloud.projectUrl}/rest/v1/tracker_state?on_conflict=user_id`,{
+          method:'POST',headers:cloudHeaders(token,{'Prefer':'resolution=merge-duplicates,return=representation'}),body:JSON.stringify(payload)
+        });
+        const data=await r.json().catch(()=>[]);
+        if(!r.ok) throw new Error(data.message||data.hint||'Không đẩy được dữ liệu lên cloud.');
+        const row=Array.isArray(data)&&data.length?data[0]:null;
+        cloud.dirty=false; cloud.ready=true; cloud.conflict=false; cloud.lastRemoteUpdatedAt=row?.updated_at||new Date().toISOString(); cloud.lastSyncAt=new Date().toISOString();
+        saveCloudConfig(); updateCloudStatus();
+        return true;
+      }catch(e){
+        cloud.lastError=e.message||String(e); saveCloudConfig(); updateCloudStatus();
+        return false;
+      }finally{cloudBusy=false;updateCloudStatus();}
+    }
+    async function cloudPull(force=false){
+      if(cloudBusy) return false;
+      if(!navigator.onLine){ updateCloudStatus(); return false; }
+      if(!cloudConfigured()||!cloudLoggedIn()) return false;
+      cloudBusy=true; cloud.lastError=''; updateCloudStatus();
+      try{
+        const remote=await cloudFetchRow();
+        if(!remote){
+          cloud.lastError='Cloud chưa có dữ liệu. Trên thiết bị có dữ liệu chuẩn, bấm “Đẩy máy này lên cloud”.'; saveCloudConfig(); updateCloudStatus();
+          return false;
+        }
+        if(cloud.dirty && !force && cloud.lastRemoteUpdatedAt && remote.updated_at!==cloud.lastRemoteUpdatedAt){
+          cloud.conflict=true; saveCloudConfig(); updateCloudStatus(); return false;
+        }
+        if(!force && cloud.lastRemoteUpdatedAt && remote.updated_at===cloud.lastRemoteUpdatedAt){
+          cloud.ready=true; cloud.lastSyncAt=new Date().toISOString(); saveCloudConfig(); updateCloudStatus(); return true;
+        }
+        if(!remote.state || !remote.state.schedule || !remote.state.history) throw new Error('Dữ liệu cloud không hợp lệ.');
+        state=migrateState(remote.state); saveState({cloudDirty:false});
+        cloud.dirty=false; cloud.ready=true; cloud.conflict=false; cloud.lastRemoteUpdatedAt=remote.updated_at; cloud.lastSyncAt=new Date().toISOString();
+        saveCloudConfig(); updateCloudStatus(); renderPage(activePage);
+        return true;
+      }catch(e){
+        cloud.lastError=e.message||String(e); saveCloudConfig(); updateCloudStatus(); return false;
+      }finally{cloudBusy=false;updateCloudStatus();}
+    }
+    async function cloudSyncNow(){
+      if(!cloud.autoSync||!cloud.ready||cloud.conflict||!cloudConfigured()||!cloudLoggedIn()||!navigator.onLine||cloudBusy) return;
+      if(cloud.dirty) await cloudPush(false); else await cloudPull(false);
+    }
+    function scheduleCloudSync(){
+      if(!cloud.autoSync||!cloud.ready||cloud.conflict||!cloudConfigured()||!cloudLoggedIn()) return;
+      clearTimeout(cloudSyncTimer); cloudSyncTimer=setTimeout(()=>cloudSyncNow(),1200);
+    }
+    function updateCloudStatus(){
+      const btn=document.getElementById('cloudStatusBtn'), txt=document.getElementById('cloudStatusText'); if(!btn||!txt)return;
+      btn.classList.remove('syncing','synced','warn','error');
+      let label='Local',cls='';
+      if(!navigator.onLine){label='Offline';cls='warn';}
+      else if(!cloudConfigured()){label='Chưa cấu hình';cls='warn';}
+      else if(!cloudLoggedIn()){label='Chưa đăng nhập';cls='warn';}
+      else if(cloudBusy){label='Đang sync';cls='syncing';}
+      else if(cloud.conflict){label='Xung đột';cls='error';}
+      else if(!cloud.ready){label='Chưa khởi tạo';cls='warn';}
+      else if(cloud.dirty){label='Chờ sync';cls='warn';}
+      else {label='Đã đồng bộ';cls='synced';}
+      txt.textContent=label; if(cls)btn.classList.add(cls);
+    }
     function dayFromDate(d){
       const map = ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
       return map[d.getDay()];
@@ -797,17 +960,106 @@
 
     function renderData(){
       const page=document.getElementById('page-data');
+      const configured=cloudConfigured(), logged=cloudLoggedIn();
+      const statusClass=cloud.conflict?'err':(logged&&cloud.ready&&!cloud.dirty?'ok':'warn');
+      const statusText=cloud.conflict?'Xung đột dữ liệu':(!configured?'Chưa cấu hình Supabase':(!logged?'Chưa đăng nhập':(!cloud.ready?'Chưa khởi tạo cloud':(cloud.dirty?'Có thay đổi chưa sync':'Đã đồng bộ'))));
+      const syncTime=cloud.lastSyncAt?new Date(cloud.lastSyncAt).toLocaleString('vi-VN'):'Chưa có';
       page.innerHTML=`
-        <div class="grid2">
-          <div class="card pad"><div class="section-head"><div><h3>Backup / Restore</h3><p>Nên backup định kỳ để không mất dữ liệu nếu xóa cache trình duyệt.</p></div></div><div class="data-actions"><button class="btn primary" id="exportJson">Tải backup JSON</button><label class="btn" for="importJson">Nhập backup JSON</label><input id="importJson" type="file" accept="application/json" style="display:none"></div></div>
+        <div class="cloud-grid">
+          <div class="card pad cloud-card">
+            <div class="section-head"><div><h3>☁ Đồng bộ Cloud</h3><p>Đồng bộ lịch tập, buổi tập và nhật ký giữa PC ↔ điện thoại bằng Supabase.</p></div><span class="cloud-badge ${statusClass}">${statusText}</span></div>
+            <div class="field"><label>Supabase Project URL</label><input id="cloudUrl" placeholder="https://xxxxx.supabase.co" value="${escapeHtml(cloud.projectUrl||'')}"></div>
+            <div class="field"><label>Publishable key / anon key</label><input id="cloudKey" type="password" placeholder="sb_publishable_..." value="${escapeHtml(cloud.publishableKey||'')}"></div>
+            <div class="cloud-row"><button class="btn" id="saveCloudConfig">Lưu cấu hình</button></div>
+            <div class="cloud-help">Chỉ dùng <b>Publishable key</b> (hoặc anon key cũ). Tuyệt đối không dán <b>secret/service_role key</b> vào app.</div>
+            <div class="cloud-sep"></div>
+            <div class="field"><label>Email tài khoản sync</label><input id="cloudEmail" type="email" placeholder="email của bạn" value="${escapeHtml(cloud.email||'')}"></div>
+            <div class="field"><label>Mật khẩu</label><input id="cloudPassword" type="password" placeholder="Chỉ dùng khi đăng nhập / tạo tài khoản"></div>
+            <div class="cloud-row">
+              <button class="btn primary" id="cloudLogin">${logged?'Đăng nhập lại':'Đăng nhập'}</button>
+              <button class="btn" id="cloudSignup">Tạo tài khoản</button>
+              ${logged?'<button class="btn" id="cloudLogout">Đăng xuất</button>':''}
+            </div>
+            ${logged?`<div class="cloud-help">Đã đăng nhập user ID: <code>${escapeHtml(cloud.session.user_id)}</code></div>`:''}
+          </div>
+
+          <div class="card pad cloud-card">
+            <div class="section-head"><div><h3>Điều khiển đồng bộ</h3><p>Lần đầu: PC có dữ liệu chuẩn → đẩy lên cloud. Sau đó điện thoại → tải cloud về.</p></div></div>
+            <label class="toggle-line"><input id="cloudAutoSync" type="checkbox" ${cloud.autoSync?'checked':''}> Tự động đồng bộ khi có Internet</label>
+            <div class="cloud-help">Lần sync gần nhất: <b>${syncTime}</b>${cloud.lastError?`<br><span style="color:#fda4af">${escapeHtml(cloud.lastError)}</span>`:''}</div>
+            <div class="cloud-sep"></div>
+            <div class="data-actions">
+              <button class="btn primary" id="cloudSyncNow">Đồng bộ ngay</button>
+              <button class="btn" id="cloudPush">↑ Đẩy máy này lên cloud</button>
+              <button class="btn" id="cloudPull">↓ Tải cloud về máy</button>
+            </div>
+            ${cloud.conflict?'<div class="note" style="margin-top:12px">Phát hiện cả máy này và cloud đều đã thay đổi. Chọn <b>Đẩy máy này</b> nếu dữ liệu hiện tại là bản đúng, hoặc <b>Tải cloud về</b> nếu bản trên thiết bị kia là bản đúng.</div>':''}
+            <div class="cloud-help">Không nên chỉnh cùng lúc trên 2 thiết bị. V5 có kiểm tra xung đột để hạn chế ghi đè nhầm.</div>
+          </div>
+        </div>
+
+        <div class="grid2" style="margin-top:18px">
+          <div class="card pad"><div class="section-head"><div><h3>Backup / Restore</h3><p>Nên giữ backup JSON định kỳ dù đã có cloud sync.</p></div></div><div class="data-actions"><button class="btn primary" id="exportJson">Tải backup JSON</button><label class="btn" for="importJson">Nhập backup JSON</label><input id="importJson" type="file" accept="application/json" style="display:none"></div></div>
           <div class="card pad"><div class="section-head"><div><h3>Xuất dữ liệu</h3><p>CSV mở được bằng Excel / Google Sheets.</p></div></div><div class="data-actions"><button class="btn" id="exportScheduleCsv">Xuất lịch tập CSV</button><button class="btn" id="exportHistoryCsv">Xuất nhật ký CSV</button></div></div>
         </div>
-        <div class="card pad" style="margin-top:18px"><div class="section-head"><div><h3>Reset ứng dụng</h3><p>Khôi phục chương trình mặc định và xóa toàn bộ nhật ký.</p></div></div><button class="btn danger" id="resetAll">Reset toàn bộ dữ liệu</button></div>`;
+        <div class="card pad" style="margin-top:18px"><div class="section-head"><div><h3>Reset ứng dụng</h3><p>Khôi phục chương trình mặc định và xóa toàn bộ nhật ký trên thiết bị này. Cloud không tự xóa.</p></div></div><button class="btn danger" id="resetAll">Reset toàn bộ dữ liệu local</button></div>`;
+
+      document.getElementById('saveCloudConfig').onclick=()=>{
+        cloud.projectUrl=cleanCloudUrl(document.getElementById('cloudUrl').value);
+        cloud.publishableKey=document.getElementById('cloudKey').value.trim();
+        cloud.email=document.getElementById('cloudEmail').value.trim();
+        cloud.session=null; cloud.ready=false; cloud.conflict=false; cloud.lastRemoteUpdatedAt=null; cloud.lastError=''; saveCloudConfig(); updateCloudStatus(); renderData(); toast('Đã lưu cấu hình Supabase');
+      };
+      document.getElementById('cloudAutoSync').onchange=e=>{cloud.autoSync=e.target.checked;saveCloudConfig(); if(cloud.autoSync)scheduleCloudSync();};
+      document.getElementById('cloudSignup').onclick=cloudSignup;
+      document.getElementById('cloudLogin').onclick=cloudLogin;
+      const logout=document.getElementById('cloudLogout'); if(logout)logout.onclick=cloudLogout;
+      document.getElementById('cloudSyncNow').onclick=async()=>{
+        if(cloud.dirty){const ok=await cloudPush(false); if(ok)toast('Đã đẩy thay đổi lên cloud');}
+        else {const ok=await cloudPull(false); if(ok)toast('Cloud đã đồng bộ');}
+        renderData();
+      };
+      document.getElementById('cloudPush').onclick=()=>confirmBox('Đẩy dữ liệu máy này lên cloud','Thao tác này sẽ lấy dữ liệu trên thiết bị hiện tại làm bản chính.',async()=>{const ok=await cloudPush(true); if(ok)toast('Đã đẩy dữ liệu lên cloud');renderData();});
+      document.getElementById('cloudPull').onclick=()=>confirmBox('Tải dữ liệu cloud về máy','Dữ liệu local hiện tại sẽ được thay bằng bản cloud.',async()=>{const ok=await cloudPull(true); if(ok)toast('Đã tải dữ liệu cloud về');renderData();});
       document.getElementById('exportJson').onclick=exportBackup;
       document.getElementById('importJson').onchange=importBackup;
       document.getElementById('exportScheduleCsv').onclick=exportScheduleCsv;
       document.getElementById('exportHistoryCsv').onclick=exportHistoryCsv;
-      document.getElementById('resetAll').onclick=()=>confirmBox('Reset toàn bộ','Lịch tập và nhật ký sẽ trở về mặc định.',()=>{state=defaultState();saveState();showPage('dashboard');toast('Đã reset toàn bộ');});
+      document.getElementById('resetAll').onclick=()=>confirmBox('Reset toàn bộ','Lịch tập và nhật ký local sẽ trở về mặc định. Dữ liệu cloud không tự xóa.',()=>{state=defaultState();saveState();showPage('dashboard');toast('Đã reset dữ liệu local');});
+    }
+
+    async function cloudSignup(){
+      cloud.projectUrl=cleanCloudUrl(document.getElementById('cloudUrl')?.value||cloud.projectUrl);
+      cloud.publishableKey=(document.getElementById('cloudKey')?.value||cloud.publishableKey).trim();
+      cloud.email=(document.getElementById('cloudEmail')?.value||cloud.email).trim();
+      const password=document.getElementById('cloudPassword')?.value||''; saveCloudConfig();
+      if(!cloudConfigured()||!cloud.email||password.length<6){alert('Nhập Project URL, Publishable key, email và mật khẩu tối thiểu 6 ký tự.');return;}
+      cloudBusy=true;updateCloudStatus();
+      try{
+        const r=await fetch(`${cloud.projectUrl}/auth/v1/signup`,{method:'POST',headers:{'apikey':cloud.publishableKey,'Content-Type':'application/json'},body:JSON.stringify({email:cloud.email,password})});
+        const data=await r.json().catch(()=>({})); if(!r.ok)throw new Error(data.msg||data.error_description||data.message||'Không tạo được tài khoản.');
+        if(data.access_token){setCloudSession(data);toast('Tạo tài khoản và đăng nhập thành công');}
+        else toast('Đã tạo tài khoản. Kiểm tra email xác nhận rồi đăng nhập.');
+      }catch(e){alert(e.message||String(e));}
+      finally{cloudBusy=false;updateCloudStatus();renderData();}
+    }
+    async function cloudLogin(){
+      cloud.projectUrl=cleanCloudUrl(document.getElementById('cloudUrl')?.value||cloud.projectUrl);
+      cloud.publishableKey=(document.getElementById('cloudKey')?.value||cloud.publishableKey).trim();
+      cloud.email=(document.getElementById('cloudEmail')?.value||cloud.email).trim();
+      const password=document.getElementById('cloudPassword')?.value||''; saveCloudConfig();
+      if(!cloudConfigured()||!cloud.email||!password){alert('Nhập Project URL, Publishable key, email và mật khẩu.');return;}
+      cloudBusy=true;cloud.lastError='';updateCloudStatus();
+      try{
+        const r=await fetch(`${cloud.projectUrl}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'apikey':cloud.publishableKey,'Content-Type':'application/json'},body:JSON.stringify({email:cloud.email,password})});
+        const data=await r.json().catch(()=>({})); if(!r.ok)throw new Error(data.msg||data.error_description||data.message||'Đăng nhập thất bại.');
+        setCloudSession(data); cloud.conflict=false; cloud.lastError=''; saveCloudConfig(); toast('Đăng nhập cloud thành công');
+        // Không tự đẩy dữ liệu lần đầu để tránh ghi đè nhầm giữa PC và điện thoại.
+      }catch(e){cloud.lastError=e.message||String(e);saveCloudConfig();alert(cloud.lastError);}
+      finally{cloudBusy=false;updateCloudStatus();renderData();}
+    }
+    function cloudLogout(){
+      cloud.session=null; cloud.ready=false; cloud.conflict=false; cloud.lastRemoteUpdatedAt=null; saveCloudConfig(); updateCloudStatus(); renderData(); toast('Đã đăng xuất cloud');
     }
 
     function download(name,content,type='text/plain;charset=utf-8'){
@@ -858,10 +1110,15 @@
 
     document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target.id==='confirmModal')e.currentTarget.classList.remove('open');});
     document.getElementById('backupBtn').onclick=exportBackup;
+    document.getElementById('cloudStatusBtn').onclick=()=>showPage('data');
+    window.addEventListener('online',()=>{updateCloudStatus();cloudSyncNow();});
+    window.addEventListener('offline',updateCloudStatus);
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){updateCloudStatus();cloudSyncNow();}});
+    setInterval(()=>cloudSyncNow(),15000);
     const installBtn=document.getElementById('installBtn'); if(installBtn) installBtn.onclick=installPwa;
     const mobileDataBtn=document.getElementById('mobileDataBtn'); if(mobileDataBtn) mobileDataBtn.onclick=()=>showPage('data');
 
-    renderNav(); renderDashboard(); syncInstallButtons();
+    renderNav(); renderDashboard(); syncInstallButtons(); updateCloudStatus(); setTimeout(()=>cloudSyncNow(),800);
   })();
   </script>
 </body>

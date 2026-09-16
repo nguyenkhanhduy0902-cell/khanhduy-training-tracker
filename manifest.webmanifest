@@ -1,7 +1,7 @@
 {
   "name": "KHANHDUY Training Tracker",
   "short_name": "KHANHDUY",
-  "description": "Personal gym training tracker for KHANHDUY",
+  "description": "Personal gym training tracker for KHANHDUY with cloud sync",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
