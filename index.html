@@ -10,7 +10,7 @@
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
-  <title>KHANHDUY Training Tracker V4</title>
+  <title>KHANHDUY Training Tracker V5.1</title>
   <style>
     :root{
       --bg:#0b1020;
@@ -272,7 +272,7 @@
     <header class="topbar">
       <div class="brand">
         <div class="logo">KD</div>
-        <div><h1>KHANHDUY</h1><small>TRAINING TRACKER V5 • Cloud Sync</small></div>
+        <div><h1>KHANHDUY</h1><small>TRAINING TRACKER V5.1 • Cloud Sync</small></div>
       </div>
       <nav class="nav" id="nav"></nav>
       <div class="top-actions">
@@ -310,6 +310,7 @@
   (() => {
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
+    const CLOUD_EMAIL_REDIRECT = 'https://nguyenkhanhduy0902-cell.github.io/khanhduy-training-tracker/';
     const navItems = [
       ['dashboard','Dashboard'],['workout','Buổi tập'],['schedule','Lịch tập'],['volume','Volume'],['history','Nhật ký'],['data','Dữ liệu']
     ];
@@ -415,6 +416,7 @@
       return x;
     }
     let cloud = loadCloudConfig();
+    const authRedirectHandled = handleAuthRedirect();
     let cloudSyncTimer = null;
     let cloudBusy = false;
     let state = migrateState(loadState());
@@ -452,6 +454,31 @@
     function cleanCloudUrl(v=''){ return String(v).trim().replace(/\/+$/,''); }
     function cloudConfigured(){ return !!(cloud.projectUrl && cloud.publishableKey); }
     function cloudLoggedIn(){ return !!(cloud.session && cloud.session.access_token && cloud.session.user_id); }
+    function decodeJwtSub(token=''){
+      try{
+        const part=token.split('.')[1]; if(!part) return '';
+        const b64=part.replace(/-/g,'+').replace(/_/g,'/').padEnd(Math.ceil(part.length/4)*4,'=');
+        return JSON.parse(decodeURIComponent(escape(atob(b64)))).sub||'';
+      }catch(e){return '';}
+    }
+    function handleAuthRedirect(){
+      if(!location.hash || !location.hash.includes('access_token=')) return false;
+      const params=new URLSearchParams(location.hash.slice(1));
+      const access=params.get('access_token')||'';
+      const refresh=params.get('refresh_token')||'';
+      const uid=decodeJwtSub(access);
+      if(!access||!uid) return false;
+      cloud.session={
+        access_token:access,
+        refresh_token:refresh,
+        expires_at:Date.now()+Number(params.get('expires_in')||3600)*1000,
+        user_id:uid
+      };
+      cloud.ready=false; cloud.conflict=false; cloud.lastError='';
+      saveCloudConfig();
+      try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+      return true;
+    }
     function setCloudSession(data){
       if(!data || !data.access_token){ cloud.session=null; saveCloudConfig(); return; }
       const expiresIn=Number(data.expires_in||3600);
@@ -978,6 +1005,7 @@
             <div class="cloud-row">
               <button class="btn primary" id="cloudLogin">${logged?'Đăng nhập lại':'Đăng nhập'}</button>
               <button class="btn" id="cloudSignup">Tạo tài khoản</button>
+              <button class="btn" id="cloudResend">Gửi lại email xác nhận</button>
               ${logged?'<button class="btn" id="cloudLogout">Đăng xuất</button>':''}
             </div>
             ${logged?`<div class="cloud-help">Đã đăng nhập user ID: <code>${escapeHtml(cloud.session.user_id)}</code></div>`:''}
@@ -994,7 +1022,7 @@
               <button class="btn" id="cloudPull">↓ Tải cloud về máy</button>
             </div>
             ${cloud.conflict?'<div class="note" style="margin-top:12px">Phát hiện cả máy này và cloud đều đã thay đổi. Chọn <b>Đẩy máy này</b> nếu dữ liệu hiện tại là bản đúng, hoặc <b>Tải cloud về</b> nếu bản trên thiết bị kia là bản đúng.</div>':''}
-            <div class="cloud-help">Không nên chỉnh cùng lúc trên 2 thiết bị. V5 có kiểm tra xung đột để hạn chế ghi đè nhầm.</div>
+            <div class="cloud-help">Không nên chỉnh cùng lúc trên 2 thiết bị. V5.1 có kiểm tra xung đột để hạn chế ghi đè nhầm.</div>
           </div>
         </div>
 
@@ -1012,6 +1040,7 @@
       };
       document.getElementById('cloudAutoSync').onchange=e=>{cloud.autoSync=e.target.checked;saveCloudConfig(); if(cloud.autoSync)scheduleCloudSync();};
       document.getElementById('cloudSignup').onclick=cloudSignup;
+      document.getElementById('cloudResend').onclick=cloudResendConfirmation;
       document.getElementById('cloudLogin').onclick=cloudLogin;
       const logout=document.getElementById('cloudLogout'); if(logout)logout.onclick=cloudLogout;
       document.getElementById('cloudSyncNow').onclick=async()=>{
@@ -1036,13 +1065,34 @@
       if(!cloudConfigured()||!cloud.email||password.length<6){alert('Nhập Project URL, Publishable key, email và mật khẩu tối thiểu 6 ký tự.');return;}
       cloudBusy=true;updateCloudStatus();
       try{
-        const r=await fetch(`${cloud.projectUrl}/auth/v1/signup`,{method:'POST',headers:{'apikey':cloud.publishableKey,'Content-Type':'application/json'},body:JSON.stringify({email:cloud.email,password})});
+        const r=await fetch(`${cloud.projectUrl}/auth/v1/signup?redirect_to=${encodeURIComponent(CLOUD_EMAIL_REDIRECT)}`,{method:'POST',headers:{'apikey':cloud.publishableKey,'Content-Type':'application/json'},body:JSON.stringify({email:cloud.email,password})});
         const data=await r.json().catch(()=>({})); if(!r.ok)throw new Error(data.msg||data.error_description||data.message||'Không tạo được tài khoản.');
         if(data.access_token){setCloudSession(data);toast('Tạo tài khoản và đăng nhập thành công');}
         else toast('Đã tạo tài khoản. Kiểm tra email xác nhận rồi đăng nhập.');
       }catch(e){alert(e.message||String(e));}
       finally{cloudBusy=false;updateCloudStatus();renderData();}
     }
+    async function cloudResendConfirmation(){
+      cloud.projectUrl=cleanCloudUrl(document.getElementById('cloudUrl')?.value||cloud.projectUrl);
+      cloud.publishableKey=(document.getElementById('cloudKey')?.value||cloud.publishableKey).trim();
+      cloud.email=(document.getElementById('cloudEmail')?.value||cloud.email).trim();
+      saveCloudConfig();
+      if(!cloudConfigured()||!cloud.email){alert('Nhập Project URL, Publishable key và email trước.');return;}
+      cloudBusy=true; cloud.lastError=''; updateCloudStatus();
+      try{
+        const r=await fetch(`${cloud.projectUrl}/auth/v1/resend?redirect_to=${encodeURIComponent(CLOUD_EMAIL_REDIRECT)}`,{
+          method:'POST',
+          headers:{'apikey':cloud.publishableKey,'Content-Type':'application/json'},
+          body:JSON.stringify({type:'signup',email:cloud.email})
+        });
+        const data=await r.json().catch(()=>({}));
+        if(!r.ok) throw new Error(data.msg||data.error_description||data.message||'Không gửi lại được email xác nhận.');
+        toast('Đã gửi lại email xác nhận. Hãy mở email mới nhất.');
+        alert(`Đã gửi lại email xác nhận tới ${cloud.email}.\n\nHãy mở EMAIL MỚI NHẤT và bấm link xác nhận. Sau xác nhận, bạn sẽ được đưa về KHANHDUY Training Tracker.`);
+      }catch(e){cloud.lastError=e.message||String(e);saveCloudConfig();alert(cloud.lastError);}
+      finally{cloudBusy=false;updateCloudStatus();renderData();}
+    }
+
     async function cloudLogin(){
       cloud.projectUrl=cleanCloudUrl(document.getElementById('cloudUrl')?.value||cloud.projectUrl);
       cloud.publishableKey=(document.getElementById('cloudKey')?.value||cloud.publishableKey).trim();
@@ -1118,7 +1168,9 @@
     const installBtn=document.getElementById('installBtn'); if(installBtn) installBtn.onclick=installPwa;
     const mobileDataBtn=document.getElementById('mobileDataBtn'); if(mobileDataBtn) mobileDataBtn.onclick=()=>showPage('data');
 
-    renderNav(); renderDashboard(); syncInstallButtons(); updateCloudStatus(); setTimeout(()=>cloudSyncNow(),800);
+    renderNav(); renderDashboard(); syncInstallButtons(); updateCloudStatus();
+    if(authRedirectHandled) setTimeout(()=>toast('Email đã xác nhận • Đã đăng nhập cloud'),350);
+    setTimeout(()=>cloudSyncNow(),800);
   })();
   </script>
 </body>

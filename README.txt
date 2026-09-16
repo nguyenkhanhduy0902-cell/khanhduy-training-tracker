@@ -1,4 +1,4 @@
-KHANHDUY TRAINING TRACKER V5 - CLOUD SYNC
+KHANHDUY TRAINING TRACKER V5.1 - CLOUD SYNC
 
 FILES TO UPLOAD TO GITHUB REPOSITORY ROOT:
 - index.html
@@ -22,3 +22,9 @@ SUPABASE SETUP:
 IMPORTANT:
 - Do not edit both devices at exactly the same time. The app detects common conflicts and asks which copy to keep.
 - Keep periodic JSON backups.
+
+V5.1 CHANGES:
+- Tab title updated to V5.1.
+- Signup confirmation emails explicitly redirect to the GitHub Pages app.
+- Added 'Gui lai email xac nhan' button.
+- Confirmation redirect can restore the Supabase session automatically when tokens are returned.
