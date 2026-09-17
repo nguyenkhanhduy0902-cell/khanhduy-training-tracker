@@ -600,32 +600,42 @@ function applyAuthGate(){
   updateCloudStatus();
 }
     async function authGateLogin(){
-      function bindAuthGate(){
 
-  const btn =
-    document.getElementById('authLoginBtn');
+  const email =
+    document.getElementById('authEmail')?.value.trim() || '';
 
   const password =
-    document.getElementById('authPassword');
+    document.getElementById('authPassword')?.value || '';
 
-  if(btn){
-    btn.onclick = authGateLogin;
+  if(!email || !password){
+    alert('Nhập email và mật khẩu.');
+    return;
   }
 
-  if(password){
-    password.addEventListener(
-      'keydown',
-      e => {
-        if(e.key === 'Enter'){
-          authGateLogin();
-        }
-      }
-    );
+  const oldEmail =
+    document.getElementById('cloudEmail');
+
+  const oldPassword =
+    document.getElementById('cloudPassword');
+
+  if(oldEmail){
+    oldEmail.value = email;
   }
 
-  syncAuthGateFields();
+  if(oldPassword){
+    oldPassword.value = password;
+  }
+
+  cloud.email = email;
+
+  await cloudLogin();
+
+  if(cloudLoggedIn()){
+    activePage = 'dashboard';
+    applyAuthGate();
+    toast('Đăng nhập thành công');
+  }
 }
-
   const btn = document.getElementById('authLoginBtn');
 
   const email =
