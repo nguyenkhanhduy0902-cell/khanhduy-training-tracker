@@ -264,10 +264,127 @@
       .cloud-status-btn span{display:none}
       .cloud-status-btn{width:44px;padding:0;justify-content:center}
     }
+/* ===== AUTH LOGIN SCREEN ===== */
 
+body.auth-locked{
+  padding-bottom:0!important;
+  overflow:hidden;
+}
+
+body.auth-locked .app{
+  display:none!important;
+}
+
+.auth-gate{
+  min-height:100dvh;
+  display:grid;
+  place-items:center;
+  padding:22px;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(90,209,255,.12), transparent 35%),
+    linear-gradient(180deg,#090d18 0%,#0d1426 100%);
+}
+
+body:not(.auth-locked) .auth-gate{
+  display:none;
+}
+
+.auth-login-card{
+  width:min(430px,100%);
+  background:linear-gradient(
+    180deg,
+    rgba(24,35,61,.96),
+    rgba(18,26,46,.98)
+  );
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+
+.auth-logo{
+  width:64px;
+  height:64px;
+  margin:0 auto 18px;
+  border-radius:19px;
+  display:grid;
+  place-items:center;
+  font-size:19px;
+  font-weight:950;
+  background:linear-gradient(
+    135deg,
+    var(--accent),
+    var(--accent2)
+  );
+  color:#07101c;
+}
+
+.auth-title{
+  margin:0;
+  text-align:center;
+  font-size:27px;
+  font-weight:950;
+}
+
+.auth-sub{
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  margin:7px 0 25px;
+}
+
+.auth-login-card .field{
+  margin-bottom:13px;
+}
+
+.auth-login-btn{
+  width:100%;
+  min-height:48px;
+}
   </style>
 </head>
-<body>
+<body class="auth-locked"> 
+  <div class="auth-gate" id="authGate">
+
+  <div class="auth-login-card">
+
+    <div class="auth-logo">KD</div>
+
+    <h1 class="auth-title">KHANHDUY</h1>
+
+    <div class="auth-sub">
+      TRAINING TRACKER<br>
+      Đăng nhập để tiếp tục
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input
+        id="authEmail"
+        type="email"
+        placeholder="Email của bạn"
+      >
+    </div>
+
+    <div class="field">
+      <label>Mật khẩu</label>
+      <input
+        id="authPassword"
+        type="password"
+        placeholder="Mật khẩu"
+      >
+    </div>
+
+    <button
+      class="btn primary auth-login-btn"
+      id="authLoginBtn"
+    >
+      Đăng nhập
+    </button>
+
+  </div>
+
+</div>
   <div class="app">
     <header class="topbar">
       <div class="brand">
@@ -454,6 +571,136 @@
     function cleanCloudUrl(v=''){ return String(v).trim().replace(/\/+$/,''); }
     function cloudConfigured(){ return !!(cloud.projectUrl && cloud.publishableKey); }
     function cloudLoggedIn(){ return !!(cloud.session && cloud.session.access_token && cloud.session.user_id); }
+    function syncAuthGateFields(){
+
+  const email = document.getElementById('authEmail');
+
+  if(email && !email.value){
+    email.value = cloud.email || '';
+  }
+}
+
+function applyAuthGate(){
+
+  const logged = cloudLoggedIn();
+
+  document.body.classList.toggle(
+    'auth-locked',
+    !logged
+  );
+
+  if(!logged){
+    syncAuthGateFields();
+    return;
+  }
+
+  renderNav();
+  renderPage(activePage);
+  syncInstallButtons();
+  updateCloudStatus();
+}
+    async function authGateLogin(){
+      function bindAuthGate(){
+
+  const btn =
+    document.getElementById('authLoginBtn');
+
+  const password =
+    document.getElementById('authPassword');
+
+  if(btn){
+    btn.onclick = authGateLogin;
+  }
+
+  if(password){
+    password.addEventListener(
+      'keydown',
+      e => {
+        if(e.key === 'Enter'){
+          authGateLogin();
+        }
+      }
+    );
+  }
+
+  syncAuthGateFields();
+}
+
+  const btn = document.getElementById('authLoginBtn');
+
+  const email =
+    document.getElementById('authEmail')?.value.trim() || '';
+
+  const password =
+    document.getElementById('authPassword')?.value || '';
+
+  if(!cloudConfigured()){
+    alert('Chưa có cấu hình Supabase.');
+    return;
+  }
+
+  if(!email || !password){
+    alert('Nhập email và mật khẩu.');
+    return;
+  }
+
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = 'Đang đăng nhập...';
+  }
+
+  try{
+
+    const r = await fetch(
+      `${cloud.projectUrl}/auth/v1/token?grant_type=password`,
+      {
+        method:'POST',
+        headers:{
+          'apikey':cloud.publishableKey,
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          email,
+          password
+        })
+      }
+    );
+
+    const data = await r.json().catch(()=>({}));
+
+    if(!r.ok){
+      throw new Error(
+        data.msg ||
+        data.error_description ||
+        data.message ||
+        'Đăng nhập thất bại.'
+      );
+    }
+
+    cloud.email = email;
+
+    setCloudSession(data);
+
+    saveCloudConfig();
+
+    activePage = 'dashboard';
+
+    applyAuthGate();
+
+    toast('Đăng nhập thành công');
+
+  }catch(e){
+
+    alert(e.message || String(e));
+
+  }finally{
+
+    if(btn){
+      btn.disabled = false;
+      btn.textContent = 'Đăng nhập';
+    }
+  }
+}
     function decodeJwtSub(token=''){
       try{
         const part=token.split('.')[1]; if(!part) return '';
@@ -1108,9 +1355,28 @@
       }catch(e){cloud.lastError=e.message||String(e);saveCloudConfig();alert(cloud.lastError);}
       finally{cloudBusy=false;updateCloudStatus();renderData();}
     }
-    function cloudLogout(){
-      cloud.session=null; cloud.ready=false; cloud.conflict=false; cloud.lastRemoteUpdatedAt=null; saveCloudConfig(); updateCloudStatus(); renderData(); toast('Đã đăng xuất cloud');
-    }
+   function cloudLogout(){
+
+  cloud.session = null;
+  cloud.ready = false;
+  cloud.conflict = false;
+  cloud.lastRemoteUpdatedAt = null;
+
+  saveCloudConfig();
+
+  activePage = 'dashboard';
+
+  const pass =
+    document.getElementById('authPassword');
+
+  if(pass){
+    pass.value = '';
+  }
+
+  updateCloudStatus();
+
+  applyAuthGate();
+}
 
     function download(name,content,type='text/plain;charset=utf-8'){
       const blob=new Blob([content],{type}); const url=URL.createObjectURL(blob); const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
@@ -1168,9 +1434,25 @@
     const installBtn=document.getElementById('installBtn'); if(installBtn) installBtn.onclick=installPwa;
     const mobileDataBtn=document.getElementById('mobileDataBtn'); if(mobileDataBtn) mobileDataBtn.onclick=()=>showPage('data');
 
-    renderNav(); renderDashboard(); syncInstallButtons(); updateCloudStatus();
-    if(authRedirectHandled) setTimeout(()=>toast('Email đã xác nhận • Đã đăng nhập cloud'),350);
-    setTimeout(()=>cloudSyncNow(),800);
+    bindAuthGate();
+
+syncInstallButtons();
+updateCloudStatus();
+applyAuthGate();
+
+if(authRedirectHandled && cloudLoggedIn()){
+  setTimeout(
+    ()=>toast('Email đã xác nhận • Đã đăng nhập cloud'),
+    350
+  );
+}
+
+if(cloudLoggedIn()){
+  setTimeout(
+    ()=>cloudSyncNow(),
+    800
+  );
+}
   })();
   </script>
 </body>
