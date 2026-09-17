@@ -380,12 +380,13 @@ body:not(.auth-locked) .auth-gate{
   <button
   type="button"
   class="btn primary auth-login-btn"
+ <button
+  type="button"
+ <button
+  type="button"
+  class="btn primary auth-login-btn"
   id="authLoginBtn"
-  onclick="authGateLogin()"
 >
-  Đăng nhập
-</button>
- onclick="authGateLogin()"
   Đăng nhập
 </button>
 
@@ -1413,6 +1414,11 @@ function applyAuthGate(){
     toast('Đăng nhập thành công');
   }
 }
+const authLoginBtn = document.getElementById('authLoginBtn');
+
+if(authLoginBtn){
+  authLoginBtn.addEventListener('click', authGateLogin);
+}    
 syncInstallButtons();
 updateCloudStatus();
 applyAuthGate();
