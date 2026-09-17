@@ -1402,7 +1402,7 @@ function applyAuthGate(){
     setInterval(()=>cloudSyncNow(),15000);
     const installBtn=document.getElementById('installBtn'); if(installBtn) installBtn.onclick=installPwa;
     const mobileDataBtn=document.getElementById('mobileDataBtn'); if(mobileDataBtn) mobileDataBtn.onclick=()=>showPage('data');
-    async function authGateLogin(){
+   async function authGateLogin(){
 
   const email =
     document.getElementById('authEmail')?.value.trim() || '';
@@ -1415,28 +1415,71 @@ function applyAuthGate(){
     return;
   }
 
-  const oldEmail =
-    document.getElementById('cloudEmail');
-
-  const oldPassword =
-    document.getElementById('cloudPassword');
-
-  if(oldEmail){
-    oldEmail.value = email;
+  if(!cloudConfigured()){
+    alert('Supabase chưa được cấu hình.');
+    return;
   }
 
-  if(oldPassword){
-    oldPassword.value = password;
+  const btn = document.getElementById('authLoginBtn');
+
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = 'Đang đăng nhập...';
   }
 
-  cloud.email = email;
+  try{
 
-  await cloudLogin();
+    const r = await fetch(
+      `${cloud.projectUrl}/auth/v1/token?grant_type=password`,
+      {
+        method:'POST',
+        headers:{
+          'apikey':cloud.publishableKey,
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          email: email,
+          password: password
+        })
+      }
+    );
 
-  if(cloudLoggedIn()){
+    const data = await r.json().catch(()=>({}));
+
+    if(!r.ok){
+      throw new Error(
+        data.msg ||
+        data.error_description ||
+        data.message ||
+        'Đăng nhập thất bại.'
+      );
+    }
+
+    cloud.email = email;
+
+    setCloudSession(data);
+
+    cloud.conflict = false;
+    cloud.lastError = '';
+
+    saveCloudConfig();
+
     activePage = 'dashboard';
+
     applyAuthGate();
+
     toast('Đăng nhập thành công');
+
+  }catch(e){
+
+    alert(e.message || String(e));
+
+  }finally{
+
+    if(btn){
+      btn.disabled = false;
+      btn.textContent = 'Đăng nhập';
+    }
   }
 }
 const authLoginBtn = document.getElementById('authLoginBtn');
