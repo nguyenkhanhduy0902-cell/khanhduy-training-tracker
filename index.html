@@ -564,17 +564,42 @@ body:not(.auth-locked) .auth-gate{
     }
     function defaultCloudConfig(){
       return {
-        projectUrl:'', publishableKey:'', email:'', session:null, autoSync:true, ready:false,
-        dirty:false, lastRemoteUpdatedAt:null, conflict:false, lastError:'', lastSyncAt:null
-      };
+        projectUrl:'https://douurybhrzojpjwxmzzxs.supabase.co',
+publishableKey:'sb_publishable_joNj-U2HI2GtxqlihpUROA_0ESKczbF',
+email:'',
+session:null,
+autoSync:true,
+ready:false,
+dirty:false,
+lastRemoteUpdatedAt:null,
+conflict:false,
+lastError:'',
+lastSyncAt:null
+};
+}
+
+function loadCloudConfig(){
+  try{
+    const raw = localStorage.getItem(CLOUD_KEY);
+
+    const cfg = raw
+      ? Object.assign(defaultCloudConfig(), JSON.parse(raw))
+      : defaultCloudConfig();
+
+    if(!cfg.projectUrl){
+      cfg.projectUrl = 'https://douurybhrzojpjwxmzzxs.supabase.co';
     }
-    function loadCloudConfig(){
-      try{
-        const raw=localStorage.getItem(CLOUD_KEY);
-        if(!raw) return defaultCloudConfig();
-        return Object.assign(defaultCloudConfig(),JSON.parse(raw));
-      }catch(e){return defaultCloudConfig();}
+
+    if(!cfg.publishableKey){
+      cfg.publishableKey = 'sb_publishable_joNj-U2HI2GtxqlihpUROA_0ESKczbF';
     }
+
+    return cfg;
+
+  }catch(e){
+    return defaultCloudConfig();
+  }
+}
     function saveCloudConfig(){ localStorage.setItem(CLOUD_KEY,JSON.stringify(cloud)); }
     function cleanCloudUrl(v=''){ return String(v).trim().replace(/\/+$/,''); }
     function cloudConfigured(){ return !!(cloud.projectUrl && cloud.publishableKey); }
