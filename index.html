@@ -1376,9 +1376,43 @@ function applyAuthGate(){
     setInterval(()=>cloudSyncNow(),15000);
     const installBtn=document.getElementById('installBtn'); if(installBtn) installBtn.onclick=installPwa;
     const mobileDataBtn=document.getElementById('mobileDataBtn'); if(mobileDataBtn) mobileDataBtn.onclick=()=>showPage('data');
+    async function authGateLogin(){
 
-    bindAuthGate();
+  const email =
+    document.getElementById('authEmail')?.value.trim() || '';
 
+  const password =
+    document.getElementById('authPassword')?.value || '';
+
+  if(!email || !password){
+    alert('Nhập email và mật khẩu.');
+    return;
+  }
+
+  const oldEmail =
+    document.getElementById('cloudEmail');
+
+  const oldPassword =
+    document.getElementById('cloudPassword');
+
+  if(oldEmail){
+    oldEmail.value = email;
+  }
+
+  if(oldPassword){
+    oldPassword.value = password;
+  }
+
+  cloud.email = email;
+
+  await cloudLogin();
+
+  if(cloudLoggedIn()){
+    activePage = 'dashboard';
+    applyAuthGate();
+    toast('Đăng nhập thành công');
+  }
+}
 syncInstallButtons();
 updateCloudStatus();
 applyAuthGate();
