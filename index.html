@@ -561,6 +561,20 @@ body:not(.auth-locked) .auth-gate{
       .auth-login-card{padding:22px 18px;border-radius:20px}.auth-logo{width:72px;height:72px;border-radius:50%}.auth-title{font-size:23px;letter-spacing:.08em}.auth-sub{font-size:10px;letter-spacing:.04em}
     }
 
+    .auth-server-setup{margin-top:14px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(10,18,34,.55);overflow:hidden}
+    .auth-server-setup summary{cursor:pointer;list-style:none;padding:12px 13px;color:var(--muted);font-size:11px;font-weight:850;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .auth-server-setup summary::-webkit-details-marker{display:none}
+    .auth-server-setup summary:after{content:'▾';color:var(--accent)}
+    .auth-server-setup[open] summary:after{content:'▴'}
+    .auth-server-inner{padding:0 13px 13px}
+    .auth-server-note{font-size:10px;line-height:1.5;color:var(--muted);margin:0 0 10px}
+    .auth-server-inner .field{margin-bottom:9px}
+    .auth-server-inner input{font-size:11px}
+    .auth-server-actions{display:grid;grid-template-columns:1fr;gap:7px}
+    .auth-server-status{min-height:16px;margin-top:8px;font-size:10px;line-height:1.4;color:var(--muted)}
+    .auth-server-status.ok{color:var(--good)}
+    .auth-server-status.err{color:#ff8a9b}
+
   </style>
 </head>
 <body class="auth-locked"> 
@@ -592,6 +606,25 @@ body:not(.auth-locked) .auth-gate{
           <button type="button" class="auth-link-btn" id="authForgotBtn">Quên mật khẩu?</button>
           <button type="button" class="auth-link-btn" id="authRegisterBtn">Đăng ký tài khoản</button>
         </div>
+
+        <details class="auth-server-setup" id="authServerSetup">
+          <summary>⚙ Cấu hình kết nối</summary>
+          <div class="auth-server-inner">
+            <p class="auth-server-note">Chỉ mở phần này khi thiết bị báo không kết nối được máy chủ. Dùng cùng <b>Project URL</b> và <b>Publishable/anon key</b> với thiết bị đang hoạt động.</p>
+            <div class="field">
+              <label>Supabase Project URL</label>
+              <input id="authServerUrl" inputmode="url" autocomplete="off" placeholder="https://xxxxx.supabase.co">
+            </div>
+            <div class="field">
+              <label>Publishable / anon key</label>
+              <input id="authServerKey" autocomplete="off" placeholder="sb_publishable_...">
+            </div>
+            <div class="auth-server-actions">
+              <button type="button" class="btn" id="authServerSaveBtn">Lưu & kiểm tra kết nối</button>
+            </div>
+            <div class="auth-server-status" id="authServerStatus"></div>
+          </div>
+        </details>
       </div>
 
       <div id="authResetPanel" class="auth-hidden">
@@ -662,7 +695,7 @@ body:not(.auth-locked) .auth-gate{
 
   <script>
   (() => {
-    const APP_VERSION = '7.1.0';
+    const APP_VERSION = '7.2.0';
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
     const CLOUD_PROJECT_URL = 'https://douurybhrzojpjwxmzzxs.supabase.co';
@@ -964,26 +997,15 @@ body:not(.auth-locked) .auth-gate{
     function loadCloudConfig(){
       try{
         const raw = localStorage.getItem(CLOUD_KEY);
-        const saved = raw ? JSON.parse(raw) : {};
-        const cfg = Object.assign(defaultCloudConfig(), saved);
-        const oldUrl = String(saved.projectUrl || '').trim().replace(/\/+$/,'');
-        const currentUrl = CLOUD_PROJECT_URL.replace(/\/+$/,'');
-        const backendChanged = (oldUrl && oldUrl !== currentUrl) ||
-          (saved.publishableKey && saved.publishableKey !== CLOUD_PUBLISHABLE_KEY);
+        const cfg = raw
+          ? Object.assign(defaultCloudConfig(), JSON.parse(raw))
+          : defaultCloudConfig();
 
-        // TRUE TRAIN uses one fixed Supabase project. Do not let stale values
-        // saved on an older phone/browser override the current endpoint/key.
-        cfg.projectUrl = CLOUD_PROJECT_URL;
-        cfg.publishableKey = CLOUD_PUBLISHABLE_KEY;
-
-        // A token issued by an old project must not be reused against this one.
-        if(backendChanged){
-          cfg.session = null;
-          cfg.ready = false;
-          cfg.conflict = false;
-          cfg.lastError = '';
-          cfg.lastRemoteUpdatedAt = null;
-        }
+        // Preserve the backend configuration already saved on each browser/device.
+        // The constants above are defaults only for a brand-new device.
+        if(!cfg.projectUrl) cfg.projectUrl = CLOUD_PROJECT_URL;
+        if(!cfg.publishableKey) cfg.publishableKey = CLOUD_PUBLISHABLE_KEY;
+        cfg.projectUrl = cleanCloudUrl(cfg.projectUrl);
         return cfg;
       }catch(e){
         return defaultCloudConfig();
@@ -996,6 +1018,52 @@ body:not(.auth-locked) .auth-gate{
     function syncAuthGateFields(){
       const email = document.getElementById('authEmail');
       if(email && !email.value) email.value = cloud.email || '';
+      const serverUrl = document.getElementById('authServerUrl');
+      const serverKey = document.getElementById('authServerKey');
+      if(serverUrl && !serverUrl.value) serverUrl.value = cloud.projectUrl || '';
+      if(serverKey && !serverKey.value) serverKey.value = cloud.publishableKey || '';
+    }
+
+    function setAuthServerStatus(message='', type=''){
+      const el=document.getElementById('authServerStatus');
+      if(!el) return;
+      el.textContent=message;
+      el.classList.remove('ok','err');
+      if(type) el.classList.add(type);
+    }
+
+    async function saveAndTestAuthServer(){
+      const url=cleanCloudUrl(document.getElementById('authServerUrl')?.value||'');
+      const key=(document.getElementById('authServerKey')?.value||'').trim();
+      const btn=document.getElementById('authServerSaveBtn');
+      if(!/^https:\/\//i.test(url) || !key){
+        setAuthServerStatus('Nhập đúng Project URL (https://...) và Publishable/anon key.', 'err');
+        return;
+      }
+      const changed=url!==cloud.projectUrl || key!==cloud.publishableKey;
+      cloud.projectUrl=url; cloud.publishableKey=key;
+      if(changed){
+        cloud.session=null; cloud.ready=false; cloud.conflict=false; cloud.lastRemoteUpdatedAt=null; cloud.lastError='';
+      }
+      saveCloudConfig(); updateCloudStatus();
+      if(btn){btn.disabled=true;btn.textContent='Đang kiểm tra...';}
+      setAuthServerStatus('Đã lưu. Đang kiểm tra kết nối...');
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),8000);
+      try{
+        const r=await fetch(`${url}/auth/v1/settings`,{headers:{'apikey':key},signal:controller.signal,cache:'no-store'});
+        if(!r.ok){
+          const data=await r.json().catch(()=>({}));
+          throw new Error(data.msg||data.error_description||data.message||`Máy chủ trả về HTTP ${r.status}`);
+        }
+        setAuthServerStatus('✓ Kết nối máy chủ thành công. Có thể đăng nhập.', 'ok');
+      }catch(e){
+        const msg=e?.name==='AbortError'?'Hết thời gian chờ kết nối.':(e?.message||String(e));
+        setAuthServerStatus(`Không kết nối được: ${msg}`, 'err');
+      }finally{
+        clearTimeout(timer);
+        if(btn){btn.disabled=false;btn.textContent='Lưu & kiểm tra kết nối';}
+      }
     }
 
     function setAuthMessage(message='', type=''){
@@ -1080,7 +1148,7 @@ body:not(.auth-locked) .auth-gate{
         const networkFail = /load failed|failed to fetch|networkerror|network request failed/i.test(rawMsg);
         setAuthMessage(
           networkFail
-            ? 'Không kết nối được máy chủ đăng nhập. Hãy tải lại trang rồi thử lại. Nếu đang mở từ icon ngoài màn hình chính, hãy đóng app và mở lại sau khi cập nhật.'
+            ? `Không kết nối được máy chủ đăng nhập (${new URL(cloud.projectUrl).hostname}). Mở “Cấu hình kết nối” để kiểm tra Project URL/key rồi thử lại.`
             : rawMsg,
           'error'
         );
@@ -2673,8 +2741,10 @@ body:not(.auth-locked) .auth-gate{
     const authResetCancelBtn = document.getElementById('authResetCancelBtn');
     const authPassword = document.getElementById('authPassword');
     const authNewPasswordConfirm = document.getElementById('authNewPasswordConfirm');
+    const authServerSaveBtn = document.getElementById('authServerSaveBtn');
 
     if(authLoginBtn) authLoginBtn.addEventListener('click', authGateLogin);
+    if(authServerSaveBtn) authServerSaveBtn.addEventListener('click', saveAndTestAuthServer);
     if(authRegisterBtn) authRegisterBtn.addEventListener('click', authGateSignup);
     if(authForgotBtn) authForgotBtn.addEventListener('click', authGateForgotPassword);
     if(authResetBtn) authResetBtn.addEventListener('click', authGateResetPassword);
