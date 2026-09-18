@@ -1,4 +1,4 @@
-const CACHE_NAME = 'true-train-master-v7.3.0';
+const CACHE_NAME = 'true-train-master-v7.4.0';
 const APP_SHELL = [
   './',
   './index.html',
