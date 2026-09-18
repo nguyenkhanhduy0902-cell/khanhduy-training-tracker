@@ -1,7 +1,7 @@
 {
   "name": "TRUE TRAIN • MASTER TRAINING TRACKER",
   "short_name": "TRUE TRAIN",
-  "description": "MASTER TRAINING TRACKER by TRUE TRAIN",
+  "description": "TRUE TRAIN • MASTER TRAINING TRACKER V8",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -11,7 +11,7 @@
   "icons": [
     {
       "src": "./true-train-logo.png",
-      "sizes": "1264x1264",
+      "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"
     }

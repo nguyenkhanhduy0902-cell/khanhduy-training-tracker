@@ -10,7 +10,7 @@
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./true-train-logo.png" />
   <link rel="icon" type="image/png" href="./true-train-logo.png" />
-  <title>TRUE TRAIN • MASTER TRAINING TRACKER</title>
+  <title>TRUE TRAIN • MASTER TRAINING TRACKER V8</title>
   <style>
     :root{
       --bg:#0b1020;
@@ -575,6 +575,165 @@ body:not(.auth-locked) .auth-gate{
     .auth-server-status.ok{color:var(--good)}
     .auth-server-status.err{color:#ff8a9b}
 
+  
+
+    /* ===== V8 MOBILE-FIRST CONCEPT ===== */
+    @media(max-width:760px){
+      :root{
+        --v8-bg:#07101c;
+        --v8-panel:#0d1a2d;
+        --v8-panel-2:#10233b;
+        --v8-border:#1b3856;
+        --v8-cyan:#35d8ff;
+        --v8-cyan-soft:#7be8ff;
+        --v8-green:#35d07f;
+        --v8-yellow:#ffbd43;
+        --v8-red:#ff4f66;
+      }
+      body{background:radial-gradient(circle at 50% -10%,rgba(26,81,112,.18),transparent 32%),linear-gradient(180deg,#050b14,#07111f 42%,#050b14);color:#f7fbff}
+      .app{max-width:560px;padding:8px 10px 26px}
+      .topbar{min-height:64px;background:rgba(5,11,20,.94);border-bottom:1px solid rgba(85,186,230,.12);box-shadow:0 12px 35px rgba(0,0,0,.24)}
+      .logo{width:41px;height:41px;border-radius:12px;background:#03070c;border:1px solid rgba(255,255,255,.12)}
+      .brand-logo-img{padding:8%;object-fit:contain}
+      .brand h1{font-size:14px;font-weight:1000;letter-spacing:.075em}
+      .brand small{display:block!important;font-size:7.5px!important;letter-spacing:.12em!important;color:#92a8bd!important;max-width:none!important}
+      .top-actions .cloud-status-btn{border-color:rgba(53,216,255,.16);background:#0a1525;color:var(--v8-cyan)}
+
+      .bottom-nav{background:rgba(4,10,18,.97);border-top:1px solid rgba(77,166,209,.15);min-height:70px;padding:6px 7px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -12px 34px rgba(0,0,0,.28)}
+      .bottom-nav button{min-height:55px;color:#71879d;border-radius:13px}
+      .bottom-nav button .bn-icon{font-size:17px}
+      .bottom-nav button .bn-label{font-size:8.5px;font-weight:900}
+      .bottom-nav button.active:not(.workout-primary){color:var(--v8-cyan);background:rgba(53,216,255,.055)}
+      .bottom-nav button.workout-primary{margin-top:-17px;min-height:64px;border-radius:20px;background:linear-gradient(180deg,#44ddff,#20bee8);color:#04111a;box-shadow:0 14px 32px rgba(31,200,241,.25);border:4px solid #050b14}
+      .bottom-nav button.workout-primary.active{background:linear-gradient(180deg,#70e7ff,#2ccdf4)}
+
+      .mobile-page-head{padding:7px 3px 12px}
+      .mobile-page-head .eyebrow{color:var(--v8-cyan);font-size:8px;letter-spacing:.17em}
+      .mobile-page-head h2{font-size:25px;margin:4px 0 2px}
+      .mobile-page-head p{font-size:10px;color:#71889e}
+
+      .mobile-home-head{display:none}
+      .v8-home-brand{display:flex;align-items:center;gap:11px;padding:4px 2px 13px}
+      .v8-home-brand img{width:45px;height:45px;object-fit:contain;padding:5px;background:#03070c;border:1px solid rgba(255,255,255,.11);border-radius:12px}
+      .v8-home-brand small{display:block;font-size:8px;letter-spacing:.18em;color:#8aa0b7;font-weight:900}
+      .v8-home-brand strong{display:block;font-size:17px;letter-spacing:.065em;margin-top:2px}
+      .v8-home-brand span{display:block;font-size:8px;color:var(--v8-cyan);margin-top:2px;letter-spacing:.08em}
+
+      .card,.mobile-today-card,.mobile-week-card,.mobile-volume-summary,.mobile-recent-summary,.mobile-kpi,.mobile-ex-card,.mobile-session-card,.mobile-schedule-ex,.mobile-tool-card,.mobile-volume-card,.mobile-history-card,.more-item{background:linear-gradient(180deg,rgba(14,31,53,.98),rgba(8,20,36,.99));border-color:rgba(65,129,171,.22);box-shadow:0 9px 26px rgba(0,0,0,.16)}
+      .mobile-today-card{padding:15px;border-radius:15px;border-color:rgba(53,216,255,.22)}
+      .mobile-today-card:after{background:radial-gradient(circle,rgba(53,216,255,.15),transparent 65%)}
+      .mobile-card-kicker{font-size:8px;color:#9db0c2;letter-spacing:.12em}
+      .mobile-today-title{font-size:24px;line-height:1.05;margin-top:7px}
+      .mobile-today-focus{color:#57d9ff;font-size:10px}
+      .v8-today-summary{display:flex;gap:14px;align-items:center;color:#8ca1b6;font-size:9px;margin:13px 0}
+      .v8-today-summary span{display:flex;align-items:center;gap:5px}
+      .v8-today-summary b{color:#dce9f4;font-size:10px}
+      .mobile-main-cta{min-height:48px;border-radius:10px;background:linear-gradient(180deg,#3edcff,#23c5ec)!important;color:#03121c!important;box-shadow:0 10px 24px rgba(36,200,236,.19);font-size:11px;font-weight:1000}
+
+      .v8-section-head{display:flex;justify-content:space-between;align-items:end;margin:14px 2px 8px}
+      .v8-section-head b{font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+      .v8-section-head span,.v8-section-head button{font-size:8px;color:#6edfff;background:none;border:0;padding:0;font-weight:800}
+      .mobile-kpi-row{gap:7px;margin-bottom:12px}
+      .mobile-kpi{padding:11px 5px;border-radius:12px}
+      .mobile-kpi b{font-size:18px}
+      .mobile-kpi span{font-size:7.5px;color:#7890a7}
+      .mobile-week-card,.mobile-volume-summary,.mobile-recent-summary{border-radius:14px;padding:13px}
+      .week-strip{gap:4px}
+      .week-day{padding:8px 2px;border-radius:10px;background:#071525;border-color:rgba(255,255,255,.045)}
+      .week-day.today{background:rgba(53,216,255,.11);outline:1px solid rgba(53,216,255,.5)}
+      .week-day.done{color:var(--v8-green)}
+      .muscle-progress-track{background:#071523;border-color:rgba(255,255,255,.035)}
+      .muscle-progress-fill{background:linear-gradient(90deg,#25c5ed,#50e3ff)}
+
+      /* Workout */
+      #page-workout{padding-bottom:10px}
+      .mobile-workout-sticky{top:calc(61px + env(safe-area-inset-top));border-radius:14px;background:linear-gradient(180deg,rgba(9,24,42,.99),rgba(6,16,29,.99));border-color:rgba(53,216,255,.22);padding:11px 12px}
+      .mobile-workout-sticky-top small{font-size:8px;color:#66ddff;letter-spacing:.08em}
+      .mobile-workout-sticky-top b{font-size:17px}
+      .mobile-workout-sticky-top strong{font-size:15px;color:#dff9ff}
+      .v8-workout-focus{font-size:8px;color:#58d7ff;margin-top:2px}
+      .mobile-workout-sticky-foot{font-size:8px}
+      .v8-workout-tools{display:grid;grid-template-columns:1fr auto;gap:7px;margin:0 0 9px}
+      .v8-workout-tools .mobile-workout-controls{margin:0;padding:9px;border-radius:13px}
+      .v8-rest-timer{min-width:96px;border:1px solid rgba(53,216,255,.2);background:#0a192a;color:#ecfbff;border-radius:13px;padding:8px 9px;text-align:center}
+      .v8-rest-timer small{display:block;font-size:7px;color:#7992a9;text-transform:uppercase;letter-spacing:.08em}
+      .v8-rest-timer b{display:block;font-size:18px;margin:1px 0;color:#5ee0ff}
+      .v8-rest-timer button{border:0;background:none;color:#a6bfd3;font-size:8px;padding:0;font-weight:900}
+      .mobile-exercise-list{gap:8px}
+      .mobile-ex-card{border-radius:13px;overflow:hidden}
+      .mobile-ex-card.open{border-color:rgba(53,216,255,.25)}
+      .mobile-ex-card.complete{border-color:rgba(53,208,127,.28)}
+      .mobile-ex-summary{padding:10px 11px}
+      .mobile-ex-index{width:31px;height:31px;border-radius:9px;background:#102b43;color:#63ddff}
+      .mobile-ex-summary b{font-size:12px;max-width:220px}
+      .mobile-ex-summary small{font-size:8px;color:#8298ad}
+      .mobile-ex-summary strong{font-size:10px;color:#61e0ff}
+      .mobile-ex-body{padding:0 9px 10px}
+      .mobile-ex-meta{font-size:8px;padding-top:2px}
+      .mobile-set-labels,.mobile-set-row{grid-template-columns:30px 1fr 1fr 1fr 28px;gap:4px}
+      .mobile-set-row input{min-height:38px;border-radius:8px;background:#0b1a2c;border-color:rgba(58,122,164,.25);font-size:14px}
+      .mobile-set-row.set-row-complete input{border-color:rgba(53,208,127,.35);background:rgba(53,208,127,.035)}
+      .mobile-set-status{font-size:13px}
+      .v8-ex-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+      .v8-ex-actions button{min-height:36px;border-radius:9px;border:1px solid rgba(53,216,255,.28);background:#0b1a2b;color:#6ce2ff;font-size:8px;font-weight:900}
+      .v8-ex-actions button.secondary{color:#91a8bc;border-color:rgba(255,255,255,.08)}
+      .mobile-workout-actions{position:sticky;bottom:calc(75px + env(safe-area-inset-bottom));z-index:17;margin:10px 0 0;padding:7px;background:rgba(5,11,20,.92);border:1px solid rgba(255,255,255,.06);border-radius:13px;backdrop-filter:blur(14px)}
+      .mobile-workout-actions .btn.primary{min-height:48px;border-radius:9px}
+      .mobile-workout-actions .btn:not(.primary){display:none}
+
+      /* Schedule */
+      .v8-schedule-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:#081729;border:1px solid rgba(255,255,255,.05);padding:4px;border-radius:11px;margin-bottom:10px}
+      .v8-schedule-tabs span{padding:7px;text-align:center;border-radius:8px;font-size:8px;color:#6f879d;font-weight:900}
+      .v8-schedule-tabs span.active{background:#2cccf3;color:#03131e}
+      .v8-week-program{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+      .v8-day-row{width:100%;border:1px solid rgba(65,129,171,.20);background:linear-gradient(180deg,#0e1e34,#091726);color:#fff;border-radius:12px;padding:10px;display:grid;grid-template-columns:42px 1fr 16px;gap:10px;align-items:center;text-align:left}
+      .v8-day-row.active{border-color:rgba(53,216,255,.5);box-shadow:inset 3px 0 0 #35d8ff}
+      .v8-day-icon{width:38px;height:38px;border-radius:10px;background:#10324b;color:#52dcff;display:grid;place-items:center;font-size:15px;font-weight:900}
+      .v8-day-row.rest .v8-day-icon{background:rgba(255,79,102,.08);color:#ff6f81}
+      .v8-day-copy small{display:block;color:#6f879d;font-size:7px;text-transform:uppercase;letter-spacing:.08em}
+      .v8-day-copy b{display:block;font-size:11px;margin-top:1px}
+      .v8-day-copy span{display:block;color:#7892a8;font-size:8px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .v8-day-row>i{font-style:normal;color:#5fcfec;font-size:15px}
+      .v8-editor-label{font-size:8px;color:#6fe1ff;font-weight:900;letter-spacing:.12em;margin:14px 2px 6px}
+      .mobile-session-card{border-radius:13px;padding:12px}
+      .mobile-session-card h3{font-size:17px}
+      .mobile-session-card p{font-size:9px}
+      .mobile-schedule-actions{margin-top:9px}
+      .mobile-schedule-ex{border-radius:12px}
+      .mobile-schedule-main{padding:10px}
+      .mobile-schedule-main b{font-size:11px}
+      .mobile-schedule-main small{font-size:8px}
+      .mobile-schedule-info span{font-size:7.5px;padding:4px 6px}
+
+      /* Coach */
+      .v8-coach-list{display:flex;flex-direction:column;gap:8px}
+      .v8-coach-item{width:100%;border:1px solid rgba(65,129,171,.20);background:linear-gradient(180deg,#0e1e34,#091726);color:#fff;border-radius:13px;padding:11px;display:grid;grid-template-columns:44px 1fr 18px;gap:10px;align-items:center;text-align:left}
+      .v8-coach-icon{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:#0c2b41;color:#5ee1ff;font-size:17px;font-weight:1000}
+      .v8-coach-item.purple .v8-coach-icon{background:rgba(124,92,255,.12);color:#b597ff}
+      .v8-coach-item.yellow .v8-coach-icon{background:rgba(255,189,67,.10);color:#ffbd43}
+      .v8-coach-item.green .v8-coach-icon{background:rgba(53,208,127,.10);color:#43dc8c}
+      .v8-coach-item b{display:block;font-size:12px}
+      .v8-coach-item small{display:block;color:#7892a8;font-size:8px;margin-top:3px}
+      .v8-coach-item>i{font-style:normal;color:#6b8298;font-size:17px}
+      .v8-coach-quote{margin:18px 0 4px;text-align:center;color:#4bd7fa;font-size:8px;letter-spacing:.12em;line-height:1.6;font-style:italic}
+
+      /* More */
+      .v8-account{display:grid;grid-template-columns:42px 1fr 18px;gap:10px;align-items:center;padding:11px;border-radius:13px;background:linear-gradient(180deg,#0e1e34,#091726);border:1px solid rgba(65,129,171,.20);margin-bottom:14px}
+      .v8-account-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#6f8398,#cbd7df);color:#07111b;display:grid;place-items:center;font-size:11px;font-weight:1000}
+      .v8-account b{font-size:11px}.v8-account small{display:block;color:#7892a8;font-size:8px;margin-top:2px}.v8-account i{font-style:normal;color:#71889e;font-size:17px}
+      .v8-menu-label{font-size:8px;color:#7892a8;font-weight:900;letter-spacing:.12em;margin:13px 3px 6px}
+      .more-menu{gap:6px}
+      .more-item{padding:10px 11px;border-radius:12px;grid-template-columns:38px 1fr 18px}
+      .more-item>span{width:36px;height:36px;border-radius:10px;font-size:14px}
+      .more-item b{font-size:11px}.more-item small{font-size:7.5px}
+      .v8-cloud-dot{width:7px;height:7px;border-radius:50%;background:#53687a;justify-self:end}
+      .v8-cloud-dot.ok{background:#35d07f;box-shadow:0 0 10px rgba(53,208,127,.5)}
+      .v8-logout{width:100%;margin-top:12px;min-height:44px;border-radius:11px;border:1px solid rgba(255,79,102,.65);background:rgba(255,79,102,.03);color:#ff5d72;font-weight:900;font-size:10px}
+
+      .auth-login-card{border-color:rgba(53,216,255,.15);background:linear-gradient(180deg,#0e1d33,#091522)}
+      .auth-logo{border-radius:16px;background:#03070c}
+    }
+
   </style>
 </head>
 <body class="auth-locked"> 
@@ -709,6 +868,8 @@ body:not(.auth-locked) .auth-gate{
     function isMobileUI(){ return MOBILE_MEDIA.matches; }
     let mobileWorkoutOpen = 0;
     let mobileCoachMenu = true;
+    let restTimerRemaining = 0;
+    let restTimerHandle = null;
     const handleUiModeChange=()=>{
       if(!document.getElementById('nav')) return;
       renderNav();
@@ -1443,6 +1604,11 @@ body:not(.auth-locked) .auth-gate{
     function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
     function escapeHtml(s=''){ return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c])); }
     function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2200); }
+    function formatRestTimer(sec){ const s=Math.max(0,Number(sec)||0),m=Math.floor(s/60),r=s%60; return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`; }
+    function syncRestTimerUI(){ const el=document.getElementById('restTimerValue'); if(el)el.textContent=formatRestTimer(restTimerRemaining); const b=document.getElementById('restTimerBtn'); if(b)b.textContent=restTimerHandle?'Dừng':'90s'; }
+    function stopRestTimer(){ if(restTimerHandle){clearInterval(restTimerHandle);restTimerHandle=null;} syncRestTimerUI(); }
+    function startRestTimer(sec=90){ stopRestTimer(); restTimerRemaining=sec; syncRestTimerUI(); restTimerHandle=setInterval(()=>{restTimerRemaining=Math.max(0,restTimerRemaining-1);syncRestTimerUI();if(restTimerRemaining<=0){stopRestTimer();toast('Hết thời gian nghỉ');}},1000); syncRestTimerUI(); }
+    function toggleRestTimer(){ if(restTimerHandle)stopRestTimer(); else startRestTimer(restTimerRemaining>0?restTimerRemaining:90); }
 
     function renderNav(){
       const nav = document.getElementById('nav');
@@ -1452,7 +1618,7 @@ body:not(.auth-locked) .auth-gate{
       const bottom=document.getElementById('bottomNav');
       if(bottom){
         const items=[
-          ['dashboard','⌂','Home'],['schedule','▦','Lịch'],['workout','●','Tập'],['coach','⚡','Coach'],['more','•••','Thêm']
+          ['dashboard','⌂','Home'],['schedule','▣','Schedule'],['workout','◫','Tập'],['coach','♙','Coach'],['more','≡','More']
         ];
         const moreActive=['more','volume','history','data'].includes(activePage);
         bottom.innerHTML=items.map(([id,icon,label])=>{
@@ -1527,51 +1693,29 @@ body:not(.auth-locked) .auth-gate{
           return `<button class="week-day ${cls}" data-dashboard-day="${d}"><span>${labels[i]}</span><i>${rest?'—':completed?'✓':d===today?'●':'○'}</i></button>`;
         }).join('');
         page.innerHTML=`
-          <div class="mobile-home-head">
-            <div class="mobile-brand-lockup">
-              <div class="mobile-brand-mark"><img src="./true-train-logo.png" alt="TRUE TRAIN"></div>
-              <div class="mobile-brand-copy"><small>TRUE TRAIN</small><strong>MASTER TRAINING TRACKER</strong></div>
-            </div>
-            <p>Mobile-first tracker for training, progress and coach tools.</p>
+          <div class="v8-home-brand">
+            <img src="./true-train-logo.png" alt="TRUE TRAIN">
+            <div><small>TRUE TRAIN</small><strong>MASTER TRAINING TRACKER</strong><span>YOUR DATA AT A GLANCE</span></div>
           </div>
-
           <div class="card mobile-today-card">
-            <div class="mobile-card-kicker">HÔM NAY • ${escapeHtml(today)}</div>
+            <div class="mobile-card-kicker">TODAY • ${escapeHtml(today)}</div>
             <div class="mobile-today-title">${escapeHtml(sched.name)}</div>
             <div class="mobile-today-focus">${escapeHtml(sched.focus)}</div>
-            <div class="mobile-today-metrics"><span><b>${sched.exercises.length}</b>Bài tập</span><span><b>${todaySets}</b>Sets</span></div>
-            <button class="btn primary mobile-main-cta" id="dashboardStart">${sched.exercises.length?'▶ BẮT ĐẦU BUỔI TẬP':'XEM NGÀY NGHỈ'}</button>
+            <div class="v8-today-summary"><span>◫ <b>${sched.exercises.length}</b> Exercises</span><span>▦ <b>${todaySets}</b> Sets</span></div>
+            <button class="btn primary mobile-main-cta" id="dashboardStart">▶ START WORKOUT</button>
           </div>
-
-          <div class="mobile-section-title"><div><b>Tuần này</b><span>Tiến độ tập luyện</span></div></div>
+          <div class="v8-section-head"><b>Weekly Progress</b><button id="dashboardHistory">View all ›</button></div>
           <div class="mobile-kpi-row">
-            <div class="mobile-kpi"><b>${stats.completedSessions}/${stats.plannedSessions}</b><span>Buổi</span></div>
+            <div class="mobile-kpi"><b>${stats.completedSessions}/${stats.plannedSessions}</b><span>Workouts</span></div>
             <div class="mobile-kpi"><b>${stats.doneSets}/${stats.plannedSets}</b><span>Sets</span></div>
-            <div class="mobile-kpi"><b>${setPct.toFixed(0)}%</b><span>Tiến độ</span></div>
+            <div class="mobile-kpi"><b>${setPct.toFixed(0)}%</b><span>Progress</span></div>
           </div>
-
-          <div class="card mobile-week-card">
-            <div class="mobile-card-head"><b>Lịch tuần</b><button class="dashboard-link" id="dashboardSchedule">Chỉnh lịch →</button></div>
-            <div class="week-strip">${weekStrip}</div>
-          </div>
-
-          <div class="card pad mobile-volume-summary">
-            <div class="mobile-card-head"><div><b>Volume tuần</b><small>Effective volume</small></div><button class="dashboard-link" id="dashboardVolume">Xem tất cả →</button></div>
-            <div class="muscle-progress-list">
-              ${activeGroups.length?activeGroups.map(x=>{
-                const pct=x.plan?Math.min(100,x.done/x.plan*100):0;
-                return `<div class="muscle-progress-row"><div class="muscle-progress-name">${escapeHtml(x.g)}</div><div class="muscle-progress-track"><div class="muscle-progress-fill" style="width:${pct}%"></div></div><div class="muscle-progress-value">${fmtVolume(x.done)}/${fmtVolume(x.plan)}</div></div>`;
-              }).join(''):'<div class="empty">Chưa có volume để hiển thị.</div>'}
-            </div>
-          </div>
-
-          <div class="card pad mobile-recent-summary">
-            <div class="mobile-card-head"><div><b>Buổi gần đây</b><small>${recent.length?'Lịch sử mới nhất':'Chưa có dữ liệu'}</small></div><button class="dashboard-link" id="dashboardHistory">Nhật ký →</button></div>
-            <div class="recent-list">
-              ${recent.length?recent.map(h=>{const pct=h.totalSets?Math.round(h.completedSets/h.totalSets*100):0;return `<div class="recent-item"><div class="recent-main"><div class="recent-title">${escapeHtml(h.title)}</div><div class="recent-sub">${formatDate(h.date)} • ${h.completedSets}/${h.totalSets} sets</div></div><div class="recent-pct">${pct}%</div></div>`;}).join(''):'<div class="empty compact">Hoàn thành một buổi tập để bắt đầu theo dõi.</div>'}
-            </div>
-          </div>`;
-
+          <div class="v8-section-head"><b>This Week</b><button id="dashboardSchedule">Schedule ›</button></div>
+          <div class="card mobile-week-card"><div class="week-strip">${weekStrip}</div></div>
+          <div class="v8-section-head"><b>Volume (This Week)</b><button id="dashboardVolume">View all ›</button></div>
+          <div class="card pad mobile-volume-summary"><div class="muscle-progress-list">
+            ${activeGroups.length?activeGroups.map(x=>{const pct=x.plan?Math.min(100,x.done/x.plan*100):0;return `<div class="muscle-progress-row"><div class="muscle-progress-name">${escapeHtml(x.g)}</div><div class="muscle-progress-track"><div class="muscle-progress-fill" style="width:${pct}%"></div></div><div class="muscle-progress-value">${fmtVolume(x.done)}/${fmtVolume(x.plan)}</div></div>`;}).join(''):'<div class="empty compact">Chưa có volume.</div>'}
+          </div></div>`;
         document.getElementById('dashboardStart')?.addEventListener('click',openToday);
         document.getElementById('dashboardSchedule')?.addEventListener('click',()=>showPage('schedule'));
         document.getElementById('dashboardVolume')?.addEventListener('click',()=>showPage('volume'));
@@ -1696,45 +1840,32 @@ body:not(.auth-locked) .auth-gate{
       const tab=state.coach.activeTab||'tdee';
       if(isMobileUI() && mobileCoachMenu){
         page.innerHTML=`
-          <div class="mobile-page-head"><div><div class="eyebrow">TRUE TRAIN</div><h2>Coach</h2><p>Chọn công cụ bạn cần.</p></div></div>
-          <div class="mobile-coach-section"><div class="mobile-section-label">BODY & NUTRITION</div><div class="mobile-coach-grid">
-            <button class="mobile-tool-card" data-coach-open="tdee"><span>🔥</span><b>TDEE</b><small>Calories & mục tiêu</small></button>
-            <button class="mobile-tool-card" data-coach-open="macro"><span>◉</span><b>Macro</b><small>Protein • Carb • Fat</small></button>
-            <button class="mobile-tool-card wide" data-coach-open="nutrition"><span>🍚</span><b>Nutrition</b><small>Theo dõi calories & thực phẩm</small></button>
-          </div></div>
-          <div class="mobile-coach-section"><div class="mobile-section-label">TRAINING</div><div class="mobile-coach-grid">
-            <button class="mobile-tool-card" data-coach-open="exercise"><span>🏋</span><b>Exercise Library</b><small>Tìm bài & thêm vào lịch</small></button>
-            <button class="mobile-tool-card" data-coach-open="muscle"><span>◎</span><b>Muscle Map 3D</b><small>Anatomy & bài theo nhóm cơ</small></button>
-          </div></div>`;
+          <div class="mobile-page-head"><div><div class="eyebrow">COACH TOOLS</div><h2>Coach Tools</h2><p>SCIENCE. GUIDANCE. BETTER YOU.</p></div></div>
+          <div class="v8-coach-list">
+            <button class="v8-coach-item green" data-coach-open="tdee"><span class="v8-coach-icon">▥</span><div><b>TDEE Calculator</b><small>Find your daily energy needs</small></div><i>›</i></button>
+            <button class="v8-coach-item purple" data-coach-open="macro"><span class="v8-coach-icon">◉</span><div><b>Macro Calculator</b><small>Protein • Carb • Fat by goal</small></div><i>›</i></button>
+            <button class="v8-coach-item yellow" data-coach-open="nutrition"><span class="v8-coach-icon">⋈</span><div><b>Nutrition Tracker</b><small>Track calories, macros and foods</small></div><i>›</i></button>
+            <button class="v8-coach-item" data-coach-open="exercise"><span class="v8-coach-icon">◫</span><div><b>Exercise Library</b><small>Search exercises and add to schedule</small></div><i>›</i></button>
+            <button class="v8-coach-item" data-coach-open="muscle"><span class="v8-coach-icon">◎</span><div><b>Muscle Map 3D</b><small>Explore anatomy and matching exercises</small></div><i>›</i></button>
+          </div>
+          <div class="v8-coach-quote">“BETTER DATA BUILDS A STRONGER YOU.”<br>— TRUE TRAIN</div>`;
         page.querySelectorAll('[data-coach-open]').forEach(b=>b.onclick=()=>{state.coach.activeTab=b.dataset.coachOpen;mobileCoachMenu=false;saveState({cloudDirty:false});renderCoach();});
         return;
       }
-
       const btn=(id,label)=>`<button data-coach-tab="${id}" class="${tab===id?'active':''}">${label}</button>`;
       if(isMobileUI()){
-        const titleMap={tdee:'TDEE',macro:'Macro',nutrition:'Nutrition',exercise:'Exercise Library',muscle:'Muscle Map 3D'};
-        page.innerHTML=`<div class="mobile-tool-head"><button class="mobile-back" id="coachBackMenu">←</button><div><small>COACH</small><b>${titleMap[tab]||'Coach'}</b></div></div><div id="coachContent"></div>`;
+        const titleMap={tdee:'TDEE Calculator',macro:'Macro Calculator',nutrition:'Nutrition Tracker',exercise:'Exercise Library',muscle:'Muscle Map 3D'};
+        page.innerHTML=`<div class="mobile-tool-head"><button class="mobile-back" id="coachBackMenu">←</button><div><small>COACH TOOLS</small><b>${titleMap[tab]||'Coach'}</b></div></div><div id="coachContent"></div>`;
         document.getElementById('coachBackMenu').onclick=()=>{mobileCoachMenu=true;renderCoach();};
-        renderCoachTab(tab);
-        return;
+        renderCoachTab(tab); return;
       }
-
       page.innerHTML=`
-        <div class="card coach-hero">
-          <div><div class="eyebrow">TRUE TRAIN • PT COACHING SYSTEM</div><h2>Coach Tools</h2><p>Tính nhu cầu → chia macro → theo dõi dinh dưỡng; tra bài tập → xem anatomy → thêm thẳng vào lịch tập.</p><div class="coach-workflow-hint">TDEE → Macro → Nutrition &nbsp;&nbsp;•&nbsp;&nbsp; Exercise Library ↔ Muscle Map 3D</div></div>
-          <button class="btn" id="coachBackDashboard">← Dashboard</button>
-        </div>
-        <div class="coach-flow-nav">
-          <div class="coach-flow-group"><span class="coach-flow-label">Body & Nutrition</span>${btn('tdee','TDEE')}<span class="coach-flow-arrow">→</span>${btn('macro','Macro')}<span class="coach-flow-arrow">→</span>${btn('nutrition','Nutrition')}</div>
-          <div class="coach-flow-group"><span class="coach-flow-label">Training</span>${btn('exercise','Exercise Library')}<span class="coach-flow-arrow">↔</span>${btn('muscle','Muscle Map 3D')}</div>
-        </div>
-        <div id="coachContent"></div>`;
+        <div class="card coach-hero"><div><div class="eyebrow">TRUE TRAIN • PT COACHING SYSTEM</div><h2>Coach Tools</h2><p>Tính nhu cầu → chia macro → theo dõi dinh dưỡng; tra bài tập → xem anatomy → thêm thẳng vào lịch tập.</p><div class="coach-workflow-hint">TDEE → Macro → Nutrition &nbsp;&nbsp;•&nbsp;&nbsp; Exercise Library ↔ Muscle Map 3D</div></div><button class="btn" id="coachBackDashboard">← Dashboard</button></div>
+        <div class="coach-flow-nav"><div class="coach-flow-group"><span class="coach-flow-label">Body & Nutrition</span>${btn('tdee','TDEE')}<span class="coach-flow-arrow">→</span>${btn('macro','Macro')}<span class="coach-flow-arrow">→</span>${btn('nutrition','Nutrition')}</div><div class="coach-flow-group"><span class="coach-flow-label">Training</span>${btn('exercise','Exercise Library')}<span class="coach-flow-arrow">↔</span>${btn('muscle','Muscle Map 3D')}</div></div><div id="coachContent"></div>`;
       document.getElementById('coachBackDashboard').onclick=()=>showPage('dashboard');
       page.querySelectorAll('[data-coach-tab]').forEach(b=>b.onclick=()=>{state.coach.activeTab=b.dataset.coachTab;saveState({cloudDirty:false});renderCoach();});
       renderCoachTab(tab);
     }
-
-
 
     function renderCoachTab(tab){
       if(tab!=='muscle') destroyMuscle3D();
@@ -2196,60 +2327,38 @@ body:not(.auth-locked) .auth-gate{
       if(isMobileUI()){
         const firstIncomplete=w.exercises.findIndex(ex=>ex.sets.some(s=>!isWorkoutSetComplete(s)));
         if(mobileWorkoutOpen<0 || mobileWorkoutOpen>=w.exercises.length) mobileWorkoutOpen=firstIncomplete>=0?firstIncomplete:0;
+        const completeExercises=w.exercises.filter(ex=>ex.sets.length && ex.sets.every(isWorkoutSetComplete)).length;
         page.innerHTML=`
           <div class="mobile-workout-sticky">
-            <div class="mobile-workout-sticky-top"><div><small>${escapeHtml(w.day)}</small><b>${escapeHtml(w.title)}</b></div><strong id="workoutDoneSets">${st.done}/${st.total}</strong></div>
+            <div class="mobile-workout-sticky-top"><div><small>${escapeHtml(w.day)} • ${completeExercises}/${w.exercises.length} EXERCISES</small><b>${escapeHtml(w.title)}</b><div class="v8-workout-focus">${escapeHtml(w.focus)}</div></div><strong id="workoutDoneSets">${st.done}/${st.total}</strong></div>
             <div class="progressbar mobile-workout-progress"><span id="workoutProgress" style="width:${st.pct}%"></span></div>
-            <div class="mobile-workout-sticky-foot"><span id="workoutPct">${st.pct}%</span><span id="workoutStatus" class="${st.complete?'done':''}">${st.complete?'Hoàn thành':'Đang tập'}</span></div>
+            <div class="mobile-workout-sticky-foot"><span id="workoutPct">${st.pct}% COMPLETE</span><span id="workoutStatus" class="${st.complete?'done':''}">${st.complete?'READY TO SAVE':'LOG WITH EASE'}</span></div>
           </div>
-          <div class="card mobile-workout-controls">
-            <div class="mobile-control-field"><label>Buổi</label><select id="workoutDay">${days.map(d=>`<option ${d===state.currentDay?'selected':''}>${d}</option>`).join('')}</select></div>
-            <div class="mobile-control-field"><label>Ngày</label><input id="workoutDate" type="date" value="${w.date}"></div>
+          <div class="v8-workout-tools">
+            <div class="card mobile-workout-controls"><div class="mobile-control-field"><label>SESSION</label><select id="workoutDay">${days.map(d=>`<option ${d===state.currentDay?'selected':''}>${d}</option>`).join('')}</select></div><div class="mobile-control-field"><label>DATE</label><input id="workoutDate" type="date" value="${w.date}"></div></div>
+            <div class="v8-rest-timer"><small>Rest Timer</small><b id="restTimerValue">${formatRestTimer(restTimerRemaining)}</b><button id="restTimerBtn">${restTimerHandle?'Dừng':'90s'}</button></div>
           </div>
           <div id="exerciseList" class="exercise-list mobile-exercise-list"></div>
-          <div class="mobile-workout-actions">
-            <button class="btn primary" id="saveWorkout">${st.complete?'✓ LƯU BUỔI HOÀN THÀNH':`LƯU TIẾN ĐỘ • ${st.done}/${st.total} SET`}</button>
-            <button class="btn" id="resetWorkout">↻ Reset buổi tập</button>
-          </div>`;
+          <div class="mobile-workout-actions"><button class="btn primary" id="saveWorkout">${st.complete?'✓ COMPLETE WORKOUT':`SAVE PROGRESS • ${st.done}/${st.total}`}</button><button class="btn" id="resetWorkout">↻ Reset</button></div>`;
       }else{
         page.innerHTML=`
-          <div class="hero">
-            <div class="card hero-main">
-              <div class="eyebrow">Buổi tập đang chọn</div>
-              <h2>${escapeHtml(w.day)} • ${escapeHtml(w.title)}</h2>
-              <p class="subtitle">${escapeHtml(w.focus)}</p>
-              <div class="stats">
-                <div class="stat"><b>${w.exercises.length}</b><span>Bài tập</span></div>
-                <div class="stat"><b id="workoutDoneSets">${st.done}/${st.total}</b><span>Sets hoàn thành</span></div>
-                <div class="stat"><b id="workoutPct">${st.pct}%</b><span>Tiến độ</span></div>
-              </div>
-              <div class="progressbar"><span id="workoutProgress" style="width:${st.pct}%"></span></div>
-              <div id="workoutStatus" class="workout-status ${st.complete?'done':''}">${st.complete?'✓ Buổi tập đã hoàn thành':'Tự hoàn thành khi đủ Tạ • Rep • RIR'}</div>
-            </div>
-            <div class="card quick">
-              <div class="quick-title">Chọn ngày / buổi tập</div>
-              <div class="field"><label>Ngày trong tuần</label><select id="workoutDay">${days.map(d=>`<option ${d===state.currentDay?'selected':''}>${d}</option>`).join('')}</select></div>
-              <div class="field"><label>Ngày tập</label><input id="workoutDate" type="date" value="${w.date}"></div>
-              <button class="btn primary" id="saveWorkout">${st.complete?'✓ Lưu buổi đã hoàn thành vào nhật ký':`Lưu tiến độ vào nhật ký • ${st.done}/${st.total} set`}</button>
-              <button class="btn" id="resetWorkout">↻ Reset dữ liệu buổi hiện tại</button>
-            </div>
-          </div>
-          <div class="card pad">
-            <div class="section-head"><div><h3>Nhập kết quả từng set</h3><p>Không cần tick. Set tự hoàn thành khi nhập đủ <b>Tạ + Rep + RIR</b>. Note là tùy chọn.</p></div></div>
-            <div id="exerciseList" class="exercise-list"></div>
-          </div>`;
+          <div class="hero"><div class="card hero-main"><div class="eyebrow">Buổi tập đang chọn</div><h2>${escapeHtml(w.day)} • ${escapeHtml(w.title)}</h2><p class="subtitle">${escapeHtml(w.focus)}</p><div class="stats"><div class="stat"><b>${w.exercises.length}</b><span>Bài tập</span></div><div class="stat"><b id="workoutDoneSets">${st.done}/${st.total}</b><span>Sets hoàn thành</span></div><div class="stat"><b id="workoutPct">${st.pct}%</b><span>Tiến độ</span></div></div><div class="progressbar"><span id="workoutProgress" style="width:${st.pct}%"></span></div><div id="workoutStatus" class="workout-status ${st.complete?'done':''}">${st.complete?'✓ Buổi tập đã hoàn thành':'Tự hoàn thành khi đủ Tạ • Rep • RIR'}</div></div>
+          <div class="card quick"><div class="quick-title">Chọn ngày / buổi tập</div><div class="field"><label>Ngày trong tuần</label><select id="workoutDay">${days.map(d=>`<option ${d===state.currentDay?'selected':''}>${d}</option>`).join('')}</select></div><div class="field"><label>Ngày tập</label><input id="workoutDate" type="date" value="${w.date}"></div><button class="btn primary" id="saveWorkout">${st.complete?'✓ Lưu buổi đã hoàn thành vào nhật ký':`Lưu tiến độ vào nhật ký • ${st.done}/${st.total} set`}</button><button class="btn" id="resetWorkout">↻ Reset dữ liệu buổi hiện tại</button></div></div>
+          <div class="card pad"><div class="section-head"><div><h3>Nhập kết quả từng set</h3><p>Không cần tick. Set tự hoàn thành khi nhập đủ <b>Tạ + Rep + RIR</b>. Note là tùy chọn.</p></div></div><div id="exerciseList" class="exercise-list"></div></div>`;
       }
       document.getElementById('workoutDay').onchange=e=>{state.currentDay=e.target.value;state.currentWorkout=null;mobileWorkoutOpen=0;saveState();renderWorkout();};
       document.getElementById('workoutDate').onchange=e=>{w.date=e.target.value;saveState();};
       document.getElementById('saveWorkout').onclick=saveWorkoutToHistory;
       document.getElementById('resetWorkout').onclick=()=>confirmBox('Reset buổi tập','Xóa toàn bộ tạ/reps/RIR/note đã nhập ở buổi hiện tại?',()=>{state.currentWorkout=null;mobileWorkoutOpen=0;saveState();renderWorkout();toast('Đã reset buổi tập');});
-      renderExerciseCards(w);updateWorkoutCompletionUI(w);
+      const timer=document.getElementById('restTimerBtn'); if(timer)timer.onclick=toggleRestTimer;
+      renderExerciseCards(w);updateWorkoutCompletionUI(w);syncRestTimerUI();
     }
 
     function bindWorkoutInputs(root){
       root.querySelectorAll('input[data-e][data-s][data-k]').forEach(inp=>{
         const handler=()=>{const e=+inp.dataset.e,si=+inp.dataset.s,k=inp.dataset.k,set=state.currentWorkout.exercises[e].sets[si];set[k]=inp.value;set.done=isWorkoutSetComplete(set);saveState();updateWorkoutCompletionUI(state.currentWorkout);};
         inp.addEventListener('input',handler);inp.addEventListener('change',handler);
+        inp.addEventListener('keydown',ev=>{if(ev.key!=='Enter')return;ev.preventDefault();const fields=[...root.querySelectorAll('input[data-e][data-s][data-k]')];const idx=fields.indexOf(inp);if(idx>=0&&fields[idx+1]){fields[idx+1].focus();fields[idx+1].select?.();}});
       });
     }
 
@@ -2259,34 +2368,29 @@ body:not(.auth-locked) .auth-gate{
       syncWorkoutCompletion(w);
       if(isMobileUI()){
         el.innerHTML=w.exercises.map((ex,ei)=>{
-          const done=ex.sets.filter(s=>isWorkoutSetComplete(s)).length,open=ei===mobileWorkoutOpen;
-          return `<div class="mobile-ex-card ${open?'open':''} ${done===ex.sets.length&&ex.sets.length?'complete':''}" data-mobile-ex-card="${ei}">
-            <button class="mobile-ex-summary" data-ex-toggle="${ei}"><div><span class="mobile-ex-index">${done===ex.sets.length&&ex.sets.length?'✓':ei+1}</span><div><b>${escapeHtml(ex.name)}</b><small>${escapeHtml(ex.detail||ex.group)} • ${escapeHtml(ex.targetReps)} reps • RIR ${escapeHtml(ex.targetRir)}</small></div></div><strong id="exerciseCount-${ei}">${done}/${ex.sets.length}</strong></button>
+          const done=ex.sets.filter(s=>isWorkoutSetComplete(s)).length,open=ei===mobileWorkoutOpen,complete=done===ex.sets.length&&ex.sets.length;
+          return `<div class="mobile-ex-card ${open?'open':''} ${complete?'complete':''}" data-mobile-ex-card="${ei}">
+            <button class="mobile-ex-summary" data-ex-toggle="${ei}"><div><span class="mobile-ex-index">${complete?'✓':'◫'}</span><div><b>${ei+1}. ${escapeHtml(ex.name)}</b><small>${escapeHtml(ex.detail||ex.group)} • ${escapeHtml(ex.targetReps)} reps • RIR ${escapeHtml(ex.targetRir)}</small></div></div><strong id="exerciseCount-${ei}">${done}/${ex.sets.length} ${complete?'✓':''}</strong></button>
             <div class="mobile-ex-body">
               <div class="mobile-ex-meta"><span class="badge">${escapeHtml(ex.group)}</span>${ex.indirect?`<span>Secondary: ${escapeHtml(ex.indirect)}</span>`:''}</div>
-              <div class="mobile-set-labels"><span>SET</span><span>KG</span><span>REP</span><span>RIR</span><span></span></div>
+              <div class="mobile-set-labels"><span>SET</span><span>KG</span><span>REPS</span><span>RIR</span><span></span></div>
               ${ex.sets.map((set,si)=>`<div class="mobile-set-wrap"><div class="mobile-set-row ${isWorkoutSetComplete(set)?'set-row-complete':''}" data-set-row="${ei}-${si}"><b>${si+1}</b><input aria-label="Kg set ${si+1}" type="number" step="0.5" min="0" inputmode="decimal" data-e="${ei}" data-s="${si}" data-k="weight" value="${escapeHtml(set.weight)}" placeholder="kg"><input aria-label="Rep set ${si+1}" type="number" min="0" inputmode="numeric" data-e="${ei}" data-s="${si}" data-k="reps" value="${escapeHtml(set.reps)}" placeholder="rep"><input aria-label="RIR set ${si+1}" type="number" step="0.5" min="0" max="10" inputmode="decimal" data-e="${ei}" data-s="${si}" data-k="rir" value="${escapeHtml(set.rir)}" placeholder="RIR"><span class="mobile-set-status" data-set-status="${ei}-${si}">${isWorkoutSetComplete(set)?'✓':'○'}</span></div><details class="mobile-set-note" ${set.note?'open':''}><summary>＋ Note set ${si+1}</summary><input data-e="${ei}" data-s="${si}" data-k="note" value="${escapeHtml(set.note||'')}" placeholder="Ghi chú tùy chọn..."></details></div>`).join('')}
+              <div class="v8-ex-actions"><button data-add-set="${ei}">＋ ADD SET</button><button class="secondary" data-copy-last="${ei}">⧉ COPY LAST</button></div>
               <div class="progressbar"><span id="exerciseProgress-${ei}" style="width:${ex.sets.length?done/ex.sets.length*100:0}%"></span></div>
             </div>
           </div>`;
         }).join('');
         el.querySelectorAll('[data-ex-toggle]').forEach(b=>b.onclick=()=>{mobileWorkoutOpen=Number(b.dataset.exToggle);renderExerciseCards(w);updateWorkoutCompletionUI(w);});
-        bindWorkoutInputs(el);
-        return;
+        el.querySelectorAll('[data-add-set]').forEach(b=>b.onclick=()=>{const ei=Number(b.dataset.addSet),sets=w.exercises[ei].sets;sets.push({index:sets.length+1,weight:'',reps:'',rir:'',note:'',done:false});mobileWorkoutOpen=ei;saveState();renderExerciseCards(w);updateWorkoutCompletionUI(w);});
+        el.querySelectorAll('[data-copy-last]').forEach(b=>b.onclick=()=>{const ei=Number(b.dataset.copyLast),sets=w.exercises[ei].sets;if(!sets.length)return;const target=sets.find(s=>!isWorkoutSetComplete(s))||sets[sets.length-1],idx=sets.indexOf(target),prev=sets[Math.max(0,idx-1)];if(!prev||prev===target||(!prev.weight&&!prev.reps&&!prev.rir)){toast('Chưa có set trước để copy');return;}target.weight=prev.weight;target.reps=prev.reps;target.rir=prev.rir;target.done=isWorkoutSetComplete(target);saveState();renderExerciseCards(w);updateWorkoutCompletionUI(w);toast('Đã copy set trước');});
+        bindWorkoutInputs(el);return;
       }
       el.innerHTML=w.exercises.map((ex,ei)=>{
         const done=ex.sets.filter(s=>isWorkoutSetComplete(s)).length;
-        return `<div class="exercise-card">
-          <div class="exercise-top"><div><div class="exercise-name">${ei+1}. ${escapeHtml(ex.name)}</div><div class="exercise-meta">${escapeHtml(ex.detail)} • ${ex.sets.length} sets × ${escapeHtml(ex.targetReps)} reps • RIR ${escapeHtml(ex.targetRir)}${ex.indirect?` • Gián tiếp: ${escapeHtml(ex.indirect)}`:''}</div></div><span class="badge">${escapeHtml(ex.group)}</span></div>
-          <div class="table-wrap" style="border:0"><table class="set-table">
-            <thead><tr><th>Set</th><th>Tạ (kg)</th><th>Rep</th><th>RIR</th><th>Note <span style="font-weight:500">(tùy chọn)</span></th></tr></thead>
-            <tbody>${ex.sets.map((set,si)=>`<tr data-set-row="${ei}-${si}" class="${isWorkoutSetComplete(set)?'set-row-complete':''}"><td class="set-index">${si+1}<span class="set-status-dot"></span></td><td><input type="number" step="0.5" min="0" data-e="${ei}" data-s="${si}" data-k="weight" value="${escapeHtml(set.weight)}" placeholder="kg"></td><td><input type="number" min="0" data-e="${ei}" data-s="${si}" data-k="reps" value="${escapeHtml(set.reps)}" placeholder="rep"></td><td><input type="number" step="0.5" min="0" max="10" data-e="${ei}" data-s="${si}" data-k="rir" value="${escapeHtml(set.rir)}" placeholder="RIR"></td><td><input data-e="${ei}" data-s="${si}" data-k="note" value="${escapeHtml(set.note||'')}" placeholder="Ví dụ: tempo tốt, đau vai nhẹ..."></td></tr>`).join('')}</tbody>
-          </table></div><div class="progressbar"><span id="exerciseProgress-${ei}" style="width:${ex.sets.length?done/ex.sets.length*100:0}%"></span></div>
-        </div>`;
+        return `<div class="exercise-card"><div class="exercise-top"><div><div class="exercise-name">${ei+1}. ${escapeHtml(ex.name)}</div><div class="exercise-meta">${escapeHtml(ex.detail)} • ${ex.sets.length} sets × ${escapeHtml(ex.targetReps)} reps • RIR ${escapeHtml(ex.targetRir)}${ex.indirect?` • Gián tiếp: ${escapeHtml(ex.indirect)}`:''}</div></div><span class="badge">${escapeHtml(ex.group)}</span></div><div class="table-wrap" style="border:0"><table class="set-table"><thead><tr><th>Set</th><th>Tạ (kg)</th><th>Rep</th><th>RIR</th><th>Note <span style="font-weight:500">(tùy chọn)</span></th></tr></thead><tbody>${ex.sets.map((set,si)=>`<tr data-set-row="${ei}-${si}" class="${isWorkoutSetComplete(set)?'set-row-complete':''}"><td class="set-index">${si+1}<span class="set-status-dot"></span></td><td><input type="number" step="0.5" min="0" data-e="${ei}" data-s="${si}" data-k="weight" value="${escapeHtml(set.weight)}" placeholder="kg"></td><td><input type="number" min="0" data-e="${ei}" data-s="${si}" data-k="reps" value="${escapeHtml(set.reps)}" placeholder="rep"></td><td><input type="number" step="0.5" min="0" max="10" data-e="${ei}" data-s="${si}" data-k="rir" value="${escapeHtml(set.rir)}" placeholder="RIR"></td><td><input data-e="${ei}" data-s="${si}" data-k="note" value="${escapeHtml(set.note||'')}" placeholder="Ví dụ: tempo tốt, đau vai nhẹ..."></td></tr>`).join('')}</tbody></table></div><div class="progressbar"><span id="exerciseProgress-${ei}" style="width:${ex.sets.length?done/ex.sets.length*100:0}%"></span></div></div>`;
       }).join('');
       bindWorkoutInputs(el);
     }
-
 
     function saveWorkoutToHistory(){
       const w=ensureCurrentWorkout();
@@ -2374,17 +2478,19 @@ body:not(.auth-locked) .auth-gate{
 
     function renderScheduleMobile(){
       const page=document.getElementById('page-schedule'),day=state.scheduleEditorDay||'Thứ 2';state.scheduleEditorDay=day;
-      const days=Object.keys(state.schedule),sess=state.schedule[day],short={'Thứ 2':'T2','Thứ 3':'T3','Thứ 4':'T4','Thứ 5':'T5','Thứ 6':'T6','Thứ 7':'T7','Chủ nhật':'CN'};
+      const days=Object.keys(state.schedule),sess=state.schedule[day],short={'Thứ 2':'MON','Thứ 3':'TUE','Thứ 4':'WED','Thứ 5':'THU','Thứ 6':'FRI','Thứ 7':'SAT','Chủ nhật':'SUN'};
       page.innerHTML=`
-        <div class="mobile-page-head"><div><div class="eyebrow">PROGRAM</div><h2>Lịch tập</h2><p>Chạm bài tập để chỉnh nhanh.</p></div></div>
-        <div class="mobile-day-strip">${days.map(d=>`<button class="${d===day?'active':''} ${state.schedule[d].exercises.length?'has-workout':'rest'}" data-schedule-day="${d}"><b>${short[d]||d}</b><span>${state.schedule[d].exercises.length?'●':'—'}</span></button>`).join('')}</div>
+        <div class="mobile-page-head"><div><div class="eyebrow">PLAN YOUR PROGRESS</div><h2>Schedule</h2><p>Weekly program • tap a day to edit</p></div></div>
+        <div class="v8-schedule-tabs"><span class="active">WEEK</span><span>PROGRAM EDITOR</span></div>
+        <div class="v8-week-program">${days.map(d=>{const s=state.schedule[d],rest=!s.exercises.length;return `<button class="v8-day-row ${d===day?'active':''} ${rest?'rest':''}" data-schedule-day="${d}"><span class="v8-day-icon">${rest?'♥':'◫'}</span><div class="v8-day-copy"><small>${short[d]||d} • ${escapeHtml(d)}</small><b>${escapeHtml(s.name)}</b><span>${escapeHtml(s.focus)}${rest?'':' • '+s.exercises.length+' exercises'}</span></div><i>›</i></button>`;}).join('')}</div>
+        <div class="v8-editor-label">EDIT SELECTED DAY</div>
         <div class="card mobile-session-card">
           <div><small>${escapeHtml(day)}</small><h3>${escapeHtml(sess.name)}</h3><p>${escapeHtml(sess.focus)}</p></div>
-          <details class="mobile-session-edit"><summary>Chỉnh buổi</summary><div class="mobile-session-edit-grid"><label>Tên buổi<input id="mobileSessionName" value="${escapeHtml(sess.name)}"></label><label>Focus<input id="mobileSessionFocus" value="${escapeHtml(sess.focus)}"></label></div></details>
-          <div class="mobile-schedule-actions"><button class="btn" id="workoutTemplatePreviewBtn">⚡ Lịch mẫu</button><button class="btn primary" id="addExercise">＋ Thêm bài</button></div>
+          <details class="mobile-session-edit"><summary>Edit session name & focus</summary><div class="mobile-session-edit-grid"><label>Tên buổi<input id="mobileSessionName" value="${escapeHtml(sess.name)}"></label><label>Focus<input id="mobileSessionFocus" value="${escapeHtml(sess.focus)}"></label></div></details>
+          <div class="mobile-schedule-actions"><button class="btn" id="workoutTemplatePreviewBtn">⚡ TEMPLATE</button><button class="btn primary" id="addExercise">＋ ADD EXERCISE</button></div>
         </div>
-        <div class="mobile-schedule-list">${sess.exercises.length?sess.exercises.map((ex,i)=>`<div class="card mobile-schedule-ex"><button class="mobile-schedule-main" data-edit-ex="${i}"><div><span>${i+1}</span><div><b>${escapeHtml(ex.name)}</b><small>${escapeHtml(ex.detail||ex.group)}</small></div></div><strong>⋮</strong></button><div class="mobile-schedule-info"><span>${ex.sets} sets</span><span>${escapeHtml(ex.reps)} reps</span><span>RIR ${escapeHtml(ex.rir)}</span></div>${ex.indirect?`<div class="mobile-schedule-secondary">Secondary: ${escapeHtml(ex.indirect)}</div>`:''}<div class="mobile-schedule-order"><button data-up="${i}" ${i===0?'disabled':''}>↑</button><button data-down="${i}" ${i===sess.exercises.length-1?'disabled':''}>↓</button></div></div>`).join(''):'<div class="empty">Chưa có bài tập. Bấm “＋ Thêm bài”.</div>'}</div>
-        ${sess.exercises.length?'<button class="btn danger mobile-clear-day" id="clearDayExercises">Xóa tất cả bài của ngày này</button>':''}`;
+        <div class="mobile-schedule-list">${sess.exercises.length?sess.exercises.map((ex,i)=>`<div class="card mobile-schedule-ex"><button class="mobile-schedule-main" data-edit-ex="${i}"><div><span>${i+1}</span><div><b>${escapeHtml(ex.name)}</b><small>${escapeHtml(ex.detail||ex.group)}</small></div></div><strong>⋮</strong></button><div class="mobile-schedule-info"><span>${ex.sets} sets</span><span>${escapeHtml(ex.reps)} reps</span><span>RIR ${escapeHtml(ex.rir)}</span></div>${ex.indirect?`<div class="mobile-schedule-secondary">Secondary: ${escapeHtml(ex.indirect)}</div>`:''}<div class="mobile-schedule-order"><button data-up="${i}" ${i===0?'disabled':''}>↑</button><button data-down="${i}" ${i===sess.exercises.length-1?'disabled':''}>↓</button></div></div>`).join(''):'<div class="empty">Rest day / no exercises. Add an exercise to turn it into a training day.</div>'}</div>
+        ${sess.exercises.length?'<button class="btn danger mobile-clear-day" id="clearDayExercises">Clear selected day</button>':''}`;
       page.querySelectorAll('[data-schedule-day]').forEach(b=>b.onclick=()=>{state.scheduleEditorDay=b.dataset.scheduleDay;renderSchedule();});
       const name=document.getElementById('mobileSessionName'),focus=document.getElementById('mobileSessionFocus');
       if(name)name.oninput=e=>{sess.name=e.target.value;invalidateWorkoutFor(day);saveState();page.querySelector('.mobile-session-card h3').textContent=e.target.value;};
@@ -2493,12 +2599,30 @@ body:not(.auth-locked) .auth-gate{
 
     function renderMore(){
       const page=document.getElementById('page-more');
-      page.innerHTML=`<div class="mobile-page-head"><div><div class="eyebrow">TRUE TRAIN</div><h2>Thêm</h2><p>Phân tích, nhật ký và cài đặt hệ thống.</p></div></div>
-        <div class="more-menu"><button class="card more-item" data-more-page="volume"><span>▥</span><div><b>Volume</b><small>Direct + indirect theo tuần</small></div><i>›</i></button><button class="card more-item" data-more-page="history"><span>◴</span><div><b>Nhật ký</b><small>Lịch sử các buổi đã lưu</small></div><i>›</i></button><button class="card more-item" data-more-page="data"><span>☁</span><div><b>Cloud & Dữ liệu</b><small>Sync • Backup • Export • Account</small></div><i>›</i></button><button class="card more-item" id="moreInstall"><span>⬇</span><div><b>Cài ứng dụng</b><small>Thêm MASTER lên màn hình chính</small></div><i>›</i></button></div>`;
+      const logged=cloudLoggedIn(),syncOk=logged&&cloud.ready&&!cloud.dirty&&!cloud.conflict;
+      const email=cloud.email||'TRUE TRAIN Member';
+      page.innerHTML=`
+        <div class="mobile-page-head"><div><div class="eyebrow">SETTINGS • DATA • YOUR JOURNEY</div><h2>More</h2><p>Everything important in one place.</p></div></div>
+        <div class="v8-account"><div class="v8-account-avatar">TT</div><div><b>${escapeHtml(email)}</b><small>${logged?'Signed in • TRUE TRAIN':'Local mode'}</small></div><i>›</i></div>
+        <div class="v8-menu-label">PROGRESS</div>
+        <div class="more-menu">
+          <button class="card more-item" data-more-page="volume"><span>▥</span><div><b>Volume Analysis</b><small>Direct + indirect weekly volume</small></div><i>›</i></button>
+          <button class="card more-item" data-more-page="history"><span>◴</span><div><b>Training History</b><small>Saved workouts and set details</small></div><i>›</i></button>
+        </div>
+        <div class="v8-menu-label">DATA & SYNC</div>
+        <div class="more-menu">
+          <button class="card more-item" data-more-page="data"><span>☁</span><div><b>Cloud Sync</b><small>${syncOk?'Synced':'Open cloud controls & data tools'}</small></div><span class="v8-cloud-dot ${syncOk?'ok':''}"></span></button>
+          <button class="card more-item" data-more-page="data"><span>▤</span><div><b>Manage Data</b><small>Backup • Restore • Export CSV</small></div><i>›</i></button>
+          <button class="card more-item" id="moreInstall"><span>↓</span><div><b>Install App</b><small>Add MASTER to home screen</small></div><i>›</i></button>
+        </div>
+        <div class="v8-menu-label">APP</div>
+        <div class="more-menu"><button class="card more-item" id="moreAbout"><span>TT</span><div><b>About TRUE TRAIN</b><small>MASTER TRAINING TRACKER • V8</small></div><i>›</i></button></div>
+        ${logged?'<button class="v8-logout" id="moreLogout">↪ LOG OUT</button>':''}`;
       page.querySelectorAll('[data-more-page]').forEach(b=>b.onclick=()=>showPage(b.dataset.morePage));
       const install=document.getElementById('moreInstall');if(install)install.onclick=installPwa;
+      const about=document.getElementById('moreAbout');if(about)about.onclick=()=>toast('TRUE TRAIN • MASTER TRAINING TRACKER V8');
+      const logout=document.getElementById('moreLogout');if(logout)logout.onclick=()=>confirmBox('Đăng xuất','Đăng xuất TRUE TRAIN trên thiết bị này?',cloudLogout);
     }
-
 
     function renderHistory(){
       const page=document.getElementById('page-history');
