@@ -695,10 +695,10 @@ body:not(.auth-locked) .auth-gate{
 
   <script>
   (() => {
-    const APP_VERSION = '7.2.0';
+    const APP_VERSION = '7.3.0';
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
-    const CLOUD_PROJECT_URL = 'https://douurybhrzojpjwxmzzxs.supabase.co';
+    const CLOUD_PROJECT_URL = 'https://douurybhrzojpjwxmzxs.supabase.co';
     const CLOUD_PUBLISHABLE_KEY = 'sb_publishable_joNj-U2HI2GtxqlihpUROA_0ESKczbF';
     const CLOUD_EMAIL_REDIRECT = 'https://nguyenkhanhduy0902-cell.github.io/khanhduy-training-tracker/';
     const navItems = [
@@ -1002,8 +1002,11 @@ body:not(.auth-locked) .auth-gate{
           : defaultCloudConfig();
 
         // Preserve the backend configuration already saved on each browser/device.
-        // The constants above are defaults only for a brand-new device.
-        if(!cfg.projectUrl) cfg.projectUrl = CLOUD_PROJECT_URL;
+        // Migrate the typo shipped in V7.1/V7.2 so mobile devices do not keep the bad host.
+        const BAD_PROJECT_URL = 'https://douurybhrzojpjwxmzzxs.supabase.co';
+        if(!cfg.projectUrl || cleanCloudUrl(cfg.projectUrl)===BAD_PROJECT_URL){
+          cfg.projectUrl = CLOUD_PROJECT_URL;
+        }
         if(!cfg.publishableKey) cfg.publishableKey = CLOUD_PUBLISHABLE_KEY;
         cfg.projectUrl = cleanCloudUrl(cfg.projectUrl);
         return cfg;
