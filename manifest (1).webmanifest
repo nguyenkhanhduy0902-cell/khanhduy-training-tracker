@@ -1,0 +1,19 @@
+{
+  "name": "TRUE TRAIN • MASTER TRAINING TRACKER",
+  "short_name": "TRUE TRAIN",
+  "description": "MASTER TRAINING TRACKER by TRUE TRAIN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090d18",
+  "theme_color": "#0b1020",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./true-train-logo.png",
+      "sizes": "1264x1264",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
