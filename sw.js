@@ -1,19 +1,24 @@
-const CACHE_NAME = 'true-train-master-v8.2.0';
+const CACHE_NAME = 'true-train-master-v8.4.0';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './true-train-logo.png',
-  './assets/exercises/incline-db-press.jpg',
-  './assets/exercises/chest-supported-row.jpg',
-  './assets/exercises/lat-pulldown.jpg',
-  './assets/exercises/overhead-press.jpg',
-  './assets/exercises/lateral-raise.jpg',
-  './assets/exercises/triceps-pushdown.jpg',
-  './assets/exercises/squat.jpg',
-  './assets/exercises/leg-press.jpg',
-  './assets/exercises/romanian-deadlift.jpg',
-  './assets/exercises/leg-curl.jpg'
+  './assets/exercises/movement/flat-barbell-bench-press.webp',
+  './assets/exercises/movement/incline-db-press.webp',
+  './assets/exercises/movement/chest-supported-row.webp',
+  './assets/exercises/movement/lat-pulldown.webp',
+  './assets/exercises/movement/overhead-press.webp',
+  './assets/exercises/movement/lateral-raise.webp',
+  './assets/exercises/movement/triceps-pushdown.webp',
+  './assets/exercises/movement/squat.webp',
+  './assets/exercises/movement/leg-press.webp',
+  './assets/exercises/movement/romanian-deadlift.webp',
+  './assets/exercises/movement/leg-curl.webp',
+  './assets/schedule/full.svg',
+  './assets/schedule/upper.svg',
+  './assets/schedule/lower.svg',
+  './assets/schedule/rest.svg'
 ];
 
 self.addEventListener('install', event => {
