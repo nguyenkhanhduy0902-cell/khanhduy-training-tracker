@@ -662,8 +662,11 @@ body:not(.auth-locked) .auth-gate{
 
   <script>
   (() => {
+    const APP_VERSION = '7.1.0';
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
+    const CLOUD_PROJECT_URL = 'https://douurybhrzojpjwxmzzxs.supabase.co';
+    const CLOUD_PUBLISHABLE_KEY = 'sb_publishable_joNj-U2HI2GtxqlihpUROA_0ESKczbF';
     const CLOUD_EMAIL_REDIRECT = 'https://nguyenkhanhduy0902-cell.github.io/khanhduy-training-tracker/';
     const navItems = [
       ['dashboard','Dashboard'],['workout','Workout'],['schedule','Schedule'],['coach','Coach'],['volume','Volume'],['history','History']
@@ -944,42 +947,48 @@ body:not(.auth-locked) .auth-gate{
     }
     function defaultCloudConfig(){
       return {
-        projectUrl:'https://douurybhrzojpjwxmzzxs.supabase.co',
-publishableKey:'sb_publishable_joNj-U2HI2GtxqlihpUROA_0ESKczbF',
-email:'',
-session:null,
-autoSync:true,
-ready:false,
-dirty:false,
-lastRemoteUpdatedAt:null,
-conflict:false,
-lastError:'',
-lastSyncAt:null
-};
-}
-
-function loadCloudConfig(){
-  try{
-    const raw = localStorage.getItem(CLOUD_KEY);
-
-    const cfg = raw
-      ? Object.assign(defaultCloudConfig(), JSON.parse(raw))
-      : defaultCloudConfig();
-
-    if(!cfg.projectUrl){
-      cfg.projectUrl = 'https://douurybhrzojpjwxmzzxs.supabase.co';
+        projectUrl:CLOUD_PROJECT_URL,
+        publishableKey:CLOUD_PUBLISHABLE_KEY,
+        email:'',
+        session:null,
+        autoSync:true,
+        ready:false,
+        dirty:false,
+        lastRemoteUpdatedAt:null,
+        conflict:false,
+        lastError:'',
+        lastSyncAt:null
+      };
     }
 
-    if(!cfg.publishableKey){
-      cfg.publishableKey = 'sb_publishable_joNj-U2HI2GtxqlihpUROA_0ESKczbF';
+    function loadCloudConfig(){
+      try{
+        const raw = localStorage.getItem(CLOUD_KEY);
+        const saved = raw ? JSON.parse(raw) : {};
+        const cfg = Object.assign(defaultCloudConfig(), saved);
+        const oldUrl = String(saved.projectUrl || '').trim().replace(/\/+$/,'');
+        const currentUrl = CLOUD_PROJECT_URL.replace(/\/+$/,'');
+        const backendChanged = (oldUrl && oldUrl !== currentUrl) ||
+          (saved.publishableKey && saved.publishableKey !== CLOUD_PUBLISHABLE_KEY);
+
+        // TRUE TRAIN uses one fixed Supabase project. Do not let stale values
+        // saved on an older phone/browser override the current endpoint/key.
+        cfg.projectUrl = CLOUD_PROJECT_URL;
+        cfg.publishableKey = CLOUD_PUBLISHABLE_KEY;
+
+        // A token issued by an old project must not be reused against this one.
+        if(backendChanged){
+          cfg.session = null;
+          cfg.ready = false;
+          cfg.conflict = false;
+          cfg.lastError = '';
+          cfg.lastRemoteUpdatedAt = null;
+        }
+        return cfg;
+      }catch(e){
+        return defaultCloudConfig();
+      }
     }
-
-    return cfg;
-
-  }catch(e){
-    return defaultCloudConfig();
-  }
-}
     function saveCloudConfig(){ localStorage.setItem(CLOUD_KEY,JSON.stringify(cloud)); }
     function cleanCloudUrl(v=''){ return String(v).trim().replace(/\/+$/,''); }
     function cloudConfigured(){ return !!(cloud.projectUrl && cloud.publishableKey); }
@@ -1067,7 +1076,14 @@ function loadCloudConfig(){
         applyAuthGate();
         toast('Đăng nhập thành công');
       }catch(e){
-        setAuthMessage(e.message||String(e), 'error');
+        const rawMsg = e?.message || String(e);
+        const networkFail = /load failed|failed to fetch|networkerror|network request failed/i.test(rawMsg);
+        setAuthMessage(
+          networkFail
+            ? 'Không kết nối được máy chủ đăng nhập. Hãy tải lại trang rồi thử lại. Nếu đang mở từ icon ngoài màn hình chính, hãy đóng app và mở lại sau khi cập nhật.'
+            : rawMsg,
+          'error'
+        );
       }finally{
         if(btn){ btn.disabled = false; btn.textContent = 'Đăng nhập'; }
       }
@@ -2631,7 +2647,14 @@ function loadCloudConfig(){
     });
     window.addEventListener('appinstalled',()=>{ deferredInstallPrompt=null; syncInstallButtons(); toast('Đã cài TRUE TRAIN • MASTER TRAINING TRACKER'); });
     if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
-      window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+      window.addEventListener('load', async ()=>{
+        try{
+          const reg = await navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`, {updateViaCache:'none'});
+          await reg.update();
+        }catch(e){
+          console.warn('Service worker update failed', e);
+        }
+      });
     }
 
     document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target.id==='confirmModal')e.currentTarget.classList.remove('open');});
