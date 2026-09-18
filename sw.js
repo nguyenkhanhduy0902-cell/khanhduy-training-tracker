@@ -1,9 +1,19 @@
-const CACHE_NAME = 'true-train-master-v8.0.0';
+const CACHE_NAME = 'true-train-master-v8.2.0';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './true-train-logo.png'
+  './true-train-logo.png',
+  './assets/exercises/incline-db-press.jpg',
+  './assets/exercises/chest-supported-row.jpg',
+  './assets/exercises/lat-pulldown.jpg',
+  './assets/exercises/overhead-press.jpg',
+  './assets/exercises/lateral-raise.jpg',
+  './assets/exercises/triceps-pushdown.jpg',
+  './assets/exercises/squat.jpg',
+  './assets/exercises/leg-press.jpg',
+  './assets/exercises/romanian-deadlift.jpg',
+  './assets/exercises/leg-curl.jpg'
 ];
 
 self.addEventListener('install', event => {

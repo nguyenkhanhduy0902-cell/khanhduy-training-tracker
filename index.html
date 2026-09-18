@@ -677,6 +677,13 @@ body:not(.auth-locked) .auth-gate{
       .v8-ex-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
       .v8-ex-actions button{min-height:36px;border-radius:9px;border:1px solid rgba(53,216,255,.28);background:#0b1a2b;color:#6ce2ff;font-size:8px;font-weight:900}
       .v8-ex-actions button.secondary{color:#91a8bc;border-color:rgba(255,255,255,.08)}
+      .mobile-ex-thumb{position:relative;width:48px;height:48px;border-radius:11px;overflow:hidden;flex:0 0 auto;background:#081421;border:1px solid rgba(78,211,246,.22);box-shadow:0 5px 14px rgba(0,0,0,.22)}
+      .mobile-ex-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+      .mobile-ex-thumb em{position:absolute;right:3px;bottom:3px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;display:grid;place-items:center;background:rgba(3,13,22,.88);border:1px solid rgba(255,255,255,.16);color:#72e7ff;font-style:normal;font-size:8px;font-weight:1000;line-height:1}
+      .mobile-ex-card.complete .mobile-ex-thumb{border-color:rgba(53,208,127,.4)}
+      .mobile-ex-card.complete .mobile-ex-thumb em{background:rgba(20,70,48,.92);color:#7cf0b1;border-color:rgba(83,225,146,.3)}
+      .mobile-ex-summary.has-thumb>div{gap:10px}
+      .mobile-ex-summary.has-thumb b{max-width:190px}
       .mobile-workout-actions{position:sticky;bottom:calc(75px + env(safe-area-inset-bottom));z-index:17;margin:10px 0 0;padding:7px;background:rgba(5,11,20,.92);border:1px solid rgba(255,255,255,.06);border-radius:13px;backdrop-filter:blur(14px)}
       .mobile-workout-actions .btn.primary{min-height:48px;border-radius:9px}
       .mobile-workout-actions .btn:not(.primary){display:none}
@@ -732,6 +739,39 @@ body:not(.auth-locked) .auth-gate{
 
       .auth-login-card{border-color:rgba(53,216,255,.15);background:linear-gradient(180deg,#0e1d33,#091522)}
       .auth-logo{border-radius:16px;background:#03070c}
+    }
+
+
+    /* ===== V8.2 ICON / VISUAL SYSTEM + REST TIMER ===== */
+    .ui-icon{width:1em;height:1em;display:block;pointer-events:none}
+    .v82-empty{padding:26px 18px;border:1px dashed rgba(70,145,190,.22);border-radius:16px;background:linear-gradient(180deg,rgba(11,29,49,.72),rgba(6,17,30,.72));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#7892a8}
+    .v82-empty-icon{width:58px;height:58px;border-radius:18px;background:rgba(53,216,255,.06);border:1px solid rgba(53,216,255,.15);color:#55dcff;display:grid;place-items:center;margin-bottom:10px}
+    .v82-empty-icon .ui-icon{width:28px;height:28px}.v82-empty b{color:#e7f6ff;font-size:13px}.v82-empty span{max-width:300px;font-size:10px;line-height:1.55;margin-top:5px}
+    @media(max-width:760px){
+      .bottom-nav .bn-icon{display:grid;place-items:center;width:24px;height:24px}
+      .bottom-nav .bn-icon .ui-icon{width:20px;height:20px}
+      .bottom-nav .workout-primary .bn-icon .ui-icon{width:19px;height:19px}
+      .v8-coach-icon .ui-icon{width:24px;height:24px}
+      .more-item>span .ui-icon{width:20px;height:20px}
+      .v82-tt-icon{font-size:11px!important;font-weight:1000!important;letter-spacing:.04em}
+
+      .v82-empty{min-height:168px;padding:26px 18px;border:1px dashed rgba(70,145,190,.22);border-radius:16px;background:linear-gradient(180deg,rgba(11,29,49,.72),rgba(6,17,30,.72));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#7892a8}
+      .v82-empty-icon{width:64px;height:64px;border-radius:20px;background:radial-gradient(circle at 50% 30%,rgba(53,216,255,.15),rgba(53,216,255,.04));border:1px solid rgba(53,216,255,.18);color:#55dcff;display:grid;place-items:center;margin-bottom:12px}
+      .v82-empty-icon .ui-icon{width:31px;height:31px}
+      .v82-empty b{color:#e7f6ff;font-size:13px}.v82-empty span{max-width:250px;font-size:9px;line-height:1.55;margin-top:5px}
+      .mobile-volume-summary .v82-empty,.mobile-recent-summary .v82-empty{min-height:122px;padding:18px 12px}.mobile-volume-summary .v82-empty-icon,.mobile-recent-summary .v82-empty-icon{width:48px;height:48px;border-radius:15px;margin-bottom:8px}.mobile-volume-summary .v82-empty-icon .ui-icon,.mobile-recent-summary .v82-empty-icon .ui-icon{width:24px;height:24px}
+
+      .exercise-library-card.has-visual{overflow:hidden;padding-top:0}.exercise-library-thumb{height:122px;margin:0 -12px 11px;background:#06121f;border-bottom:1px solid rgba(53,216,255,.12);overflow:hidden}.exercise-library-thumb img{width:100%;height:100%;object-fit:cover;display:block}.exercise-library-card.has-visual .ex-title{font-size:13px}
+
+      .v8-workout-tools{grid-template-columns:1fr 106px}.v8-rest-timer{display:none!important}
+      .v8-rest-launch{width:106px;border:1px solid rgba(53,216,255,.22);background:linear-gradient(180deg,#0d2035,#081827);color:#dff8ff;border-radius:13px;padding:8px 9px;display:grid;grid-template-columns:24px 1fr 10px;gap:5px;align-items:center;text-align:left}
+      .v8-rest-launch>span{color:#58dfff}.v8-rest-launch>span .ui-icon{width:20px;height:20px}.v8-rest-launch small{display:block;font-size:6.5px;color:#7892a8;letter-spacing:.09em}.v8-rest-launch b{display:block;color:#65e1ff;font-size:13px;margin-top:1px}.v8-rest-launch i{font-style:normal;color:#658097;font-size:14px}
+      .v8-rest-float{display:none;position:fixed;left:10px;right:10px;bottom:calc(77px + env(safe-area-inset-bottom));z-index:85;padding:10px 12px;border:1px solid rgba(53,216,255,.25);border-radius:16px;background:linear-gradient(180deg,rgba(12,31,51,.98),rgba(6,18,31,.98));box-shadow:0 18px 55px rgba(0,0,0,.42);backdrop-filter:blur(16px);grid-template-columns:1fr auto;align-items:center;gap:10px}
+      .v8-rest-float.show{display:grid}.v8-rest-close{position:absolute;right:7px;top:7px;width:27px;height:27px;border:0;background:transparent;color:#718aa0;display:grid;place-items:center}.v8-rest-close .ui-icon{width:17px;height:17px}
+      .v8-rest-float-copy small{display:block;color:#7892a8;font-size:7px;letter-spacing:.12em}.v8-rest-float-copy b{display:block;color:#66e2ff;font-size:27px;line-height:1;margin-top:3px;letter-spacing:.02em}
+      .v8-rest-float-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-right:26px}.v8-rest-float-actions button{min-width:78px;height:43px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0b1b2d;color:#dbeaf4;display:flex;align-items:center;justify-content:center;gap:5px;font-size:7px;font-weight:900}.v8-rest-float-actions button:first-child{border-color:rgba(53,216,255,.22);color:#62dfff}.v8-rest-float-actions .ui-icon{width:16px;height:16px}
+      .v82-rest-sheet .mobile-sheet-head{margin-bottom:14px}.v82-rest-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.v82-rest-presets button{min-height:50px;border-radius:12px;border:1px solid rgba(65,129,171,.22);background:#0b1a2d;color:#9bb1c4;font-weight:900}.v82-rest-presets button.active{border-color:#35d8ff;background:rgba(53,216,255,.10);color:#68e4ff;box-shadow:inset 0 0 0 1px rgba(53,216,255,.08)}
+      .v82-rest-custom{display:block;margin-top:13px;color:#8399ad;font-size:9px;font-weight:800}.v82-rest-custom input{margin-top:6px}.v82-rest-sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.v82-rest-sheet-actions .btn{font-size:9px;min-height:46px}
     }
 
   </style>
@@ -854,7 +894,7 @@ body:not(.auth-locked) .auth-gate{
 
   <script>
   (() => {
-    const APP_VERSION = '7.3.0';
+    const APP_VERSION = '8.2.0';
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
     const CLOUD_PROJECT_URL = 'https://douurybhrzojpjwxmzxs.supabase.co';
@@ -870,6 +910,8 @@ body:not(.auth-locked) .auth-gate{
     let mobileCoachMenu = true;
     let restTimerRemaining = 0;
     let restTimerHandle = null;
+    let restTimerActive = false;
+    let restTimerHideHandle = null;
     const handleUiModeChange=()=>{
       if(!document.getElementById('nav')) return;
       renderNav();
@@ -1074,7 +1116,7 @@ body:not(.auth-locked) .auth-gate{
         history: [],
         currentDay: dayFromDate(new Date()),
         currentWorkout: null,
-        settings:{ indirectFactor:0.5 },
+        settings:{ indirectFactor:0.5, restSeconds:90 },
         coach: defaultCoachState(),
         version: 6
       };
@@ -1083,6 +1125,8 @@ body:not(.auth-locked) .auth-gate{
       if(!x.settings) x.settings={};
       if(!Number.isFinite(Number(x.settings.indirectFactor))) x.settings.indirectFactor=0.5;
       x.settings.indirectFactor=Math.max(0,Number(x.settings.indirectFactor));
+      if(!Number.isFinite(Number(x.settings.restSeconds))) x.settings.restSeconds=90;
+      x.settings.restSeconds=Math.max(10,Math.min(3600,Math.round(Number(x.settings.restSeconds)||90)));
       Object.values(x.schedule||{}).forEach(day=>(day.exercises||[]).forEach(ex=>{
         if(ex.group==='Đùi sau/Mông'){
           ex.group='Đùi sau';
@@ -1604,11 +1648,83 @@ body:not(.auth-locked) .auth-gate{
     function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
     function escapeHtml(s=''){ return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c])); }
     function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2200); }
-    function formatRestTimer(sec){ const s=Math.max(0,Number(sec)||0),m=Math.floor(s/60),r=s%60; return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`; }
-    function syncRestTimerUI(){ const el=document.getElementById('restTimerValue'); if(el)el.textContent=formatRestTimer(restTimerRemaining); const b=document.getElementById('restTimerBtn'); if(b)b.textContent=restTimerHandle?'Dừng':'90s'; }
-    function stopRestTimer(){ if(restTimerHandle){clearInterval(restTimerHandle);restTimerHandle=null;} syncRestTimerUI(); }
-    function startRestTimer(sec=90){ stopRestTimer(); restTimerRemaining=sec; syncRestTimerUI(); restTimerHandle=setInterval(()=>{restTimerRemaining=Math.max(0,restTimerRemaining-1);syncRestTimerUI();if(restTimerRemaining<=0){stopRestTimer();toast('Hết thời gian nghỉ');}},1000); syncRestTimerUI(); }
-    function toggleRestTimer(){ if(restTimerHandle)stopRestTimer(); else startRestTimer(restTimerRemaining>0?restTimerRemaining:90); }
+    function appIcon(name){
+      const icons={
+        home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/>',
+        schedule:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="M7 14h2M11 14h2M15 14h2M7 18h2M11 18h2"/>',
+        workout:'<path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12"/>',
+        coach:'<path d="M9 18h6M10 22h4"/><path d="M8.2 14.5a6 6 0 1 1 7.6 0c-1.1.8-1.8 1.7-1.8 3.5h-4c0-1.8-.7-2.7-1.8-3.5Z"/>',
+        more:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+        tdee:'<path d="M12 3c1.8 3.1.8 4.8-.5 6.2 2.3-.2 4.3 1.8 4.3 4.5A4.8 4.8 0 0 1 11 18.5a4.8 4.8 0 0 1-4.8-4.8c0-2.8 1.6-5.4 4.7-7.8-.2 2 .4 3.2 1.1 4.1.8-1.4 1.5-3.3 0-7Z"/><path d="M17 20v-5M20 20v-8"/>',
+        macro:'<path d="M12 3v9l7.8 4.5A9 9 0 1 1 12 3Z"/><path d="M12 12h9A9 9 0 0 0 12 3"/>',
+        nutrition:'<path d="M6 3v7M9 3v7M6 7h3M7.5 10v11M17 3c-2 3-2 7 0 9v9M17 3v9h2V3"/>',
+        exercise:'<path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h8"/><circle cx="17.5" cy="16.5" r="3.5"/><path d="m20 19 2 2"/>',
+        muscle:'<circle cx="12" cy="4.5" r="2"/><path d="M9 8c-2 1-3 3-3 5l2 3 1 5M15 8c2 1 3 3 3 5l-2 3-1 5M9 8l3 3 3-3M12 11v10"/>',
+        volume:'<path d="M4 20V10h4v10M10 20V4h4v16M16 20v-7h4v7"/>',
+        history:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2M4 4l2 2"/>',
+        cloud:'<path d="M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.2 1.5A3.5 3.5 0 0 0 7 18Z"/><path d="m9 14 3 3 3-3M12 17v-7"/>',
+        data:'<ellipse cx="12" cy="5" rx="7" ry="3"/><path d="M5 5v6c0 1.7 3.1 3 7 3s7-1.3 7-3V5M5 11v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+        install:'<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 20h14"/>',
+        reset:'<path d="M4 12a8 8 0 1 0 2.3-5.7L4 8"/><path d="M4 3v5h5"/>',
+        pause:'<path d="M9 5v14M15 5v14"/>',
+        play:'<path d="m9 5 10 7-10 7Z"/>',
+        close:'<path d="m6 6 12 12M18 6 6 18"/>'
+      };
+      const body=icons[name]||icons.more;
+      return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
+    }
+    function emptyState(kind,title,subtitle=''){
+      const iconMap={workout:'workout',schedule:'schedule',history:'history',volume:'volume',cloud:'cloud',nutrition:'nutrition'};
+      return `<div class="v82-empty"><div class="v82-empty-icon">${appIcon(iconMap[kind]||'more')}</div><b>${escapeHtml(title)}</b>${subtitle?`<span>${escapeHtml(subtitle)}</span>`:''}</div>`;
+    }
+    function formatRestTimer(sec){ const s=Math.max(0,Math.round(Number(sec)||0)),m=Math.floor(s/60),r=s%60; return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`; }
+    function selectedRestSeconds(){ return Math.max(10,Math.min(3600,Math.round(Number(state.settings?.restSeconds)||90))); }
+    function syncRestTimerUI(){
+      const value=document.getElementById('restTimerValue'); if(value)value.textContent=formatRestTimer(restTimerActive?restTimerRemaining:selectedRestSeconds());
+      const preset=document.getElementById('restPresetLabel'); if(preset)preset.textContent=`${selectedRestSeconds()}s`;
+      const panel=document.getElementById('restTimerFloat'); if(panel)panel.classList.toggle('show',restTimerActive);
+      const pause=document.getElementById('restTimerPause'); if(pause){pause.innerHTML=(restTimerHandle?appIcon('pause'):appIcon('play'))+`<span>${restTimerHandle?'DỪNG':'TIẾP TỤC'}</span>`; pause.disabled=!restTimerActive||restTimerRemaining<=0;}
+    }
+    function clearRestInterval(){ if(restTimerHandle){clearInterval(restTimerHandle);restTimerHandle=null;} }
+    function runRestTimer(){
+      clearRestInterval();
+      if(!restTimerActive||restTimerRemaining<=0){syncRestTimerUI();return;}
+      restTimerHandle=setInterval(()=>{
+        restTimerRemaining=Math.max(0,restTimerRemaining-1);syncRestTimerUI();
+        if(restTimerRemaining<=0){
+          clearRestInterval();syncRestTimerUI();toast('Hết thời gian nghỉ • đến set tiếp theo');
+          try{navigator.vibrate?.([180,80,180]);}catch(e){}
+          if(restTimerHideHandle)clearTimeout(restTimerHideHandle);
+          restTimerHideHandle=setTimeout(()=>{restTimerActive=false;syncRestTimerUI();},2800);
+        }
+      },1000);
+      syncRestTimerUI();
+    }
+    function startRestTimer(sec=selectedRestSeconds()){
+      if(restTimerHideHandle){clearTimeout(restTimerHideHandle);restTimerHideHandle=null;}
+      restTimerActive=true;restTimerRemaining=Math.max(10,Math.min(3600,Math.round(Number(sec)||selectedRestSeconds())));runRestTimer();
+    }
+    function pauseResumeRestTimer(){ if(!restTimerActive)return; if(restTimerHandle){clearRestInterval();syncRestTimerUI();} else if(restTimerRemaining>0){runRestTimer();} }
+    function resetRestTimer(){
+      const wasRunning=!!restTimerHandle; clearRestInterval(); restTimerActive=true; restTimerRemaining=selectedRestSeconds();
+      if(wasRunning)runRestTimer(); else syncRestTimerUI();
+    }
+    function closeRestTimer(){ clearRestInterval();restTimerActive=false;restTimerRemaining=0;syncRestTimerUI(); }
+    function ensureRestTimerSheet(){
+      let m=document.getElementById('restTimerSheet'); if(m)return m;
+      document.body.insertAdjacentHTML('beforeend',`<div class="mobile-sheet" id="restTimerSheet"><div class="mobile-sheet-panel v82-rest-sheet"><div class="mobile-sheet-handle"></div><div class="mobile-sheet-head"><div><small>REST TIMER</small><h3>Chọn thời gian nghỉ</h3></div><button class="icon-btn" id="restSheetClose">✕</button></div><div class="v82-rest-presets">${[60,90,120,180,240,300].map(x=>`<button data-rest-sec="${x}">${x}s</button>`).join('')}</div><label class="v82-rest-custom"><span>Tùy chỉnh (giây)</span><input id="restCustomSeconds" type="number" min="10" max="3600" step="5" inputmode="numeric" placeholder="VD: 150, 360, 600"></label><div class="v82-rest-sheet-actions"><button class="btn" id="restSaveDefault">LƯU MẶC ĐỊNH</button><button class="btn primary" id="restStartNow">BẮT ĐẦU</button></div></div></div>`);
+      m=document.getElementById('restTimerSheet'); const close=()=>m.classList.remove('open'); document.getElementById('restSheetClose').onclick=close; m.addEventListener('pointerdown',e=>{if(e.target===m)close();}); return m;
+    }
+    function openRestTimerSheet(){
+      const m=ensureRestTimerSheet(),current=selectedRestSeconds();m.dataset.seconds=String(current);document.getElementById('restCustomSeconds').value='';
+      const paint=()=>m.querySelectorAll('[data-rest-sec]').forEach(b=>b.classList.toggle('active',Number(b.dataset.restSec)===Number(m.dataset.seconds)));
+      m.querySelectorAll('[data-rest-sec]').forEach(b=>b.onclick=()=>{m.dataset.seconds=b.dataset.restSec;document.getElementById('restCustomSeconds').value='';paint();});
+      document.getElementById('restCustomSeconds').oninput=e=>{const n=Math.max(10,Math.min(3600,Math.round(Number(e.target.value)||0)));if(n){m.dataset.seconds=String(n);paint();}};
+      const commit=()=>{const sec=Math.max(10,Math.min(3600,Math.round(Number(m.dataset.seconds)||current)));state.settings.restSeconds=sec;saveState({cloudDirty:false});syncRestTimerUI();return sec;};
+      document.getElementById('restSaveDefault').onclick=()=>{const sec=commit();m.classList.remove('open');toast(`Rest Timer mặc định: ${sec}s`);};
+      document.getElementById('restStartNow').onclick=()=>{const sec=commit();m.classList.remove('open');startRestTimer(sec);};
+      paint();m.classList.add('open');
+    }
 
     function renderNav(){
       const nav = document.getElementById('nav');
@@ -1618,12 +1734,12 @@ body:not(.auth-locked) .auth-gate{
       const bottom=document.getElementById('bottomNav');
       if(bottom){
         const items=[
-          ['dashboard','⌂','Home'],['schedule','▣','Schedule'],['workout','◫','Tập'],['coach','♙','Coach'],['more','≡','More']
+          ['dashboard','home','Home'],['schedule','schedule','Schedule'],['workout','workout','Tập'],['coach','coach','Coach'],['more','more','More']
         ];
         const moreActive=['more','volume','history','data'].includes(activePage);
         bottom.innerHTML=items.map(([id,icon,label])=>{
           const active=id==='more'?moreActive:activePage===id;
-          return `<button data-page="${id}" class="${active?'active':''} ${id==='workout'?'workout-primary':''}"><span class="bn-icon">${icon}</span><span class="bn-label">${label}</span></button>`;
+          return `<button data-page="${id}" class="${active?'active':''} ${id==='workout'?'workout-primary':''}"><span class="bn-icon">${appIcon(icon)}</span><span class="bn-label">${label}</span></button>`;
         }).join('');
         bottom.querySelectorAll('button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
       }
@@ -1714,7 +1830,7 @@ body:not(.auth-locked) .auth-gate{
           <div class="card mobile-week-card"><div class="week-strip">${weekStrip}</div></div>
           <div class="v8-section-head"><b>Volume (This Week)</b><button id="dashboardVolume">View all ›</button></div>
           <div class="card pad mobile-volume-summary"><div class="muscle-progress-list">
-            ${activeGroups.length?activeGroups.map(x=>{const pct=x.plan?Math.min(100,x.done/x.plan*100):0;return `<div class="muscle-progress-row"><div class="muscle-progress-name">${escapeHtml(x.g)}</div><div class="muscle-progress-track"><div class="muscle-progress-fill" style="width:${pct}%"></div></div><div class="muscle-progress-value">${fmtVolume(x.done)}/${fmtVolume(x.plan)}</div></div>`;}).join(''):'<div class="empty compact">Chưa có volume.</div>'}
+            ${activeGroups.length?activeGroups.map(x=>{const pct=x.plan?Math.min(100,x.done/x.plan*100):0;return `<div class="muscle-progress-row"><div class="muscle-progress-name">${escapeHtml(x.g)}</div><div class="muscle-progress-track"><div class="muscle-progress-fill" style="width:${pct}%"></div></div><div class="muscle-progress-value">${fmtVolume(x.done)}/${fmtVolume(x.plan)}</div></div>`;}).join(''):emptyState('volume','Chưa có volume','Bắt đầu tập để volume tuần xuất hiện ở đây.')}
           </div></div>`;
         document.getElementById('dashboardStart')?.addEventListener('click',openToday);
         document.getElementById('dashboardSchedule')?.addEventListener('click',()=>showPage('schedule'));
@@ -1762,7 +1878,7 @@ body:not(.auth-locked) .auth-gate{
           <div class="card pad">
             <div class="section-head"><div><h3>Volume theo nhóm cơ</h3><p>Tiến độ volume hiệu dụng tuần này so với kế hoạch.</p></div><button class="dashboard-link" id="dashboardVolume">Xem toàn bộ →</button></div>
             <div class="muscle-progress-list">
-              ${activeGroups.length?activeGroups.map(x=>{const pct=x.plan?Math.min(100,x.done/x.plan*100):0;return `<div class="muscle-progress-row"><div class="muscle-progress-name">${escapeHtml(x.g)}</div><div class="muscle-progress-track"><div class="muscle-progress-fill" style="width:${pct}%"></div></div><div class="muscle-progress-value">${fmtVolume(x.done)} / ${fmtVolume(x.plan)}</div></div>`;}).join(''):'<div class="empty">Chưa có volume để hiển thị.</div>'}
+              ${activeGroups.length?activeGroups.map(x=>{const pct=x.plan?Math.min(100,x.done/x.plan*100):0;return `<div class="muscle-progress-row"><div class="muscle-progress-name">${escapeHtml(x.g)}</div><div class="muscle-progress-track"><div class="muscle-progress-fill" style="width:${pct}%"></div></div><div class="muscle-progress-value">${fmtVolume(x.done)} / ${fmtVolume(x.plan)}</div></div>`;}).join(''):emptyState('volume','Chưa có dữ liệu volume','Lưu một buổi tập để bắt đầu theo dõi.')}
             </div>
           </div>
           <div class="card pad">
@@ -1842,11 +1958,11 @@ body:not(.auth-locked) .auth-gate{
         page.innerHTML=`
           <div class="mobile-page-head"><div><div class="eyebrow">COACH TOOLS</div><h2>Coach Tools</h2><p>SCIENCE. GUIDANCE. BETTER YOU.</p></div></div>
           <div class="v8-coach-list">
-            <button class="v8-coach-item green" data-coach-open="tdee"><span class="v8-coach-icon">▥</span><div><b>TDEE Calculator</b><small>Find your daily energy needs</small></div><i>›</i></button>
-            <button class="v8-coach-item purple" data-coach-open="macro"><span class="v8-coach-icon">◉</span><div><b>Macro Calculator</b><small>Protein • Carb • Fat by goal</small></div><i>›</i></button>
-            <button class="v8-coach-item yellow" data-coach-open="nutrition"><span class="v8-coach-icon">⋈</span><div><b>Nutrition Tracker</b><small>Track calories, macros and foods</small></div><i>›</i></button>
-            <button class="v8-coach-item" data-coach-open="exercise"><span class="v8-coach-icon">◫</span><div><b>Exercise Library</b><small>Search exercises and add to schedule</small></div><i>›</i></button>
-            <button class="v8-coach-item" data-coach-open="muscle"><span class="v8-coach-icon">◎</span><div><b>Muscle Map 3D</b><small>Explore anatomy and matching exercises</small></div><i>›</i></button>
+            <button class="v8-coach-item green" data-coach-open="tdee"><span class="v8-coach-icon">${appIcon('tdee')}</span><div><b>TDEE Calculator</b><small>Find your daily energy needs</small></div><i>›</i></button>
+            <button class="v8-coach-item purple" data-coach-open="macro"><span class="v8-coach-icon">${appIcon('macro')}</span><div><b>Macro Calculator</b><small>Protein • Carb • Fat by goal</small></div><i>›</i></button>
+            <button class="v8-coach-item yellow" data-coach-open="nutrition"><span class="v8-coach-icon">${appIcon('nutrition')}</span><div><b>Nutrition Tracker</b><small>Track calories, macros and foods</small></div><i>›</i></button>
+            <button class="v8-coach-item" data-coach-open="exercise"><span class="v8-coach-icon">${appIcon('exercise')}</span><div><b>Exercise Library</b><small>Search exercises and add to schedule</small></div><i>›</i></button>
+            <button class="v8-coach-item" data-coach-open="muscle"><span class="v8-coach-icon">${appIcon('muscle')}</span><div><b>Muscle Map 3D</b><small>Explore anatomy and matching exercises</small></div><i>›</i></button>
           </div>
           <div class="v8-coach-quote">“BETTER DATA BUILDS A STRONGER YOU.”<br>— TRUE TRAIN</div>`;
         page.querySelectorAll('[data-coach-open]').forEach(b=>b.onclick=()=>{state.coach.activeTab=b.dataset.coachOpen;mobileCoachMenu=false;saveState({cloudDirty:false});renderCoach();});
@@ -2154,9 +2270,9 @@ body:not(.auth-locked) .auth-gate{
       const c=document.getElementById('coachContent'), st=state.coach.exercise, all=getCoachExerciseLibrary();
       const groups=['all',...MUSCLE_GROUPS], equipments=['all',...new Set(all.map(x=>x.equipment).filter(Boolean))], patterns=['all',...new Set(all.map(x=>x.pattern).filter(Boolean))];
       let base=all.slice();if(st.group!=='all')base=base.filter(x=>x.group===st.group);if(st.equipment!=='all')base=base.filter(x=>x.equipment===st.equipment);if(st.pattern!=='all')base=base.filter(x=>x.pattern===st.pattern);
-      c.innerHTML=`<div class="card coach-card"><div class="section-head"><div><h3>Exercise Library</h3><p><span id="exerciseLibCount">${base.length}</span> / ${all.length} bài • NASM + ACE dùng để cross-check category/equipment; metadata trong app được chuẩn hóa cho hypertrophy/strength.</p></div></div>
+      c.innerHTML=`<div class="card coach-card"><div class="section-head"><div><h3>Exercise Library</h3><p><span id="exerciseLibCount">${base.length}</span> / ${all.length} bài • thumbnail chỉ xuất hiện ở những bài đã có asset TRUE TRAIN.</p></div></div>
         <div class="exercise-library-toolbar"><input id="exerciseLibSearch" autocomplete="off" inputmode="search" placeholder="Tìm: incline db, kéo xô, rear delt..." value="${escapeHtml(st.search||'')}"><select id="exerciseLibGroup">${groups.map(x=>`<option value="${escapeHtml(x)}" ${x===st.group?'selected':''}>${x==='all'?'Tất cả nhóm cơ':escapeHtml(x)}</option>`).join('')}</select><select id="exerciseLibEquipment">${equipments.map(x=>`<option value="${escapeHtml(x)}" ${x===st.equipment?'selected':''}>${x==='all'?'Tất cả equipment':escapeHtml(x)}</option>`).join('')}</select><select id="exerciseLibPattern">${patterns.map(x=>`<option value="${escapeHtml(x)}" ${x===st.pattern?'selected':''}>${x==='all'?'Tất cả pattern':escapeHtml(x)}</option>`).join('')}</select></div>
-        <div class="exercise-library-grid" id="exerciseLibraryGrid">${base.map((x,i)=>`<div class="exercise-library-card standalone" data-ex-search="${escapeHtml(exerciseSearchText(x))}"><div class="ex-title">${escapeHtml(x.name)}</div><div class="ex-tags"><span>${escapeHtml(x.group)}</span><span>${escapeHtml(x.region||'')}</span><span>${escapeHtml(x.equipment||'')}</span><span>${escapeHtml(x.pattern||'')}</span><span>${escapeHtml(x.reps||'')}</span><span>${escapeHtml(x.difficulty||'')}</span></div><div class="ex-sub">Primary: <b>${escapeHtml(x.group)}</b>${x.secondary?` • Secondary: ${escapeHtml(x.secondary)}`:''}</div><div class="ex-actions"><button data-ex-map="${escapeHtml(x.group)}">Xem Muscle Map</button><button class="ex-add" data-ex-add="${i}">＋ Thêm lịch</button></div></div>`).join('')}</div>
+        <div class="exercise-library-grid" id="exerciseLibraryGrid">${base.map((x,i)=>{const thumb=exerciseThumb(x.name);return `<div class="exercise-library-card standalone ${thumb?'has-visual':''}" data-ex-search="${escapeHtml(exerciseSearchText(x))}">${thumb?`<div class="exercise-library-thumb"><img src="${thumb}" alt="${escapeHtml(x.name)}" loading="lazy"></div>`:''}<div class="ex-title">${escapeHtml(x.name)}</div><div class="ex-tags"><span>${escapeHtml(x.group)}</span><span>${escapeHtml(x.region||'')}</span><span>${escapeHtml(x.equipment||'')}</span><span>${escapeHtml(x.pattern||'')}</span><span>${escapeHtml(x.reps||'')}</span><span>${escapeHtml(x.difficulty||'')}</span></div><div class="ex-sub">Primary: <b>${escapeHtml(x.group)}</b>${x.secondary?` • Secondary: ${escapeHtml(x.secondary)}`:''}</div><div class="ex-actions"><button data-ex-map="${escapeHtml(x.group)}">Xem Muscle Map</button><button class="ex-add" data-ex-add="${i}">＋ Thêm lịch</button></div></div>`;}).join('')}</div>
       </div>`;
       const applySearch=()=>{const q=normalizeSearch(document.getElementById('exerciseLibSearch').value);st.search=document.getElementById('exerciseLibSearch').value;saveState({cloudDirty:false});let shown=0;document.querySelectorAll('#exerciseLibraryGrid .exercise-library-card').forEach(card=>{const ok=!q||card.dataset.exSearch.includes(q);card.style.display=ok?'':'none';if(ok)shown++;});document.getElementById('exerciseLibCount').textContent=shown;};
       document.getElementById('exerciseLibSearch').oninput=applySearch;applySearch();
@@ -2336,9 +2452,10 @@ body:not(.auth-locked) .auth-gate{
           </div>
           <div class="v8-workout-tools">
             <div class="card mobile-workout-controls"><div class="mobile-control-field"><label>SESSION</label><select id="workoutDay">${days.map(d=>`<option ${d===state.currentDay?'selected':''}>${d}</option>`).join('')}</select></div><div class="mobile-control-field"><label>DATE</label><input id="workoutDate" type="date" value="${w.date}"></div></div>
-            <div class="v8-rest-timer"><small>Rest Timer</small><b id="restTimerValue">${formatRestTimer(restTimerRemaining)}</b><button id="restTimerBtn">${restTimerHandle?'Dừng':'90s'}</button></div>
+            <button class="v8-rest-launch" id="restTimerOpen"><span>${appIcon('history')}</span><div><small>REST TIMER</small><b id="restPresetLabel">${selectedRestSeconds()}s</b></div><i>›</i></button>
           </div>
           <div id="exerciseList" class="exercise-list mobile-exercise-list"></div>
+          <div class="v8-rest-float ${restTimerActive?'show':''}" id="restTimerFloat"><button class="v8-rest-close" id="restTimerClose" aria-label="Đóng timer">${appIcon('close')}</button><div class="v8-rest-float-copy"><small>REST TIMER</small><b id="restTimerValue">${formatRestTimer(restTimerActive?restTimerRemaining:selectedRestSeconds())}</b></div><div class="v8-rest-float-actions"><button id="restTimerPause">${restTimerHandle?appIcon('pause'):appIcon('play')}<span>${restTimerHandle?'DỪNG':'TIẾP TỤC'}</span></button><button id="restTimerReset">${appIcon('reset')}<span>ĐẶT LẠI</span></button></div></div>
           <div class="mobile-workout-actions"><button class="btn primary" id="saveWorkout">${st.complete?'✓ COMPLETE WORKOUT':`SAVE PROGRESS • ${st.done}/${st.total}`}</button><button class="btn" id="resetWorkout">↻ Reset</button></div>`;
       }else{
         page.innerHTML=`
@@ -2350,27 +2467,49 @@ body:not(.auth-locked) .auth-gate{
       document.getElementById('workoutDate').onchange=e=>{w.date=e.target.value;saveState();};
       document.getElementById('saveWorkout').onclick=saveWorkoutToHistory;
       document.getElementById('resetWorkout').onclick=()=>confirmBox('Reset buổi tập','Xóa toàn bộ tạ/reps/RIR/note đã nhập ở buổi hiện tại?',()=>{state.currentWorkout=null;mobileWorkoutOpen=0;saveState();renderWorkout();toast('Đã reset buổi tập');});
-      const timer=document.getElementById('restTimerBtn'); if(timer)timer.onclick=toggleRestTimer;
+      const timerOpen=document.getElementById('restTimerOpen'); if(timerOpen)timerOpen.onclick=openRestTimerSheet;
+      const timerPause=document.getElementById('restTimerPause'); if(timerPause)timerPause.onclick=pauseResumeRestTimer;
+      const timerReset=document.getElementById('restTimerReset'); if(timerReset)timerReset.onclick=resetRestTimer;
+      const timerClose=document.getElementById('restTimerClose'); if(timerClose)timerClose.onclick=closeRestTimer;
       renderExerciseCards(w);updateWorkoutCompletionUI(w);syncRestTimerUI();
     }
 
     function bindWorkoutInputs(root){
       root.querySelectorAll('input[data-e][data-s][data-k]').forEach(inp=>{
-        const handler=()=>{const e=+inp.dataset.e,si=+inp.dataset.s,k=inp.dataset.k,set=state.currentWorkout.exercises[e].sets[si];set[k]=inp.value;set.done=isWorkoutSetComplete(set);saveState();updateWorkoutCompletionUI(state.currentWorkout);};
+        const handler=()=>{const e=+inp.dataset.e,si=+inp.dataset.s,k=inp.dataset.k,set=state.currentWorkout.exercises[e].sets[si],was=isWorkoutSetComplete(set);set[k]=inp.value;set.done=isWorkoutSetComplete(set);saveState();updateWorkoutCompletionUI(state.currentWorkout);if(k!=='note'&&!was&&set.done&&isMobileUI())startRestTimer(selectedRestSeconds());};
         inp.addEventListener('input',handler);inp.addEventListener('change',handler);
         inp.addEventListener('keydown',ev=>{if(ev.key!=='Enter')return;ev.preventDefault();const fields=[...root.querySelectorAll('input[data-e][data-s][data-k]')];const idx=fields.indexOf(inp);if(idx>=0&&fields[idx+1]){fields[idx+1].focus();fields[idx+1].select?.();}});
       });
     }
 
+    const EXERCISE_THUMBS=[
+      {keys:['incline dumbbell press','incline db press'],src:'./assets/exercises/incline-db-press.jpg'},
+      {keys:['chest supported row'],src:'./assets/exercises/chest-supported-row.jpg'},
+      {keys:['lat pulldown','lat pull down'],src:'./assets/exercises/lat-pulldown.jpg'},
+      {keys:['overhead press','shoulder press'],src:'./assets/exercises/overhead-press.jpg'},
+      {keys:['lateral raise','side lateral raise'],src:'./assets/exercises/lateral-raise.jpg'},
+      {keys:['triceps pushdown','tricep pushdown','cable pushdown'],src:'./assets/exercises/triceps-pushdown.jpg'},
+      {keys:['back squat','barbell squat','squat'],src:'./assets/exercises/squat.jpg'},
+      {keys:['leg press'],src:'./assets/exercises/leg-press.jpg'},
+      {keys:['romanian deadlift','rdl'],src:'./assets/exercises/romanian-deadlift.jpg'},
+      {keys:['leg curl','lying leg curl','seated leg curl'],src:'./assets/exercises/leg-curl.jpg'}
+    ];
+    function exerciseThumb(name=''){
+      const q=normalizeSearch(name);
+      const hit=EXERCISE_THUMBS.find(item=>item.keys.some(k=>q.includes(normalizeSearch(k))));
+      return hit?.src||'';
+    }
+
     function renderExerciseCards(w){
       const el=document.getElementById('exerciseList');
-      if(!w.exercises.length){el.innerHTML='<div class="empty">Ngày nghỉ. Không có bài tập.</div>';return;}
+      if(!w.exercises.length){el.innerHTML=emptyState('workout','Hôm nay là ngày nghỉ','Chọn ngày khác hoặc thêm bài trong Schedule.');return;}
       syncWorkoutCompletion(w);
       if(isMobileUI()){
         el.innerHTML=w.exercises.map((ex,ei)=>{
           const done=ex.sets.filter(s=>isWorkoutSetComplete(s)).length,open=ei===mobileWorkoutOpen,complete=done===ex.sets.length&&ex.sets.length;
+          const thumb=exerciseThumb(ex.name);
           return `<div class="mobile-ex-card ${open?'open':''} ${complete?'complete':''}" data-mobile-ex-card="${ei}">
-            <button class="mobile-ex-summary" data-ex-toggle="${ei}"><div><span class="mobile-ex-index">${complete?'✓':'◫'}</span><div><b>${ei+1}. ${escapeHtml(ex.name)}</b><small>${escapeHtml(ex.detail||ex.group)} • ${escapeHtml(ex.targetReps)} reps • RIR ${escapeHtml(ex.targetRir)}</small></div></div><strong id="exerciseCount-${ei}">${done}/${ex.sets.length} ${complete?'✓':''}</strong></button>
+            <button class="mobile-ex-summary ${thumb?'has-thumb':''}" data-ex-toggle="${ei}"><div>${thumb?`<span class="mobile-ex-thumb"><img src="${thumb}" alt="" loading="lazy"><em>${complete?'✓':ei+1}</em></span>`:`<span class="mobile-ex-index">${complete?'✓':'◫'}</span>`}<div><b>${ei+1}. ${escapeHtml(ex.name)}</b><small>${escapeHtml(ex.detail||ex.group)} • ${escapeHtml(ex.targetReps)} reps • RIR ${escapeHtml(ex.targetRir)}</small></div></div><strong id="exerciseCount-${ei}">${done}/${ex.sets.length} ${complete?'✓':''}</strong></button>
             <div class="mobile-ex-body">
               <div class="mobile-ex-meta"><span class="badge">${escapeHtml(ex.group)}</span>${ex.indirect?`<span>Secondary: ${escapeHtml(ex.indirect)}</span>`:''}</div>
               <div class="mobile-set-labels"><span>SET</span><span>KG</span><span>REPS</span><span>RIR</span><span></span></div>
@@ -2489,7 +2628,7 @@ body:not(.auth-locked) .auth-gate{
           <details class="mobile-session-edit"><summary>Edit session name & focus</summary><div class="mobile-session-edit-grid"><label>Tên buổi<input id="mobileSessionName" value="${escapeHtml(sess.name)}"></label><label>Focus<input id="mobileSessionFocus" value="${escapeHtml(sess.focus)}"></label></div></details>
           <div class="mobile-schedule-actions"><button class="btn" id="workoutTemplatePreviewBtn">⚡ TEMPLATE</button><button class="btn primary" id="addExercise">＋ ADD EXERCISE</button></div>
         </div>
-        <div class="mobile-schedule-list">${sess.exercises.length?sess.exercises.map((ex,i)=>`<div class="card mobile-schedule-ex"><button class="mobile-schedule-main" data-edit-ex="${i}"><div><span>${i+1}</span><div><b>${escapeHtml(ex.name)}</b><small>${escapeHtml(ex.detail||ex.group)}</small></div></div><strong>⋮</strong></button><div class="mobile-schedule-info"><span>${ex.sets} sets</span><span>${escapeHtml(ex.reps)} reps</span><span>RIR ${escapeHtml(ex.rir)}</span></div>${ex.indirect?`<div class="mobile-schedule-secondary">Secondary: ${escapeHtml(ex.indirect)}</div>`:''}<div class="mobile-schedule-order"><button data-up="${i}" ${i===0?'disabled':''}>↑</button><button data-down="${i}" ${i===sess.exercises.length-1?'disabled':''}>↓</button></div></div>`).join(''):'<div class="empty">Rest day / no exercises. Add an exercise to turn it into a training day.</div>'}</div>
+        <div class="mobile-schedule-list">${sess.exercises.length?sess.exercises.map((ex,i)=>`<div class="card mobile-schedule-ex"><button class="mobile-schedule-main" data-edit-ex="${i}"><div><span>${i+1}</span><div><b>${escapeHtml(ex.name)}</b><small>${escapeHtml(ex.detail||ex.group)}</small></div></div><strong>⋮</strong></button><div class="mobile-schedule-info"><span>${ex.sets} sets</span><span>${escapeHtml(ex.reps)} reps</span><span>RIR ${escapeHtml(ex.rir)}</span></div>${ex.indirect?`<div class="mobile-schedule-secondary">Secondary: ${escapeHtml(ex.indirect)}</div>`:''}<div class="mobile-schedule-order"><button data-up="${i}" ${i===0?'disabled':''}>↑</button><button data-down="${i}" ${i===sess.exercises.length-1?'disabled':''}>↓</button></div></div>`).join(''):emptyState('schedule','Chưa có bài tập','Thêm bài để biến ngày này thành training day.')}</div>
         ${sess.exercises.length?'<button class="btn danger mobile-clear-day" id="clearDayExercises">Clear selected day</button>':''}`;
       page.querySelectorAll('[data-schedule-day]').forEach(b=>b.onclick=()=>{state.scheduleEditorDay=b.dataset.scheduleDay;renderSchedule();});
       const name=document.getElementById('mobileSessionName'),focus=document.getElementById('mobileSessionFocus');
@@ -2587,7 +2726,7 @@ body:not(.auth-locked) .auth-gate{
         page.innerHTML=`<div class="mobile-page-head"><div><div class="eyebrow">WEEKLY LOAD</div><h2>Volume</h2><p>Direct + indirect theo nhóm cơ.</p></div></div>
           <div class="mobile-kpi-row volume"><div class="mobile-kpi"><b>${fmtVolume(totalDirect)}</b><span>Direct</span></div><div class="mobile-kpi"><b>${fmtVolume(totalIndirect)}</b><span>Indirect</span></div><div class="mobile-kpi"><b>${fmtVolume(totalEffective)}</b><span>Total</span></div></div>
           <details class="volume-rule-details mobile-volume-rule"><summary><span>Hệ số gián tiếp</span><span>${factor}</span></summary><div class="volume-rule-body"><div class="field"><label>1 set gián tiếp =</label><input id="indirectFactor" type="number" min="0" max="1" step="0.1" value="${factor}"></div></div></details>
-          <div class="mobile-volume-cards">${active.length?active.map(g=>{const pd=planned[g]?.direct||0,pi=planned[g]?.indirect||0,pt=pd+pi,dd=done[g]?.direct||0,di=done[g]?.indirect||0,dt=dd+di,pct=pt?Math.min(100,dt/pt*100):0;return `<div class="card mobile-volume-card"><div class="mobile-volume-card-head"><b>${escapeHtml(g)}</b><strong>${fmtVolume(dt)} / ${fmtVolume(pt)}</strong></div><div class="progressbar"><span style="width:${pct}%"></span></div><div class="mobile-volume-split"><span>Direct <b>${fmtVolume(dd)}/${fmtVolume(pd)}</b></span><span>Indirect <b>${fmtVolume(di)}/${fmtVolume(pi)}</b></span><span>${pct.toFixed(0)}%</span></div></div>`;}).join(''):'<div class="empty">Chưa có volume để hiển thị.</div>'}</div>`;
+          <div class="mobile-volume-cards">${active.length?active.map(g=>{const pd=planned[g]?.direct||0,pi=planned[g]?.indirect||0,pt=pd+pi,dd=done[g]?.direct||0,di=done[g]?.indirect||0,dt=dd+di,pct=pt?Math.min(100,dt/pt*100):0;return `<div class="card mobile-volume-card"><div class="mobile-volume-card-head"><b>${escapeHtml(g)}</b><strong>${fmtVolume(dt)} / ${fmtVolume(pt)}</strong></div><div class="progressbar"><span style="width:${pct}%"></span></div><div class="mobile-volume-split"><span>Direct <b>${fmtVolume(dd)}/${fmtVolume(pd)}</b></span><span>Indirect <b>${fmtVolume(di)}/${fmtVolume(pi)}</b></span><span>${pct.toFixed(0)}%</span></div></div>`;}).join(''):emptyState('volume','Chưa có dữ liệu volume','Lưu một buổi tập để bắt đầu theo dõi.')}</div>`;
       }else{
         page.innerHTML=`
           <div class="card hero-main" style="margin-bottom:14px"><div class="eyebrow">Weekly volume</div><h2>Volume đầy đủ theo nhóm cơ</h2><p class="subtitle">Tách volume trực tiếp và gián tiếp; dữ liệu đã tập lấy từ các set đã nhập đủ Tạ + Rep + RIR và lưu vào nhật ký.</p><div class="stats"><div class="stat"><b>${fmtVolume(totalDirect)}</b><span>Sets trực tiếp / tuần</span></div><div class="stat"><b>${fmtVolume(totalIndirect)}</b><span>Sets gián tiếp quy đổi</span></div><div class="stat"><b>${fmtVolume(totalEffective)}</b><span>Tổng volume hiệu dụng</span></div></div></div>
@@ -2606,30 +2745,31 @@ body:not(.auth-locked) .auth-gate{
         <div class="v8-account"><div class="v8-account-avatar">TT</div><div><b>${escapeHtml(email)}</b><small>${logged?'Signed in • TRUE TRAIN':'Local mode'}</small></div><i>›</i></div>
         <div class="v8-menu-label">PROGRESS</div>
         <div class="more-menu">
-          <button class="card more-item" data-more-page="volume"><span>▥</span><div><b>Volume Analysis</b><small>Direct + indirect weekly volume</small></div><i>›</i></button>
-          <button class="card more-item" data-more-page="history"><span>◴</span><div><b>Training History</b><small>Saved workouts and set details</small></div><i>›</i></button>
+          <button class="card more-item" data-more-page="volume"><span>${appIcon('volume')}</span><div><b>Volume Analysis</b><small>Direct + indirect weekly volume</small></div><i>›</i></button>
+          <button class="card more-item" data-more-page="history"><span>${appIcon('history')}</span><div><b>Training History</b><small>Saved workouts and set details</small></div><i>›</i></button>
         </div>
         <div class="v8-menu-label">DATA & SYNC</div>
         <div class="more-menu">
-          <button class="card more-item" data-more-page="data"><span>☁</span><div><b>Cloud Sync</b><small>${syncOk?'Synced':'Open cloud controls & data tools'}</small></div><span class="v8-cloud-dot ${syncOk?'ok':''}"></span></button>
-          <button class="card more-item" data-more-page="data"><span>▤</span><div><b>Manage Data</b><small>Backup • Restore • Export CSV</small></div><i>›</i></button>
-          <button class="card more-item" id="moreInstall"><span>↓</span><div><b>Install App</b><small>Add MASTER to home screen</small></div><i>›</i></button>
+          <button class="card more-item" data-more-page="data"><span>${appIcon('cloud')}</span><div><b>Cloud Sync</b><small>${syncOk?'Synced':'Open cloud controls & data tools'}</small></div><span class="v8-cloud-dot ${syncOk?'ok':''}"></span></button>
+          <button class="card more-item" data-more-page="data"><span>${appIcon('data')}</span><div><b>Manage Data</b><small>Backup • Restore • Export CSV</small></div><i>›</i></button>
+          <button class="card more-item" id="moreInstall"><span>${appIcon('install')}</span><div><b>Install App</b><small>Add MASTER to home screen</small></div><i>›</i></button>
         </div>
         <div class="v8-menu-label">APP</div>
-        <div class="more-menu"><button class="card more-item" id="moreAbout"><span>TT</span><div><b>About TRUE TRAIN</b><small>MASTER TRAINING TRACKER • V8</small></div><i>›</i></button></div>
-        ${logged?'<button class="v8-logout" id="moreLogout">↪ LOG OUT</button>':''}`;
+        <div class="more-menu"><button class="card more-item" id="moreAbout"><span class="v82-tt-icon">TT</span><div><b>About TRUE TRAIN</b><small>MASTER TRAINING TRACKER • V8.2</small></div><i>›</i></button></div>
+        ${logged?'<button class="v8-logout" id="moreLogout">LOG OUT</button>':''}`;
       page.querySelectorAll('[data-more-page]').forEach(b=>b.onclick=()=>showPage(b.dataset.morePage));
       const install=document.getElementById('moreInstall');if(install)install.onclick=installPwa;
-      const about=document.getElementById('moreAbout');if(about)about.onclick=()=>toast('TRUE TRAIN • MASTER TRAINING TRACKER V8');
+      const about=document.getElementById('moreAbout');if(about)about.onclick=()=>toast('TRUE TRAIN • MASTER TRAINING TRACKER V8.2');
       const logout=document.getElementById('moreLogout');if(logout)logout.onclick=()=>confirmBox('Đăng xuất','Đăng xuất TRUE TRAIN trên thiết bị này?',cloudLogout);
     }
+
 
     function renderHistory(){
       const page=document.getElementById('page-history');
       if(isMobileUI()){
         page.innerHTML=`<div class="mobile-page-head"><div><div class="eyebrow">PROGRESS LOG</div><h2>Nhật ký</h2><p>${state.history.length} buổi đã lưu.</p></div></div><div id="historyList" class="mobile-history-list"></div>`;
         const list=document.getElementById('historyList');
-        if(!state.history.length){list.innerHTML='<div class="empty">Chưa có buổi tập nào được lưu.</div>';return;}
+        if(!state.history.length){list.innerHTML=emptyState('history','Chưa có nhật ký','Hoàn thành và lưu buổi tập đầu tiên.');return;}
         list.innerHTML=state.history.map((h,hi)=>{const pct=h.totalSets?Math.round(h.completedSets/h.totalSets*100):0;return `<div class="card mobile-history-card"><button class="mobile-history-head" data-view="${hi}"><div><small>${formatDate(h.date)} • ${escapeHtml(h.day)}</small><b>${escapeHtml(h.title)}</b><span>${h.completedSets}/${h.totalSets} sets</span></div><strong>${pct}%</strong></button><div class="mobile-history-details" id="hist-${hi}">${historyDetailsMobile(h)}<button class="btn danger mobile-history-delete" data-delete="${hi}">Xóa buổi này</button></div></div>`;}).join('');
         list.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>document.getElementById(`hist-${b.dataset.view}`).classList.toggle('open'));
         list.querySelectorAll('[data-delete]').forEach(b=>b.onclick=e=>{e.stopPropagation();const i=+b.dataset.delete;confirmBox('Xóa buổi tập',`Xóa buổi ${state.history[i].day} ngày ${formatDate(state.history[i].date)}?`,()=>{state.history.splice(i,1);saveState();renderHistory();});});
@@ -2638,7 +2778,7 @@ body:not(.auth-locked) .auth-gate{
       page.innerHTML=`<div class="card pad"><div class="section-head"><div><h3>Nhật ký tập</h3><p>Mỗi lần bấm “Lưu buổi tập”, dữ liệu sẽ vào đây.</p></div><button class="btn danger" id="clearHistory">Xóa toàn bộ nhật ký</button></div><div id="historyList"></div></div>`;
       document.getElementById('clearHistory').onclick=()=>confirmBox('Xóa toàn bộ nhật ký','Thao tác này không thể hoàn tác.',()=>{state.history=[];saveState();renderHistory();toast('Đã xóa nhật ký');});
       const list=document.getElementById('historyList');
-      if(!state.history.length){list.innerHTML='<div class="empty">Chưa có buổi tập nào được lưu.</div>';return;}
+      if(!state.history.length){list.innerHTML=emptyState('history','Chưa có nhật ký','Hoàn thành và lưu buổi tập đầu tiên.');return;}
       list.innerHTML=state.history.map((h,hi)=>{const pct=h.totalSets?Math.round(h.completedSets/h.totalSets*100):0;return `<div class="history-card card"><div class="history-head"><div><div class="history-title">${escapeHtml(h.day)} • ${escapeHtml(h.title)} • ${formatDate(h.date)}</div><div class="history-sub">${h.completedSets}/${h.totalSets} sets hoàn thành • ${pct}%</div></div><div class="history-actions"><button class="btn" data-view="${hi}">Chi tiết</button><button class="btn danger" data-delete="${hi}">Xóa</button></div></div><div class="history-details" id="hist-${hi}">${historyDetails(h)}</div></div>`;}).join('');
       list.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>document.getElementById(`hist-${b.dataset.view}`).classList.toggle('open'));
       list.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const i=+b.dataset.delete;confirmBox('Xóa buổi tập',`Xóa buổi ${state.history[i].day} ngày ${formatDate(state.history[i].date)}?`,()=>{state.history.splice(i,1);saveState();renderHistory();});});
