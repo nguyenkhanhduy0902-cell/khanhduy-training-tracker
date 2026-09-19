@@ -1,30 +1,23 @@
-KHANHDUY TRAINING TRACKER V5.1 - CLOUD SYNC
+TRUE TRAIN V8.6 FULL PACKAGE
 
-FILES TO UPLOAD TO GITHUB REPOSITORY ROOT:
-- index.html
-- manifest.webmanifest
-- sw.js
-- icon-192.png
-- icon-512.png
-- .nojekyll
+File chính: index.html
 
-SUPABASE SETUP:
-1. Create a Supabase project.
-2. Open SQL Editor and run supabase_setup.sql.
-3. In Supabase, copy Project URL and Publishable key (NOT secret/service_role key).
-4. Open the app > Du lieu > Dong bo Cloud.
-5. Paste URL + Publishable key, then save.
-6. Create/login with email + password.
-7. FIRST TIME: on the PC that already contains your correct data, click "Day may nay len cloud".
-8. On phone, configure/login with the same account, then click "Tai cloud ve may".
-9. Leave Auto Sync enabled.
+Deploy GitHub Pages / Netlify / hosting tĩnh:
+1. Upload TOÀN BỘ nội dung của thư mục này, giữ nguyên cấu trúc thư mục.
+2. Đặt index.html ở root website.
+3. Mở bằng HTTPS để PWA/service worker hoạt động đầy đủ.
 
-IMPORTANT:
-- Do not edit both devices at exactly the same time. The app detects common conflicts and asks which copy to keep.
-- Keep periodic JSON backups.
+Đã bao gồm:
+- Desktop Schedule visual premium + week cards + selected-session hero + session preview.
+- Coach Tools desktop/mobile visual system.
+- Machine Chest Press visual thật.
+- Movement-first fallback cho exercise khác, không còn phụ thuộc vào thư mục ảnh library cũ.
+- Fix Add to Schedule modal z-index.
+- PWA manifest, service worker và app icons.
+- Legacy movement/schedule assets làm fallback an toàn.
 
-V5.1 CHANGES:
-- Tab title updated to V5.1.
-- Signup confirmation emails explicitly redirect to the GitHub Pages app.
-- Added 'Gui lai email xac nhan' button.
-- Confirmation redirect can restore the Supabase session automatically when tokens are returned.
+Lưu ý Muscle Map 3D:
+- Mô hình 3D vẫn tải Three.js và anatomy model từ CDN khi có internet.
+- Nếu CDN không tải được, app dùng fallback UI hiện có; các chức năng còn lại vẫn dùng bình thường.
+
+Version release: 8.6.1
