@@ -1,7 +1,9 @@
-/* TRUE TRAIN V11.5 — GitHub Pages safe service worker */
+/* TRUE TRAIN V11.6 — GitHub Pages safe service worker */
 const CACHE_PREFIX = 'true-train-';
-const CACHE_NAME = 'true-train-v11-5-20260921';
-const STATIC_ASSETS = [
+const CACHE_NAME = 'true-train-v11-6-20260921';
+
+const OPTIONAL_STATIC_ASSETS = [
+  './index.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -10,11 +12,23 @@ const STATIC_ASSETS = [
   './icons/favicon-48.png'
 ];
 
+async function cacheOptionalAssets() {
+  const cache = await caches.open(CACHE_NAME);
+  await Promise.allSettled(
+    OPTIONAL_STATIC_ASSETS.map(async asset => {
+      try {
+        const response = await fetch(asset, { cache: 'no-store' });
+        if (response && response.ok) await cache.put(asset, response.clone());
+      } catch (_) {
+        // Optional asset missing/offline: do not block SW installation.
+      }
+    })
+  );
+}
+
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
+    cacheOptionalAssets().then(() => self.skipWaiting())
   );
 });
 
@@ -30,7 +44,11 @@ self.addEventListener('activate', event => {
   );
 });
 
-async function networkFirst(request) {
+self.addEventListener('message', event => {
+  if (event.data === 'SKIP_WAITING') self.skipWaiting();
+});
+
+async function networkFirstDocument(request) {
   try {
     const response = await fetch(request, { cache: 'no-store' });
     if (response && response.ok) {
@@ -49,32 +67,34 @@ async function networkFirst(request) {
   }
 }
 
+async function staleWhileRevalidate(request) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await caches.match(request, { ignoreSearch: true });
+
+  const networkPromise = fetch(request, { cache: 'no-store' })
+    .then(async response => {
+      if (response && response.ok) await cache.put(request, response.clone());
+      return response;
+    })
+    .catch(() => null);
+
+  return cached || (await networkPromise) || Response.error();
+}
+
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
 
-  // Never let an old cached HTML shell win over a newer GitHub Pages deploy.
+  // HTML/navigation always checks network first so a new GitHub deploy wins.
   if (request.mode === 'navigate' || request.destination === 'document') {
-    event.respondWith(networkFirst(request));
+    event.respondWith(networkFirstDocument(request));
     return;
   }
 
-  // Same-origin static files: serve cached copy quickly, refresh in background.
+  // Cache same-origin static resources only. External/API traffic is untouched.
   if (url.origin === self.location.origin) {
-    event.respondWith((async () => {
-      const cached = await caches.match(request, { ignoreSearch: true });
-      const network = fetch(request)
-        .then(async response => {
-          if (response && response.ok) {
-            const cache = await caches.open(CACHE_NAME);
-            await cache.put(request, response.clone());
-          }
-          return response;
-        })
-        .catch(() => null);
-      return cached || (await network) || Response.error();
-    })());
+    event.respondWith(staleWhileRevalidate(request));
   }
 });
