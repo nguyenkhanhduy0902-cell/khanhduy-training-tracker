@@ -7317,7 +7317,7 @@ syncInstallButtons();
       destroyMuscle3D();const page=document.getElementById('page-coach'),tab=state.coach.activeTab||'clients';
       if(isMobileUI()&&mobileCoachMenu){page.innerHTML=`<div class="mobile-page-head"><div><div class="eyebrow">COACH SYSTEM</div><h2>Coach</h2><p>Clients first • tools when you need them.</p></div></div><div class="v8-coach-list"><button class="v8-coach-item green" data-coach-open="clients"><span class="v8-coach-icon">👥</span><div><b>Clients</b><small>Programs • progress • history • compliance</small></div><i>›</i></button><button class="v8-coach-item green" data-coach-open="tdee"><span class="v8-coach-icon">${appIcon('tdee')}</span><div><b>TDEE Calculator</b><small>Find daily energy needs</small></div><i>›</i></button><button class="v8-coach-item purple" data-coach-open="macro"><span class="v8-coach-icon">${appIcon('macro')}</span><div><b>Macro Calculator</b><small>Protein • Carb • Fat by goal</small></div><i>›</i></button><button class="v8-coach-item yellow" data-coach-open="nutrition"><span class="v8-coach-icon">${appIcon('nutrition')}</span><div><b>Nutrition Tracker</b><small>Track calories and macros</small></div><i>›</i></button><button class="v8-coach-item" data-coach-open="exercise"><span class="v8-coach-icon">${appIcon('exercise')}</span><div><b>Exercise Library</b><small>196 standardized exercises</small></div><i>›</i></button><button class="v8-coach-item" data-coach-open="muscle"><span class="v8-coach-icon">${appIcon('muscle')}</span><div><b>Muscle Map 3D</b><small>Anatomy & matching exercises</small></div><i>›</i></button></div><div class="v8-coach-quote">“COACH THE PERSON. TRACK THE PROCESS.”<br>— TRUE TRAIN</div>`;page.querySelectorAll('[data-coach-open]').forEach(b=>b.onclick=()=>{state.coach.activeTab=b.dataset.coachOpen;mobileCoachMenu=false;saveState({cloudDirty:false});renderCoach();});return;}
       if(isMobileUI()){const titleMap={clients:'Clients',tdee:'TDEE Calculator',macro:'Macro Calculator',nutrition:'Nutrition Tracker',exercise:'Exercise Library',muscle:'Muscle Map 3D'};page.innerHTML=`<div class="mobile-tool-head"><button class="mobile-back" id="coachBackMenu">←</button><div><small>COACH SYSTEM</small><b>${titleMap[tab]||'Coach'}</b></div></div><div id="coachContent"></div>`;document.getElementById('coachBackMenu').onclick=()=>{mobileCoachMenu=true;renderCoach();};renderCoachTab(tab);return;}
-      const btn=(id,label)=>`<button data-coach-tab="${id}" class="${tab===id?'active':''}">${label}</button>`;page.innerHTML=`<div class="card coach-hero"><div><div class="eyebrow">TRUE TRAIN • PT COACHING SYSTEM • V11.9</div><h2>Coach</h2><p>Quản lý client riêng biệt; giữ nguyên Personal Training của bạn.</p><div class="coach-workflow-hint">Clients → Program → Workout → Progress → History &nbsp;&nbsp;•&nbsp;&nbsp; Tools remain available</div></div><button class="btn" id="coachBackDashboard">← Dashboard</button></div><div class="coach-flow-nav"><div class="coach-flow-group"><span class="coach-flow-label">Client Management</span>${btn('clients','Clients')}</div><div class="coach-flow-group"><span class="coach-flow-label">Body & Nutrition</span>${btn('tdee','TDEE')}${btn('macro','Macro')}${btn('nutrition','Nutrition')}</div><div class="coach-flow-group"><span class="coach-flow-label">Training Tools</span>${btn('exercise','Exercise Library')}${btn('muscle','Muscle Map 3D')}</div></div><div id="coachContent"></div>`;document.getElementById('coachBackDashboard').onclick=()=>showPage('dashboard');page.querySelectorAll('[data-coach-tab]').forEach(b=>b.onclick=()=>{state.coach.activeTab=b.dataset.coachTab;saveState({cloudDirty:false});renderCoach();});renderCoachTab(tab);
+      const btn=(id,label)=>`<button data-coach-tab="${id}" class="${tab===id?'active':''}">${label}</button>`;page.innerHTML=`<div class="card coach-hero"><div><div class="eyebrow">TRUE TRAIN • PT COACHING SYSTEM • V12.0</div><h2>Coach</h2><p>Quản lý client riêng biệt; giữ nguyên Personal Training của bạn.</p><div class="coach-workflow-hint">Clients → Program → Workout → Progress → History &nbsp;&nbsp;•&nbsp;&nbsp; Tools remain available</div></div><button class="btn" id="coachBackDashboard">← Dashboard</button></div><div class="coach-flow-nav"><div class="coach-flow-group"><span class="coach-flow-label">Client Management</span>${btn('clients','Clients')}</div><div class="coach-flow-group"><span class="coach-flow-label">Body & Nutrition</span>${btn('tdee','TDEE')}${btn('macro','Macro')}${btn('nutrition','Nutrition')}</div><div class="coach-flow-group"><span class="coach-flow-label">Training Tools</span>${btn('exercise','Exercise Library')}${btn('muscle','Muscle Map 3D')}</div></div><div id="coachContent"></div>`;document.getElementById('coachBackDashboard').onclick=()=>showPage('dashboard');page.querySelectorAll('[data-coach-tab]').forEach(b=>b.onclick=()=>{state.coach.activeTab=b.dataset.coachTab;saveState({cloudDirty:false});renderCoach();});renderCoachTab(tab);
     };
 
 updateCloudStatus();
@@ -9745,8 +9745,8 @@ if(cloudLoggedIn()){
     const copy=document.getElementById('m117CopyLast');if(copy)copy.onclick=()=>{let copied=0;ex.sets.forEach((set,si)=>{const old=v109PreviousSet(ex.name,si);if(!old)return;set.weight=old.weight??'';set.reps=old.reps??'';set.rir=old.rir??'';set.done=isWorkoutSetComplete(set);copied++;});if(copied){saveState();renderWorkout();toast('Đã copy performance gần nhất');}else toast('Chưa có dữ liệu lần trước');};
     const detail=document.getElementById('m117ExerciseDetail');if(detail)detail.onclick=()=>openExerciseDetail(ex);
     const rest=document.getElementById('m117RestOpen');if(rest)rest.onclick=openRestTimerSheet;
-    const prev=document.getElementById('m117PrevExercise');if(prev)prev.onclick=()=>{if(m117TrainIndex>0){m117TrainIndex--;renderWorkout();window.scrollTo({top:0,behavior:'auto'});}};
-    const next=document.getElementById('m117NextExercise');if(next)next.onclick=()=>{if(m117TrainIndex<w.exercises.length-1){m117TrainIndex++;renderWorkout();window.scrollTo({top:0,behavior:'auto'});}};
+    const prev=document.getElementById('m117PrevExercise');if(prev)prev.onclick=()=>{if(m117TrainIndex>0){m117TrainIndex--;const m117Scroll=window.scrollY;renderWorkout();requestAnimationFrame(()=>window.scrollTo({top:m117Scroll,behavior:'auto'}));}};
+    const next=document.getElementById('m117NextExercise');if(next)next.onclick=()=>{if(m117TrainIndex<w.exercises.length-1){m117TrainIndex++;const m117Scroll=window.scrollY;renderWorkout();requestAnimationFrame(()=>window.scrollTo({top:m117Scroll,behavior:'auto'}));}};
     const save=document.getElementById('m117SaveWorkout');if(save)save.onclick=saveWorkoutToHistory;
     syncRestTimerUI();m117UpdateTrainUI(w,ei);
   }
@@ -10000,7 +10000,7 @@ if(cloudLoggedIn()){
 
 
 <style id="v1181-mobile-gap-hotfix">
-/* ===== V11.9 — Mobile Feature Gap Hotfix ===== */
+/* ===== V12.0 — Mobile Feature Gap Hotfix ===== */
 @media (max-width:760px){
   .m118-template-card{margin-bottom:8px!important}
   .m118-template-actions{display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:7px;align-items:center;margin-top:9px}
@@ -10056,11 +10056,46 @@ if(cloudLoggedIn()){
     window.scrollTo(0,0);
   }
   renderMore=function(){const out=baseMore();injectTools();return out;};
-  try{state.version=V1181_VERSION;saveState({cloudDirty:false});}catch(e){console.warn('V11.9 state version',e);}
+  try{state.version=V1181_VERSION;saveState({cloudDirty:false});}catch(e){console.warn('V12.0 state version',e);}
   try{if(window.TRUE_TRAIN_MOBILE_COACH)window.TRUE_TRAIN_MOBILE_COACH.version=V1181_VERSION;if(window.TRUE_TRAIN_MOBILE_PERSONAL)window.TRUE_TRAIN_MOBILE_PERSONAL.version=V1181_VERSION;if(window.TRUE_TRAIN_MOBILE_SHELL)window.TRUE_TRAIN_MOBILE_SHELL.version=V1181_VERSION;}catch(e){}
-  try{if(personalMobile()&&document.getElementById('page-more')?.classList.contains('active'))renderMore();}catch(e){console.warn('V11.9 more refresh',e);}
+  try{if(personalMobile()&&document.getElementById('page-more')?.classList.contains('active'))renderMore();}catch(e){console.warn('V12.0 more refresh',e);}
 })();
 </script>
 
+
+<style id="v120-final-polish">
+/* TRUE TRAIN V12.0 FINAL POLISH */
+@media(max-width:760px){
+  .m117-exercise-head .m117-ex-title,
+  .m117-exercise-head h3,
+  .v11-workout-ex-head b,
+  .v11-program-ex-name b,
+  .exercise-name{
+    font-size:22px !important;
+    line-height:1.25 !important;
+    font-weight:950 !important;
+  }
+  .m117-exercise-head:before{
+    content:"";
+  }
+  .m117-exercise-card,
+  .v11-workout-ex{
+    overflow:hidden;
+  }
+  .m117-exercise-head .m117-ex-title:before{
+    content:counter(exercise);
+  }
+  .v11-workout-ex-head{
+    align-items:flex-start;
+  }
+  .v11-workout-ex-head small{
+    font-size:13px !important;
+  }
+  .v11-client-set input{
+    min-height:42px !important;
+    font-size:16px !important;
+  }
+}
+</style>
 </body>
 </html>
