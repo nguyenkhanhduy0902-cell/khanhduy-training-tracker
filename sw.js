@@ -1,6 +1,6 @@
-/* TRUE TRAIN V11.8.1 — GitHub Pages safe service worker */
+/* TRUE TRAIN V11.9 — GitHub Pages safe service worker */
 const CACHE_PREFIX = 'true-train-';
-const CACHE_NAME = 'true-train-v11-8-1-20260922';
+const CACHE_NAME = 'true-train-v11-9-20260922';
 
 const OPTIONAL_STATIC_ASSETS = [
   './index.html',
