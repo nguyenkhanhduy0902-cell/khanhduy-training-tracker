@@ -1,6 +1,6 @@
-/* TRUE TRAIN V11.8 — GitHub Pages safe service worker */
+/* TRUE TRAIN V11.8.1 — GitHub Pages safe service worker */
 const CACHE_PREFIX = 'true-train-';
-const CACHE_NAME = 'true-train-v11-8-20260922';
+const CACHE_NAME = 'true-train-v11-8-1-20260922';
 
 const OPTIONAL_STATIC_ASSETS = [
   './index.html',
@@ -19,27 +19,19 @@ async function cacheOptionalAssets() {
       try {
         const response = await fetch(asset, { cache: 'no-store' });
         if (response && response.ok) await cache.put(asset, response.clone());
-      } catch (_) {
-        // Optional asset missing/offline: do not block SW installation.
-      }
+      } catch (_) {}
     })
   );
 }
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    cacheOptionalAssets().then(() => self.skipWaiting())
-  );
+  event.waitUntil(cacheOptionalAssets().then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(
-        keys
-          .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      ))
+      .then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -70,31 +62,22 @@ async function networkFirstDocument(request) {
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE_NAME);
   const cached = await caches.match(request, { ignoreSearch: true });
-
   const networkPromise = fetch(request, { cache: 'no-store' })
     .then(async response => {
       if (response && response.ok) await cache.put(request, response.clone());
       return response;
     })
     .catch(() => null);
-
   return cached || (await networkPromise) || Response.error();
 }
 
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
-
   const url = new URL(request.url);
-
-  // HTML/navigation always checks network first so a new GitHub deploy wins.
   if (request.mode === 'navigate' || request.destination === 'document') {
     event.respondWith(networkFirstDocument(request));
     return;
   }
-
-  // Cache same-origin static resources only. External/API traffic is untouched.
-  if (url.origin === self.location.origin) {
-    event.respondWith(staleWhileRevalidate(request));
-  }
+  if (url.origin === self.location.origin) event.respondWith(staleWhileRevalidate(request));
 });
