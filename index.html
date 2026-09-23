@@ -4553,7 +4553,7 @@ body:not(.auth-locked) .auth-gate{
       document.getElementById('quickWorkout')?.addEventListener('click',openToday); document.getElementById('quickWorkout')?.addEventListener('touchend',e=>{e.preventDefault();openToday();},{passive:false});
       document.getElementById('quickPlan')?.addEventListener('click',()=>showPage('schedule')); document.getElementById('quickPlan')?.addEventListener('touchend',e=>{e.preventDefault();showPage('schedule');},{passive:false});
       document.getElementById('quickProgress')?.addEventListener('click',()=>showPage('progress')); document.getElementById('quickProgress')?.addEventListener('touchend',e=>{e.preventDefault();showPage('progress');},{passive:false});
-      document.getElementById('quickLibrary')?.addEventListener('click',()=>showPage('coach')); document.getElementById('quickLibrary')?.addEventListener('touchend',e=>{e.preventDefault();showPage('coach');},{passive:false});
+      document.getElementById('quickLibrary')?.addEventListener('click',()=>{state.coach.activeTab='exercise';saveState({cloudDirty:false});showPage('coach');}); document.getElementById('quickLibrary')?.addEventListener('touchend',e=>{e.preventDefault();state.coach.activeTab='exercise';saveState({cloudDirty:false});showPage('coach');},{passive:false});
       page.querySelectorAll('[data-dashboard-day]').forEach(b=>b.addEventListener('click',()=>{
         state.scheduleEditorDay=b.dataset.dashboardDay;
         saveState({cloudDirty:false});
