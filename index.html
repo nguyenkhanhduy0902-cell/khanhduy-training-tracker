@@ -4515,6 +4515,16 @@ body:not(.auth-locked) .auth-gate{
             <div class="tt-dash-kpi"><small>Effective Volume</small><b>${fmtVolume(stats.effectiveDone)}</b><span>Direct + indirect tuần này</span></div>
           </div>
 
+          <section class="tt-dash-section tt-quick-access">
+            <div class="tt-dash-section-head"><div><b>Quick Access</b><span>Mở nhanh các khu vực thường dùng.</span></div></div>
+            <div class="tt-quick-grid">
+              <button class="tt-quick-card" id="quickWorkout"><b>Workout</b><span>Start training</span></button>
+              <button class="tt-quick-card" id="quickPlan"><b>Plan</b><span>Training schedule</span></button>
+              <button class="tt-quick-card" id="quickProgress"><b>Progress</b><span>Analytics</span></button>
+              <button class="tt-quick-card" id="quickLibrary"><b>Library</b><span>Exercises</span></button>
+            </div>
+          </section>
+
           <div class="tt-dash-bottom">
             <section class="tt-dash-panel">
               <div class="tt-dash-section-head"><div><b>Volume Overview</b><span>Volume hiệu dụng đã làm / kế hoạch.</span></div><button class="tt-dash-link" id="dashboardVolume">VOLUME</button></div>
@@ -4540,6 +4550,10 @@ body:not(.auth-locked) .auth-gate{
       document.getElementById('dashboardVolume')?.addEventListener('click',()=>showPage('volume'));
       document.getElementById('dashboardHistory')?.addEventListener('click',()=>showPage('history'));
       document.getElementById('dashboardHistory2')?.addEventListener('click',()=>showPage('history'));
+      document.getElementById('quickWorkout')?.addEventListener('click',openToday); document.getElementById('quickWorkout')?.addEventListener('touchend',e=>{e.preventDefault();openToday();},{passive:false});
+      document.getElementById('quickPlan')?.addEventListener('click',()=>showPage('schedule')); document.getElementById('quickPlan')?.addEventListener('touchend',e=>{e.preventDefault();showPage('schedule');},{passive:false});
+      document.getElementById('quickProgress')?.addEventListener('click',()=>showPage('progress')); document.getElementById('quickProgress')?.addEventListener('touchend',e=>{e.preventDefault();showPage('progress');},{passive:false});
+      document.getElementById('quickLibrary')?.addEventListener('click',()=>showPage('coach')); document.getElementById('quickLibrary')?.addEventListener('touchend',e=>{e.preventDefault();showPage('coach');},{passive:false});
       page.querySelectorAll('[data-dashboard-day]').forEach(b=>b.addEventListener('click',()=>{
         state.scheduleEditorDay=b.dataset.dashboardDay;
         saveState({cloudDirty:false});
