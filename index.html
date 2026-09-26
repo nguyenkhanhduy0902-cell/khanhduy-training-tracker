@@ -3473,13 +3473,15 @@ body:not(.auth-locked) .auth-gate{
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_VERSION = '13.0';
+    const APP_VERSION = '13.1';
     // V11.1.1 Desktop Stability: core scope is intentionally global so legacy patch layers can extend the same runtime.
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
     const BACKUP_ROLLBACK_KEY = 'gymTrackerBackupRollbackV13';
     const BACKUP_FORMAT = 'TRUE_TRAIN_BACKUP';
     const BACKUP_SCHEMA_VERSION = 1;
+    const DATA_VERSION = 1;
+    const MIGRATION_SNAPSHOT_KEY = 'gymTrackerMigrationSnapshotV13';
     const CLOUD_PROJECT_URL = 'https://douurybhrzojpjwxmzxs.supabase.co';
     const CLOUD_PUBLISHABLE_KEY = 'sb_publishable_joNj-U2HI2GtxqlihpUROA_0ESKczbF';
     const CLOUD_EMAIL_REDIRECT = 'https://nguyenkhanhduy0902-cell.github.io/khanhduy-training-tracker/';
@@ -3704,7 +3706,8 @@ body:not(.auth-locked) .auth-gate{
         currentWorkout: null,
         settings:{ indirectFactor:0.5, restSeconds:90 },
         coach: defaultCoachState(),
-        version: 6
+        version: 6,
+        dataVersion: DATA_VERSION
       };
     }
     function migrateState(x){
@@ -3745,13 +3748,68 @@ body:not(.auth-locked) .auth-gate{
       x.version=6.4;
       return x;
     }
+
+    // V13.1 Data Migration System
+    function readDataVersion(source){
+      const n=Number(source?.dataVersion);
+      return Number.isInteger(n)&&n>=0?n:0;
+    }
+    function validateCoreState(source){
+      if(!source||typeof source!=='object'||Array.isArray(source)) throw new Error('State không phải object hợp lệ.');
+      if(!source.schedule||typeof source.schedule!=='object'||Array.isArray(source.schedule)) throw new Error('Schedule không hợp lệ.');
+      if(!Array.isArray(source.history)) throw new Error('History không hợp lệ.');
+      if(source.bodyProgress!=null&&!Array.isArray(source.bodyProgress)) throw new Error('Body Progress không hợp lệ.');
+      if(source.coach!=null&&(typeof source.coach!=='object'||Array.isArray(source.coach))) throw new Error('Coach data không hợp lệ.');
+      return true;
+    }
+    const DATA_MIGRATIONS = {
+      0(source){
+        // v0 -> v1 establishes explicit schema identity only; legacy normalization stays in migrateState().
+        source.dataVersion=1;
+        return source;
+      }
+    };
+    function runDataMigrations(source){
+      validateCoreState(source);
+      let working=deepClone(source);
+      const fromVersion=readDataVersion(working);
+      if(fromVersion>DATA_VERSION) throw new Error(`Data version ${fromVersion} mới hơn app hỗ trợ (${DATA_VERSION}).`);
+      let current=fromVersion;
+      while(current<DATA_VERSION){
+        const migrate=DATA_MIGRATIONS[current];
+        if(typeof migrate!=='function') throw new Error(`Thiếu migration v${current} → v${current+1}.`);
+        working=migrate(working);
+        const next=readDataVersion(working);
+        if(next!==current+1) throw new Error(`Migration v${current} không tạo đúng dataVersion ${current+1}.`);
+        current=next;
+      }
+      working=migrateState(working);
+      working.dataVersion=DATA_VERSION;
+      validateCoreState(working);
+      return {state:working,fromVersion,toVersion:DATA_VERSION,migrated:fromVersion!==DATA_VERSION};
+    }
+    function initializeStateWithMigrations(){
+      const loaded=loadState();
+      const fromVersion=readDataVersion(loaded);
+      if(fromVersion<DATA_VERSION){
+        try{localStorage.setItem(MIGRATION_SNAPSHOT_KEY,JSON.stringify(buildBackupPayload(loaded)));}
+        catch(err){console.warn('V13.1 migration snapshot failed',err);}
+      }
+      try{
+        const result=runDataMigrations(loaded);
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(result.state));
+        return result.state;
+      }catch(err){
+        console.error('V13.1 data migration aborted; original state preserved.',err);
+        return loaded;
+      }
+    }
     let authRecoveryMode = false;
     let cloud = loadCloudConfig();
     const authRedirectHandled = handleAuthRedirect();
     let cloudSyncTimer = null;
     let cloudBusy = false;
-    let state = migrateState(loadState());
-    saveState({cloudDirty:false});
+    let state = initializeStateWithMigrations();
     let activePage = 'dashboard';
     let coach3D = null;
 
@@ -5568,7 +5626,7 @@ body:not(.auth-locked) .auth-gate{
         </div>
 
         <div class="grid2" style="margin-top:18px">
-          <div class="card pad v130-backup-card"><div class="section-head"><div><h3>Backup / Restore <span class="v130-badge">V13.0</span></h3><p>Backup có version + kiểm tra dữ liệu trước khi restore. Không xuất token đăng nhập cloud.</p></div></div><div class="v130-backup-summary"><b>Backup hiện tại</b><span>${backupStats(state).plannedExercises} bài plan • ${backupStats(state).historySessions} buổi history • ${backupStats(state).clients} clients • ${backupStats(state).bodyProgress} body records</span></div><div class="data-actions"><button class="btn primary" id="exportJson">Tải backup JSON</button><label class="btn" for="importJson">Restore từ JSON</label><input id="importJson" type="file" accept="application/json,.json" style="display:none"><button class="btn" id="restoreRollback">Rollback lần restore gần nhất</button></div><div class="cloud-help">Restore hỗ trợ cả backup JSON cũ. Trước mỗi restore, TRUE TRAIN tự giữ 1 snapshot local để có thể quay lại.</div></div>
+          <div class="card pad v130-backup-card"><div class="section-head"><div><h3>Backup / Restore <span class="v130-badge">V13.1</span></h3><p>Backup có version + kiểm tra dữ liệu trước khi restore. Không xuất token đăng nhập cloud.</p></div></div><div class="v130-backup-summary"><b>Backup hiện tại</b><span>${backupStats(state).plannedExercises} bài plan • ${backupStats(state).historySessions} buổi history • ${backupStats(state).clients} clients • ${backupStats(state).bodyProgress} body records</span></div><div class="data-actions"><button class="btn primary" id="exportJson">Tải backup JSON</button><label class="btn" for="importJson">Restore từ JSON</label><input id="importJson" type="file" accept="application/json,.json" style="display:none"><button class="btn" id="restoreRollback">Rollback lần restore gần nhất</button></div><div class="cloud-help">Restore hỗ trợ cả backup JSON cũ. Trước mỗi restore, TRUE TRAIN tự giữ 1 snapshot local để có thể quay lại.</div></div>
           <div class="card pad"><div class="section-head"><div><h3>Xuất dữ liệu</h3><p>CSV mở được bằng Excel / Google Sheets.</p></div></div><div class="data-actions"><button class="btn" id="exportScheduleCsv">Xuất lịch tập CSV</button><button class="btn" id="exportHistoryCsv">Xuất nhật ký CSV</button></div></div>
         </div>
         <div class="card pad" style="margin-top:18px"><div class="section-head"><div><h3>Reset ứng dụng</h3><p>Khôi phục chương trình mặc định và xóa toàn bộ nhật ký trên thiết bị này. Cloud không tự xóa.</p></div></div><button class="btn danger" id="resetAll">Reset toàn bộ dữ liệu local</button></div>`;
@@ -5687,7 +5745,7 @@ body:not(.auth-locked) .auth-gate{
       return {scheduleDays:scheduleDays.length,plannedExercises,historySessions:history.length,historySets,clients,bodyProgress};
     }
     function buildBackupPayload(source=state){
-      return {format:BACKUP_FORMAT,schemaVersion:BACKUP_SCHEMA_VERSION,appVersion:APP_VERSION,exportedAt:new Date().toISOString(),stats:backupStats(source),data:deepClone(source)};
+      return {format:BACKUP_FORMAT,schemaVersion:BACKUP_SCHEMA_VERSION,dataVersion:readDataVersion(source),appVersion:APP_VERSION,exportedAt:new Date().toISOString(),stats:backupStats(source),data:deepClone(source)};
     }
     function normalizeBackupPayload(raw){
       if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new Error('Backup phải là JSON object.');
@@ -5698,11 +5756,11 @@ body:not(.auth-locked) .auth-gate{
       if(!Array.isArray(data.history))throw new Error('History không hợp lệ.');
       if(data.bodyProgress!=null&&!Array.isArray(data.bodyProgress))throw new Error('Body Progress không hợp lệ.');
       if(data.coach!=null&&(typeof data.coach!=='object'||Array.isArray(data.coach)))throw new Error('Coach data không hợp lệ.');
-      return {data:deepClone(data),legacy,meta:{format:legacy?'LEGACY':raw.format,schemaVersion:legacy?0:Number(raw.schemaVersion||0),appVersion:legacy?'V12 hoặc cũ':String(raw.appVersion||'Không rõ'),exportedAt:legacy?null:raw.exportedAt||null}};
+      return {data:deepClone(data),legacy,meta:{format:legacy?'LEGACY':raw.format,schemaVersion:legacy?0:Number(raw.schemaVersion||0),dataVersion:legacy?readDataVersion(data):Number(raw.dataVersion??readDataVersion(data)),appVersion:legacy?'V12 hoặc cũ':String(raw.appVersion||'Không rõ'),exportedAt:legacy?null:raw.exportedAt||null}};
     }
     function backupSummaryText(data,meta={}){
       const st=backupStats(data),when=meta.exportedAt?new Date(meta.exportedAt).toLocaleString('vi-VN'):'Không có metadata thời gian';
-      return `Backup: ${meta.appVersion||'Không rõ'} • ${when}\n${st.plannedExercises} bài trong plan • ${st.historySessions} buổi history • ${st.historySets} sets • ${st.clients} clients • ${st.bodyProgress} body records`;
+      return `Backup: ${meta.appVersion||'Không rõ'} • Data v${Number.isFinite(Number(meta.dataVersion))?Number(meta.dataVersion):'?'} • ${when}\n${st.plannedExercises} bài trong plan • ${st.historySessions} buổi history • ${st.historySets} sets • ${st.clients} clients • ${st.bodyProgress} body records`;
     }
     function exportBackup(){
       const payload=buildBackupPayload(state);
@@ -5714,9 +5772,9 @@ body:not(.auth-locked) .auth-gate{
       const r=new FileReader();
       r.onload=()=>{try{
         const parsed=JSON.parse(r.result),pack=normalizeBackupPayload(parsed);
-        const candidate=migrateState(pack.data);
+        const migration=runDataMigrations(pack.data),candidate=migration.state;
         const summary=backupSummaryText(candidate,pack.meta)+(pack.legacy?'\n\nFile cũ sẽ được nâng cấp sang cấu trúc hiện tại khi restore.':'');
-        confirmBox('Restore backup TRUE TRAIN',`${summary}\n\nDữ liệu hiện tại trên máy sẽ được thay thế. V13.0 sẽ giữ 1 snapshot rollback trước khi restore.`,()=>{
+        confirmBox('Restore backup TRUE TRAIN',`${summary}\n\nDữ liệu hiện tại trên máy sẽ được thay thế. V13.1 sẽ giữ 1 snapshot rollback trước khi restore.`,()=>{
           try{
             localStorage.setItem(BACKUP_ROLLBACK_KEY,JSON.stringify(buildBackupPayload(state)));
             state=candidate;
@@ -5734,7 +5792,7 @@ body:not(.auth-locked) .auth-gate{
       try{
         const raw=localStorage.getItem(BACKUP_ROLLBACK_KEY);
         if(!raw){toast('Chưa có snapshot rollback');return;}
-        const pack=normalizeBackupPayload(JSON.parse(raw)),candidate=migrateState(pack.data);
+        const pack=normalizeBackupPayload(JSON.parse(raw)),candidate=runDataMigrations(pack.data).state;
         confirmBox('Khôi phục dữ liệu trước lần restore gần nhất',`${backupSummaryText(candidate,pack.meta)}\n\nDữ liệu hiện tại sẽ được thay bằng snapshot này.`,()=>{
           const current=JSON.stringify(buildBackupPayload(state));
           state=candidate;saveState();localStorage.setItem(BACKUP_ROLLBACK_KEY,current);
@@ -10153,7 +10211,7 @@ if(cloudLoggedIn()){
 
 
 <style id="v120-final-polish">
-/* TRUE TRAIN V13.0 BUILD - Backup & Restore safety upgrade */
+/* TRUE TRAIN V13.1 BUILD - Versioned Data Migration System */
 /* TRUE TRAIN V12.0 FINAL POLISH */
 @media(max-width:760px){
   .m117-exercise-head .m117-ex-title,
