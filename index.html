@@ -3473,7 +3473,7 @@ body:not(.auth-locked) .auth-gate{
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_VERSION = '13.1';
+    const APP_VERSION = '13.2';
     // V11.1.1 Desktop Stability: core scope is intentionally global so legacy patch layers can extend the same runtime.
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
@@ -5626,7 +5626,7 @@ body:not(.auth-locked) .auth-gate{
         </div>
 
         <div class="grid2" style="margin-top:18px">
-          <div class="card pad v130-backup-card"><div class="section-head"><div><h3>Backup / Restore <span class="v130-badge">V13.1</span></h3><p>Backup có version + kiểm tra dữ liệu trước khi restore. Không xuất token đăng nhập cloud.</p></div></div><div class="v130-backup-summary"><b>Backup hiện tại</b><span>${backupStats(state).plannedExercises} bài plan • ${backupStats(state).historySessions} buổi history • ${backupStats(state).clients} clients • ${backupStats(state).bodyProgress} body records</span></div><div class="data-actions"><button class="btn primary" id="exportJson">Tải backup JSON</button><label class="btn" for="importJson">Restore từ JSON</label><input id="importJson" type="file" accept="application/json,.json" style="display:none"><button class="btn" id="restoreRollback">Rollback lần restore gần nhất</button></div><div class="cloud-help">Restore hỗ trợ cả backup JSON cũ. Trước mỗi restore, TRUE TRAIN tự giữ 1 snapshot local để có thể quay lại.</div></div>
+          <div class="card pad v130-backup-card"><div class="section-head"><div><h3>Backup / Restore <span class="v130-badge">V13.2</span></h3><p>Backup có version + kiểm tra dữ liệu trước khi restore. Không xuất token đăng nhập cloud.</p></div></div><div class="v130-backup-summary"><b>Backup hiện tại</b><span>${backupStats(state).plannedExercises} bài plan • ${backupStats(state).historySessions} buổi history • ${backupStats(state).clients} clients • ${backupStats(state).bodyProgress} body records</span></div><div class="data-actions"><button class="btn primary" id="exportJson">Tải backup JSON</button><label class="btn" for="importJson">Restore từ JSON</label><input id="importJson" type="file" accept="application/json,.json" style="display:none"><button class="btn" id="restoreRollback">Rollback lần restore gần nhất</button></div><div class="cloud-help">Restore hỗ trợ cả backup JSON cũ. Trước mỗi restore, TRUE TRAIN tự giữ 1 snapshot local để có thể quay lại.</div></div>
           <div class="card pad"><div class="section-head"><div><h3>Xuất dữ liệu</h3><p>CSV mở được bằng Excel / Google Sheets.</p></div></div><div class="data-actions"><button class="btn" id="exportScheduleCsv">Xuất lịch tập CSV</button><button class="btn" id="exportHistoryCsv">Xuất nhật ký CSV</button></div></div>
         </div>
         <div class="card pad" style="margin-top:18px"><div class="section-head"><div><h3>Reset ứng dụng</h3><p>Khôi phục chương trình mặc định và xóa toàn bộ nhật ký trên thiết bị này. Cloud không tự xóa.</p></div></div><button class="btn danger" id="resetAll">Reset toàn bộ dữ liệu local</button></div>`;
@@ -10211,7 +10211,7 @@ if(cloudLoggedIn()){
 
 
 <style id="v120-final-polish">
-/* TRUE TRAIN V13.1 BUILD - Versioned Data Migration System */
+/* TRUE TRAIN V13.2 BUILD - Developer Mode + Diagnostics */
 /* TRUE TRAIN V12.0 FINAL POLISH */
 @media(max-width:760px){
   .m117-exercise-head .m117-ex-title,
@@ -10264,6 +10264,122 @@ if(cloudLoggedIn()){
 .v130-backup-summary b{font-size:11px;color:#dff9ff}.v130-backup-summary span{font-size:9px;color:#8ca5b7;line-height:1.5}
 @media(max-width:760px){.v130-backup-card .data-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v130-backup-card .data-actions>*{min-width:0;white-space:normal}.v130-backup-card #restoreRollback{grid-column:1/-1}}
 </style>
+
+<style id="v132-developer-mode-style">
+.v132-dev-section{margin-top:14px}.v132-dev-toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:14px;border:1px solid rgba(53,216,255,.14);border-radius:16px;background:linear-gradient(180deg,#111b31,#0d1629);color:#fff;text-align:left}.v132-dev-toggle b{display:block;font-size:13px}.v132-dev-toggle small{display:block;margin-top:4px;color:#8ca5b7;font-size:9px;line-height:1.45}.v132-switch{position:relative;width:44px;height:24px;flex:0 0 auto;border-radius:999px;background:#253247;border:1px solid rgba(255,255,255,.12)}.v132-switch:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#91a4b7;transition:.18s}.v132-dev-toggle.on .v132-switch{background:rgba(53,216,255,.18);border-color:rgba(53,216,255,.45)}.v132-dev-toggle.on .v132-switch:after{left:23px;background:#70e5ff}.v132-dev-panel{margin-top:10px;padding:14px;border:1px solid rgba(53,216,255,.13);border-radius:16px;background:rgba(8,18,32,.78)}.v132-dev-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.v132-dev-head h3{margin:0;font-size:15px}.v132-dev-head p{margin:4px 0 0;color:#8ca5b7;font-size:9px;line-height:1.5}.v132-dev-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.v132-dev-kpi{padding:10px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);min-width:0}.v132-dev-kpi span{display:block;color:#7990a4;font-size:8px;text-transform:uppercase;letter-spacing:.06em}.v132-dev-kpi b{display:block;margin-top:4px;font-size:12px;overflow-wrap:anywhere}.v132-dev-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.v132-dev-result{margin-top:10px;padding:11px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);font-size:10px;line-height:1.55;color:#a9bac9}.v132-dev-result.pass{border-color:rgba(52,211,153,.2);color:#b9f6d8}.v132-dev-result.warn{border-color:rgba(251,191,36,.22);color:#ffe3a0}.v132-dev-log{max-height:180px;overflow:auto;margin-top:10px}.v132-dev-log-row{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:9px;line-height:1.45;color:#9fb0bf}.v132-dev-log-row:last-child{border-bottom:0}.v132-dev-log-row b{color:#dcecf6}.v132-dev-empty{font-size:9px;color:#71879a}.v132-dev-badge{display:inline-flex;padding:3px 7px;border-radius:999px;background:rgba(53,216,255,.08);border:1px solid rgba(53,216,255,.2);color:#70e5ff;font-size:8px;font-weight:900}
+@media(max-width:760px){.v132-dev-section{margin:12px 0}.v132-dev-grid{grid-template-columns:1fr 1fr}.v132-dev-actions{display:grid;grid-template-columns:1fr 1fr}.v132-dev-actions .btn{min-width:0;white-space:normal}.v132-dev-panel{padding:12px}.v132-dev-head{flex-direction:column}.v132-dev-kpi b{font-size:11px}}
+</style>
+<script id="v132-developer-mode-script">
+(()=>{
+  const DEV_MODE_KEY='trueTrainDevModeV13';
+  const DEV_LOG_KEY='trueTrainDevErrorLogV13';
+  const DEV_LOG_LIMIT=40;
+  function v132ReadDevMode(){try{return localStorage.getItem(DEV_MODE_KEY)==='1';}catch(_){return false;}}
+  function v132WriteDevMode(on){try{localStorage.setItem(DEV_MODE_KEY,on?'1':'0');}catch(_){}return !!on;}
+  function v132Scrub(value){
+    let s=String(value??'');
+    try{
+      if(typeof cloud!=='undefined'){
+        [cloud.publishableKey,cloud?.session?.access_token,cloud?.session?.refresh_token,cloud.email,cloud?.session?.user_id].filter(Boolean).forEach(secret=>{s=s.split(String(secret)).join('[redacted]');});
+      }
+    }catch(_){}
+    s=s.replace(/sb_(?:publishable|secret)_[A-Za-z0-9._-]+/g,'[redacted-key]')
+       .replace(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g,'[redacted-token]')
+       .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,'[redacted-email]');
+    return s.slice(0,900);
+  }
+  function v132ReadLogs(){try{const x=JSON.parse(localStorage.getItem(DEV_LOG_KEY)||'[]');return Array.isArray(x)?x.slice(-DEV_LOG_LIMIT):[];}catch(_){return [];}}
+  function v132SaveLogs(rows){try{localStorage.setItem(DEV_LOG_KEY,JSON.stringify(rows.slice(-DEV_LOG_LIMIT)));}catch(_){} }
+  function v132LogError(message,module='runtime',stack=''){
+    const rows=v132ReadLogs();rows.push({at:new Date().toISOString(),module:v132Scrub(module),message:v132Scrub(message),stack:v132Scrub(stack)});v132SaveLogs(rows);
+  }
+  window.addEventListener('error',e=>v132LogError(e?.message||'Window error',e?.filename?'runtime':'window',e?.error?.stack||''));
+  window.addEventListener('unhandledrejection',e=>{const r=e?.reason;v132LogError(r?.message||String(r||'Unhandled rejection'),'promise',r?.stack||'');});
+
+  function v132AllExerciseRefs(){
+    const rows=[];const add=(ex,where)=>{if(ex&&typeof ex==='object')rows.push({ex,where});};
+    Object.entries(state?.schedule||{}).forEach(([day,s])=>(s?.exercises||[]).forEach(ex=>add(ex,`Personal Schedule/${day}`)));
+    (state?.history||[]).forEach((h,hi)=>(h?.exercises||[]).forEach(ex=>add(ex,`Personal History/${hi}`)));
+    (state?.currentWorkout?.exercises||[]).forEach(ex=>add(ex,'Personal Current Workout'));
+    (state?.clients||[]).forEach((c,ci)=>{
+      Object.entries(c?.schedule||{}).forEach(([day,s])=>(s?.exercises||[]).forEach(ex=>add(ex,`Client ${ci+1} Schedule/${day}`)));
+      (c?.history||[]).forEach((h,hi)=>(h?.exercises||[]).forEach(ex=>add(ex,`Client ${ci+1} History/${hi}`)));
+      (c?.currentWorkout?.exercises||[]).forEach(ex=>add(ex,`Client ${ci+1} Current Workout`));
+    });
+    return rows;
+  }
+  function v132Counts(){
+    const clients=Array.isArray(state?.clients)?state.clients:[];
+    const programs=clients.filter(c=>c&&c.program&&typeof c.program==='object').length;
+    const clientHistory=clients.reduce((n,c)=>n+(Array.isArray(c?.history)?c.history.length:0),0);
+    return {clients:clients.length,programs,history:(Array.isArray(state?.history)?state.history.length:0)+clientHistory,body:(Array.isArray(state?.bodyProgress)?state.bodyProgress.length:0)+clients.reduce((n,c)=>n+(Array.isArray(c?.bodyProgress)?c.bodyProgress.length:0),0),current:(state?.currentWorkout?1:0)+clients.reduce((n,c)=>n+(c?.currentWorkout?1:0),0)};
+  }
+  function v132CloudStatus(){
+    try{if(typeof cloud==='undefined')return 'Unavailable';if(!cloud.projectUrl||!cloud.publishableKey)return 'Not configured';if(!cloud.session)return 'Configured • signed out';if(cloud.conflict)return 'Conflict';if(cloud.dirty)return 'Local changes';return cloud.ready?'Ready / synced':'Signed in';}catch(_){return 'Unavailable';}
+  }
+  function v132StorageStatus(){try{const raw=localStorage.getItem(STORAGE_KEY);return raw?`OK • ${(raw.length/1024).toFixed(1)} KB`:'Empty';}catch(_){return 'Unavailable';}}
+  function v132Integrity(){
+    const issues=[];let checkedExercises=0;
+    try{validateCoreState(state);}catch(err){issues.push(`Core state: ${v132Scrub(err.message)}`);}
+    const clients=Array.isArray(state?.clients)?state.clients:[];
+    const ids=new Map();clients.forEach((c,i)=>{const id=String(c?.id||'').trim();if(!id)issues.push(`Client #${i+1}: thiếu Client ID`);else if(ids.has(id))issues.push(`Duplicate Client ID: ${id}`);else ids.set(id,i);});
+    const active=String(state?.coach?.activeClientId||'').trim();if(active&&!clients.some(c=>String(c?.id||'')===active))issues.push('Active Client ID không tồn tại trong client list');
+    v132AllExerciseRefs().forEach(({ex,where})=>{checkedExercises++;if(!String(ex?.exerciseId||'').trim())issues.push(`${where}: ${String(ex?.name||'Exercise')} thiếu exerciseId`);});
+    const sessionIds=new Map();
+    const touchSession=(h,where)=>{if(!h||typeof h!=='object'){issues.push(`${where}: session không hợp lệ`);return;}if(!Array.isArray(h.exercises))issues.push(`${where}: exercises không phải array`);const id=String(h.id||h.sessionId||'').trim();if(id){if(sessionIds.has(id))issues.push(`Duplicate session/workout ID: ${id}`);else sessionIds.set(id,where);}};
+    (state?.history||[]).forEach((h,i)=>touchSession(h,`Personal History #${i+1}`));if(state?.currentWorkout)touchSession(state.currentWorkout,'Personal Current Workout');
+    clients.forEach((c,ci)=>{(c?.history||[]).forEach((h,hi)=>touchSession(h,`Client ${ci+1} History #${hi+1}`));if(c?.currentWorkout)touchSession(c.currentWorkout,`Client ${ci+1} Current Workout`);});
+    return {ok:issues.length===0,issues:issues.slice(0,30),checkedExercises,clients:clients.length};
+  }
+  function v132DiagnosticReport(){
+    const c=v132Counts(),integrity=v132Integrity(),logs=v132ReadLogs();
+    return [
+      'TRUE TRAIN DIAGNOSTIC REPORT',
+      `Generated: ${new Date().toISOString()}`,
+      `App Version: ${typeof APP_VERSION!=='undefined'?APP_VERSION:'?'}`,
+      `Data Version: ${typeof DATA_VERSION!=='undefined'?DATA_VERSION:'?'}`,
+      `Storage: ${v132StorageStatus()}`,
+      `Cloud: ${v132CloudStatus()}`,
+      `Active Client ID: ${state?.coach?.activeClientId? '[present]' : 'none'}`,
+      `Clients: ${c.clients}`,
+      `Programs: ${c.programs}`,
+      `History Sessions: ${c.history}`,
+      `Current Workouts: ${c.current}`,
+      `Body Progress Records: ${c.body}`,
+      `Integrity: ${integrity.ok?'PASS':`WARN (${integrity.issues.length})`}`,
+      ...(integrity.issues.length?integrity.issues.map(x=>`- ${v132Scrub(x)}`):[]),
+      `Error Log Entries: ${logs.length}`,
+      ...logs.slice(-10).map(x=>`[${x.at}] ${x.module}: ${x.message}`)
+    ].join('\n');
+  }
+  async function v132CopyReport(){
+    const report=v132DiagnosticReport();
+    try{await navigator.clipboard.writeText(report);toast('Đã copy Diagnostic Report');}
+    catch(_){const ta=document.createElement('textarea');ta.value=report;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Đã copy Diagnostic Report');}
+  }
+  function v132PanelHtml(){
+    const c=v132Counts(),logs=v132ReadLogs();
+    return `<div class="v132-dev-panel" id="v132DevPanel"><div class="v132-dev-head"><div><h3>Developer Tools <span class="v132-dev-badge">V13.2</span></h3><p>Diagnostics only • không chỉnh business data.</p></div></div><div class="v132-dev-grid"><div class="v132-dev-kpi"><span>App Version</span><b>${escapeHtml(String(APP_VERSION))}</b></div><div class="v132-dev-kpi"><span>Data Version</span><b>${escapeHtml(String(DATA_VERSION))}</b></div><div class="v132-dev-kpi"><span>Local Storage</span><b>${escapeHtml(v132StorageStatus())}</b></div><div class="v132-dev-kpi"><span>Cloud</span><b>${escapeHtml(v132CloudStatus())}</b></div><div class="v132-dev-kpi"><span>Active Client</span><b>${state?.coach?.activeClientId?'Present':'None'}</b></div><div class="v132-dev-kpi"><span>Clients / Programs</span><b>${c.clients} / ${c.programs}</b></div><div class="v132-dev-kpi"><span>History / Workouts</span><b>${c.history} / ${c.current}</b></div><div class="v132-dev-kpi"><span>Body Progress</span><b>${c.body}</b></div></div><div class="v132-dev-actions"><button class="btn primary" id="v132IntegrityBtn">Run Data Integrity Check</button><button class="btn" id="v132CopyReport">Copy Diagnostic Report</button><button class="btn" id="v132ClearErrors">Clear Error Log (${logs.length})</button></div><div class="v132-dev-result" id="v132IntegrityResult">Integrity check chưa chạy.</div><div class="v132-dev-log" id="v132DevLog">${logs.length?logs.slice().reverse().slice(0,10).map(x=>`<div class="v132-dev-log-row"><b>${escapeHtml(new Date(x.at).toLocaleString('vi-VN'))} • ${escapeHtml(x.module)}</b><br>${escapeHtml(x.message)}</div>`).join(''):'<div class="v132-dev-empty">Chưa có runtime error được ghi nhận.</div>'}</div></div>`;
+  }
+  function v132InjectDeveloperMode(){
+    const page=document.getElementById('page-more');if(!page||page.querySelector('#v132DevSection'))return;
+    const section=document.createElement('div');section.id='v132DevSection';section.className='v132-dev-section';
+    const on=v132ReadDevMode();
+    section.innerHTML=`<button class="v132-dev-toggle ${on?'on':''}" id="v132DevToggle"><div><b>Developer Mode</b><small>${on?'ON • diagnostics đang hiển thị':'OFF • bật khi cần kiểm tra kỹ thuật'}</small></div><span class="v132-switch" aria-hidden="true"></span></button>${on?v132PanelHtml():''}`;
+    const mobileRoot=page.querySelector('.m117-more');
+    if(mobileRoot){const appGroup=document.createElement('div');appGroup.className='m117-more-group';appGroup.innerHTML='<div class="m117-more-label">APP</div><div class="m117-card" style="padding:10px"></div>';appGroup.querySelector('.m117-card').appendChild(section);mobileRoot.appendChild(appGroup);}
+    else{const labels=[...page.querySelectorAll('.v8-menu-label')],appLabel=labels.find(x=>x.textContent.trim()==='APP');const appMenu=appLabel?.nextElementSibling;if(appMenu)appMenu.insertAdjacentElement('afterend',section);else page.appendChild(section);}
+    const toggle=document.getElementById('v132DevToggle');if(toggle)toggle.onclick=()=>{v132WriteDevMode(!v132ReadDevMode());renderMore();};
+    const integrityBtn=document.getElementById('v132IntegrityBtn');if(integrityBtn)integrityBtn.onclick=()=>{const r=v132Integrity(),out=document.getElementById('v132IntegrityResult');out.className=`v132-dev-result ${r.ok?'pass':'warn'}`;out.innerHTML=r.ok?`PASS • ${r.checkedExercises} exercise references • ${r.clients} clients • không phát hiện lỗi integrity cơ bản.`:`WARN • ${r.issues.length} vấn đề:<br>${r.issues.map(x=>`• ${escapeHtml(x)}`).join('<br>')}`;};
+    const copyBtn=document.getElementById('v132CopyReport');if(copyBtn)copyBtn.onclick=v132CopyReport;
+    const clearBtn=document.getElementById('v132ClearErrors');if(clearBtn)clearBtn.onclick=()=>{v132SaveLogs([]);toast('Đã xóa Error Log');renderMore();};
+  }
+  const v132RenderMoreBase=renderMore;
+  renderMore=function(){const out=v132RenderMoreBase();v132InjectDeveloperMode();return out;};
+  window.TRUE_TRAIN_DEV={version:'13.2',runIntegrity:v132Integrity,diagnosticReport:v132DiagnosticReport,readErrors:v132ReadLogs};
+  try{if(document.getElementById('page-more')?.classList.contains('active'))renderMore();}catch(err){v132LogError(err?.message||err,'developer-mode-init',err?.stack||'');}
+})();
+</script>
 </body>
 </html><style>
 /* V12.0.5 PERSONAL HOME HERO POLISH */
