@@ -3473,7 +3473,7 @@ body:not(.auth-locked) .auth-gate{
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_VERSION = '13.2';
+    const APP_VERSION = '13.3';
     // V11.1.1 Desktop Stability: core scope is intentionally global so legacy patch layers can extend the same runtime.
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
@@ -3482,6 +3482,18 @@ body:not(.auth-locked) .auth-gate{
     const BACKUP_SCHEMA_VERSION = 1;
     const DATA_VERSION = 1;
     const MIGRATION_SNAPSHOT_KEY = 'gymTrackerMigrationSnapshotV13';
+    // V13.3 Error Handling / Recovery
+    const RECOVERY_SNAPSHOTS_KEY = 'trueTrainRecoverySnapshotsV13';
+    const RECOVERY_STATUS_KEY = 'trueTrainRecoveryStatusV13';
+    const RECOVERY_SNAPSHOT_LIMIT = 3;
+    function v133SafeMessage(err){return String(err?.message||err||'Lỗi không xác định').replace(/sb_(?:publishable|secret)_[A-Za-z0-9._-]+/g,'[redacted-key]').replace(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g,'[redacted-token]').replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,'[redacted-email]').slice(0,500);}
+    function v133ReadRecoveryStatus(){try{return JSON.parse(localStorage.getItem(RECOVERY_STATUS_KEY)||'null');}catch(_){return null;}}
+    function v133SetRecoveryStatus(module,status,message=''){try{localStorage.setItem(RECOVERY_STATUS_KEY,JSON.stringify({at:new Date().toISOString(),module,status,message:v133SafeMessage(message)}));}catch(_){} }
+    function v133ClearRecoveryStatus(){try{localStorage.removeItem(RECOVERY_STATUS_KEY);}catch(_){} }
+    function v133ReadSnapshots(){try{const rows=JSON.parse(localStorage.getItem(RECOVERY_SNAPSHOTS_KEY)||'[]');return Array.isArray(rows)?rows.slice(-RECOVERY_SNAPSHOT_LIMIT):[];}catch(_){return [];} }
+    function v133Snapshot(source,reason='safe'){try{validateCoreState(source);const rows=v133ReadSnapshots();rows.push({at:new Date().toISOString(),reason,data:deepClone(source)});localStorage.setItem(RECOVERY_SNAPSHOTS_KEY,JSON.stringify(rows.slice(-RECOVERY_SNAPSHOT_LIMIT)));return true;}catch(err){v133SetRecoveryStatus('snapshot','failed',err);return false;} }
+    function v133LatestSnapshot(){const rows=v133ReadSnapshots();return rows.length?rows[rows.length-1]:null;}
+    function v133Log(module,err){const msg=v133SafeMessage(err);try{if(window.TRUE_TRAIN_DEV?.logError)window.TRUE_TRAIN_DEV.logError(msg,module,err?.stack||'');else{const key='trueTrainDevErrorLogV13',rows=JSON.parse(localStorage.getItem(key)||'[]');const list=Array.isArray(rows)?rows:[];list.push({at:new Date().toISOString(),module:v133SafeMessage(module),message:msg,stack:v133SafeMessage(err?.stack||'')});localStorage.setItem(key,JSON.stringify(list.slice(-40)));}}catch(_){}v133SetRecoveryStatus(module,'error',err);}
     const CLOUD_PROJECT_URL = 'https://douurybhrzojpjwxmzxs.supabase.co';
     const CLOUD_PUBLISHABLE_KEY = 'sb_publishable_joNj-U2HI2GtxqlihpUROA_0ESKczbF';
     const CLOUD_EMAIL_REDIRECT = 'https://nguyenkhanhduy0902-cell.github.io/khanhduy-training-tracker/';
@@ -3797,10 +3809,13 @@ body:not(.auth-locked) .auth-gate{
       }
       try{
         const result=runDataMigrations(loaded);
-        localStorage.setItem(STORAGE_KEY,JSON.stringify(result.state));
+        const recovery=v133ReadRecoveryStatus();
+        if(!recovery || recovery.module!=='load' || recovery.status!=='error') localStorage.setItem(STORAGE_KEY,JSON.stringify(result.state));
+        if(result.migrated) v133Snapshot(result.state,'migration-complete');
         return result.state;
       }catch(err){
-        console.error('V13.1 data migration aborted; original state preserved.',err);
+        console.error('V13.3 data migration aborted; original state preserved.',err);
+        v133Log('migration',err);
         return loaded;
       }
     }
@@ -3818,14 +3833,30 @@ body:not(.auth-locked) .auth-gate{
         const raw = localStorage.getItem(STORAGE_KEY);
         if(!raw) return defaultState();
         const parsed = JSON.parse(raw);
-        if(!parsed.schedule || !parsed.history) return defaultState();
+        validateCoreState(parsed);
         return parsed;
-      }catch(e){ return defaultState(); }
+      }catch(e){
+        v133SetRecoveryStatus('load','error',e);
+        const snap=v133LatestSnapshot();
+        if(snap?.data){try{validateCoreState(snap.data);v133SetRecoveryStatus('load','recovered','Đang dùng Last Safe Snapshot trong bộ nhớ; storage lỗi chưa bị ghi đè.');return deepClone(snap.data);}catch(_){} }
+        return defaultState(); // in-memory fallback only; initializeStateWithMigrations will not overwrite corrupt storage
+      }
     }
     function saveState(opts={}){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      if(opts.cloudDirty===false) return;
+      try{
+        validateCoreState(state);
+        const serialized=JSON.stringify(state);
+        if(!serialized||serialized==='null') throw new Error('State serialize không hợp lệ.');
+        localStorage.setItem(STORAGE_KEY, serialized);
+        if(v133ReadRecoveryStatus()?.module==='save') v133ClearRecoveryStatus();
+      }catch(err){
+        v133Log('save',err);
+        toast('Không thể lưu dữ liệu • dữ liệu cũ vẫn được giữ');
+        return false;
+      }
+      if(opts.cloudDirty===false) return true;
       cloud.dirty=true; saveCloudConfig(); scheduleCloudSync(); updateCloudStatus();
+      return true;
     }
     function defaultCloudConfig(){
       return {
@@ -4227,7 +4258,7 @@ body:not(.auth-locked) .auth-gate{
         saveCloudConfig(); updateCloudStatus();
         return true;
       }catch(e){
-        cloud.lastError=e.message||String(e); saveCloudConfig(); updateCloudStatus();
+        cloud.lastError=e.message||String(e); v133Log('cloud-push',e); saveCloudConfig(); updateCloudStatus();
         return false;
       }finally{cloudBusy=false;updateCloudStatus();}
     }
@@ -4249,12 +4280,12 @@ body:not(.auth-locked) .auth-gate{
           cloud.ready=true; cloud.lastSyncAt=new Date().toISOString(); saveCloudConfig(); updateCloudStatus(); return true;
         }
         if(!remote.state || !remote.state.schedule || !remote.state.history) throw new Error('Dữ liệu cloud không hợp lệ.');
-        state=migrateState(remote.state); saveState({cloudDirty:false});
+        const migrated=runDataMigrations(remote.state).state; v133Snapshot(state,'before-cloud-pull'); state=migrated; if(!saveState({cloudDirty:false})) throw new Error('Không lưu được dữ liệu cloud về local.');
         cloud.dirty=false; cloud.ready=true; cloud.conflict=false; cloud.lastRemoteUpdatedAt=remote.updated_at; cloud.lastSyncAt=new Date().toISOString();
         saveCloudConfig(); updateCloudStatus(); renderPage(activePage);
         return true;
       }catch(e){
-        cloud.lastError=e.message||String(e); saveCloudConfig(); updateCloudStatus(); return false;
+        cloud.lastError=e.message||String(e); v133Log('cloud-pull',e); saveCloudConfig(); updateCloudStatus(); return false;
       }finally{cloudBusy=false;updateCloudStatus();}
     }
     async function cloudSyncNow(){
@@ -5626,7 +5657,7 @@ body:not(.auth-locked) .auth-gate{
         </div>
 
         <div class="grid2" style="margin-top:18px">
-          <div class="card pad v130-backup-card"><div class="section-head"><div><h3>Backup / Restore <span class="v130-badge">V13.2</span></h3><p>Backup có version + kiểm tra dữ liệu trước khi restore. Không xuất token đăng nhập cloud.</p></div></div><div class="v130-backup-summary"><b>Backup hiện tại</b><span>${backupStats(state).plannedExercises} bài plan • ${backupStats(state).historySessions} buổi history • ${backupStats(state).clients} clients • ${backupStats(state).bodyProgress} body records</span></div><div class="data-actions"><button class="btn primary" id="exportJson">Tải backup JSON</button><label class="btn" for="importJson">Restore từ JSON</label><input id="importJson" type="file" accept="application/json,.json" style="display:none"><button class="btn" id="restoreRollback">Rollback lần restore gần nhất</button></div><div class="cloud-help">Restore hỗ trợ cả backup JSON cũ. Trước mỗi restore, TRUE TRAIN tự giữ 1 snapshot local để có thể quay lại.</div></div>
+          <div class="card pad v130-backup-card"><div class="section-head"><div><h3>Backup / Restore <span class="v130-badge">V13.3</span></h3><p>Backup có version + kiểm tra dữ liệu trước khi restore. Không xuất token đăng nhập cloud.</p></div></div><div class="v130-backup-summary"><b>Backup hiện tại</b><span>${backupStats(state).plannedExercises} bài plan • ${backupStats(state).historySessions} buổi history • ${backupStats(state).clients} clients • ${backupStats(state).bodyProgress} body records</span></div><div class="data-actions"><button class="btn primary" id="exportJson">Tải backup JSON</button><label class="btn" for="importJson">Restore từ JSON</label><input id="importJson" type="file" accept="application/json,.json" style="display:none"><button class="btn" id="restoreRollback">Rollback lần restore gần nhất</button></div><div class="cloud-help">Restore hỗ trợ cả backup JSON cũ. Trước mỗi restore, TRUE TRAIN tự giữ 1 snapshot local để có thể quay lại.</div></div>
           <div class="card pad"><div class="section-head"><div><h3>Xuất dữ liệu</h3><p>CSV mở được bằng Excel / Google Sheets.</p></div></div><div class="data-actions"><button class="btn" id="exportScheduleCsv">Xuất lịch tập CSV</button><button class="btn" id="exportHistoryCsv">Xuất nhật ký CSV</button></div></div>
         </div>
         <div class="card pad" style="margin-top:18px"><div class="section-head"><div><h3>Reset ứng dụng</h3><p>Khôi phục chương trình mặc định và xóa toàn bộ nhật ký trên thiết bị này. Cloud không tự xóa.</p></div></div><button class="btn danger" id="resetAll">Reset toàn bộ dữ liệu local</button></div>`;
@@ -5777,15 +5808,16 @@ body:not(.auth-locked) .auth-gate{
         confirmBox('Restore backup TRUE TRAIN',`${summary}\n\nDữ liệu hiện tại trên máy sẽ được thay thế. V13.1 sẽ giữ 1 snapshot rollback trước khi restore.`,()=>{
           try{
             localStorage.setItem(BACKUP_ROLLBACK_KEY,JSON.stringify(buildBackupPayload(state)));
+            v133Snapshot(state,'before-restore');
             state=candidate;
             saveState();
             input.value='';
             toast('Restore thành công • đã lưu snapshot rollback');
             showPage(isMobileUI()?'more':'dashboard');
-          }catch(err){alert(`Không thể restore: ${err?.message||'Lỗi không xác định'}`);}
+          }catch(err){v133Log('restore',err);alert(`Không thể restore: ${v133SafeMessage(err)}`);}
         });
-      }catch(err){input.value='';alert(`File backup không hợp lệ. ${err?.message||''}`.trim());}};
-      r.onerror=()=>{input.value='';alert('Không đọc được file backup.');};
+      }catch(err){input.value='';v133Log('restore-file',err);alert(`File backup không hợp lệ. ${v133SafeMessage(err)}`.trim());}};
+      r.onerror=()=>{input.value='';v133Log('restore-read','Không đọc được file backup.');alert('Không đọc được file backup.');};
       r.readAsText(file);
     }
     function restoreRollbackBackup(){
@@ -5795,6 +5827,7 @@ body:not(.auth-locked) .auth-gate{
         const pack=normalizeBackupPayload(JSON.parse(raw)),candidate=runDataMigrations(pack.data).state;
         confirmBox('Khôi phục dữ liệu trước lần restore gần nhất',`${backupSummaryText(candidate,pack.meta)}\n\nDữ liệu hiện tại sẽ được thay bằng snapshot này.`,()=>{
           const current=JSON.stringify(buildBackupPayload(state));
+          v133Snapshot(state,'before-rollback');
           state=candidate;saveState();localStorage.setItem(BACKUP_ROLLBACK_KEY,current);
           toast('Đã rollback dữ liệu');showPage(isMobileUI()?'more':'dashboard');
         });
@@ -10348,6 +10381,9 @@ if(cloudLoggedIn()){
       `Body Progress Records: ${c.body}`,
       `Integrity: ${integrity.ok?'PASS':`WARN (${integrity.issues.length})`}`,
       ...(integrity.issues.length?integrity.issues.map(x=>`- ${v132Scrub(x)}`):[]),
+      `Recovery Status: ${(()=>{try{const r=v133ReadRecoveryStatus();return r?`${r.module}/${r.status}`:'OK';}catch(_){return 'Unavailable';}})()}`,
+      `Last Recovery Event: ${(()=>{try{return v133ReadRecoveryStatus()?.at||'none';}catch(_){return 'none';}})()}`,
+      `Last Safe Snapshot: ${(()=>{try{return v133LatestSnapshot()?.at||'none';}catch(_){return 'none';}})()}`,
       `Error Log Entries: ${logs.length}`,
       ...logs.slice(-10).map(x=>`[${x.at}] ${x.module}: ${x.message}`)
     ].join('\n');
@@ -10359,7 +10395,7 @@ if(cloudLoggedIn()){
   }
   function v132PanelHtml(){
     const c=v132Counts(),logs=v132ReadLogs();
-    return `<div class="v132-dev-panel" id="v132DevPanel"><div class="v132-dev-head"><div><h3>Developer Tools <span class="v132-dev-badge">V13.2</span></h3><p>Diagnostics only • không chỉnh business data.</p></div></div><div class="v132-dev-grid"><div class="v132-dev-kpi"><span>App Version</span><b>${escapeHtml(String(APP_VERSION))}</b></div><div class="v132-dev-kpi"><span>Data Version</span><b>${escapeHtml(String(DATA_VERSION))}</b></div><div class="v132-dev-kpi"><span>Local Storage</span><b>${escapeHtml(v132StorageStatus())}</b></div><div class="v132-dev-kpi"><span>Cloud</span><b>${escapeHtml(v132CloudStatus())}</b></div><div class="v132-dev-kpi"><span>Active Client</span><b>${state?.coach?.activeClientId?'Present':'None'}</b></div><div class="v132-dev-kpi"><span>Clients / Programs</span><b>${c.clients} / ${c.programs}</b></div><div class="v132-dev-kpi"><span>History / Workouts</span><b>${c.history} / ${c.current}</b></div><div class="v132-dev-kpi"><span>Body Progress</span><b>${c.body}</b></div></div><div class="v132-dev-actions"><button class="btn primary" id="v132IntegrityBtn">Run Data Integrity Check</button><button class="btn" id="v132CopyReport">Copy Diagnostic Report</button><button class="btn" id="v132ClearErrors">Clear Error Log (${logs.length})</button></div><div class="v132-dev-result" id="v132IntegrityResult">Integrity check chưa chạy.</div><div class="v132-dev-log" id="v132DevLog">${logs.length?logs.slice().reverse().slice(0,10).map(x=>`<div class="v132-dev-log-row"><b>${escapeHtml(new Date(x.at).toLocaleString('vi-VN'))} • ${escapeHtml(x.module)}</b><br>${escapeHtml(x.message)}</div>`).join(''):'<div class="v132-dev-empty">Chưa có runtime error được ghi nhận.</div>'}</div></div>`;
+    return `<div class="v132-dev-panel" id="v132DevPanel"><div class="v132-dev-head"><div><h3>Developer Tools <span class="v132-dev-badge">V13.3</span></h3><p>Diagnostics only • không chỉnh business data.</p></div></div><div class="v132-dev-grid"><div class="v132-dev-kpi"><span>App Version</span><b>${escapeHtml(String(APP_VERSION))}</b></div><div class="v132-dev-kpi"><span>Data Version</span><b>${escapeHtml(String(DATA_VERSION))}</b></div><div class="v132-dev-kpi"><span>Local Storage</span><b>${escapeHtml(v132StorageStatus())}</b></div><div class="v132-dev-kpi"><span>Cloud</span><b>${escapeHtml(v132CloudStatus())}</b></div><div class="v132-dev-kpi"><span>Active Client</span><b>${state?.coach?.activeClientId?'Present':'None'}</b></div><div class="v132-dev-kpi"><span>Clients / Programs</span><b>${c.clients} / ${c.programs}</b></div><div class="v132-dev-kpi"><span>History / Workouts</span><b>${c.history} / ${c.current}</b></div><div class="v132-dev-kpi"><span>Body Progress</span><b>${c.body}</b></div></div><div class="v132-dev-actions"><button class="btn primary" id="v132IntegrityBtn">Run Data Integrity Check</button><button class="btn" id="v132CopyReport">Copy Diagnostic Report</button><button class="btn" id="v132ClearErrors">Clear Error Log (${logs.length})</button></div><div class="v132-dev-result" id="v132IntegrityResult">Integrity check chưa chạy.</div><div class="v132-dev-log" id="v132DevLog">${logs.length?logs.slice().reverse().slice(0,10).map(x=>`<div class="v132-dev-log-row"><b>${escapeHtml(new Date(x.at).toLocaleString('vi-VN'))} • ${escapeHtml(x.module)}</b><br>${escapeHtml(x.message)}</div>`).join(''):'<div class="v132-dev-empty">Chưa có runtime error được ghi nhận.</div>'}</div></div>`;
   }
   function v132InjectDeveloperMode(){
     const page=document.getElementById('page-more');if(!page||page.querySelector('#v132DevSection'))return;
@@ -10376,11 +10412,34 @@ if(cloudLoggedIn()){
   }
   const v132RenderMoreBase=renderMore;
   renderMore=function(){const out=v132RenderMoreBase();v132InjectDeveloperMode();return out;};
-  window.TRUE_TRAIN_DEV={version:'13.2',runIntegrity:v132Integrity,diagnosticReport:v132DiagnosticReport,readErrors:v132ReadLogs};
+  window.TRUE_TRAIN_DEV={version:'13.3',runIntegrity:v132Integrity,diagnosticReport:v132DiagnosticReport,readErrors:v132ReadLogs,logError:v132LogError};
   try{if(document.getElementById('page-more')?.classList.contains('active'))renderMore();}catch(err){v132LogError(err?.message||err,'developer-mode-init',err?.stack||'');}
 })();
 </script>
-</body>
+
+<style id="v133-recovery-style">
+.v133-recovery{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,7,14,.82);backdrop-filter:blur(8px)}.v133-recovery.open{display:flex}.v133-recovery-card{width:min(560px,100%);padding:20px;border-radius:20px;border:1px solid rgba(251,191,36,.28);background:#0b1526;box-shadow:0 24px 80px rgba(0,0,0,.55)}.v133-recovery-card h3{margin:0 0 7px;font-size:18px}.v133-recovery-card p{margin:0;color:#9fb0bf;font-size:11px;line-height:1.6}.v133-recovery-meta{margin:12px 0;padding:11px;border-radius:12px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.13);font-size:10px;color:#f7d98b;overflow-wrap:anywhere}.v133-recovery-actions{display:flex;flex-wrap:wrap;gap:8px}.v133-recovery-status{margin-top:10px;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.07);font-size:9px;color:#8ca5b7}.v133-recovery-status b{color:#dcecf6}@media(max-width:760px){.v133-recovery{align-items:flex-end;padding:10px}.v133-recovery-card{border-radius:20px}.v133-recovery-actions{display:grid;grid-template-columns:1fr 1fr}.v133-recovery-actions .btn{white-space:normal;min-width:0}}
+</style>
+<div class="v133-recovery" id="v133Recovery" role="dialog" aria-modal="true" aria-label="TRUE TRAIN Recovery"><div class="v133-recovery-card"><h3>TRUE TRAIN Recovery</h3><p>App phát hiện lỗi dữ liệu hoặc thao tác quan trọng thất bại. Dữ liệu đang tốt sẽ không bị ghi đè tự động.</p><div class="v133-recovery-meta" id="v133RecoveryMeta"></div><div class="v133-recovery-actions"><button class="btn primary" id="v133Retry">Retry</button><button class="btn" id="v133RestoreSafe">Restore Last Safe Snapshot</button><button class="btn" id="v133ImportBackup">Import Backup JSON</button><button class="btn" id="v133OpenDiagnostics">Open Developer Diagnostics</button></div></div></div>
+<script id="v133-error-recovery-script">
+(()=>{
+  function status(){return v133ReadRecoveryStatus();}
+  function latest(){return v133LatestSnapshot();}
+  function renderRecovery(force=false){const box=document.getElementById('v133Recovery'),meta=document.getElementById('v133RecoveryMeta');if(!box||!meta)return;const st=status();const should=force||!!(st&&(st.status==='error'||st.status==='recovered'));box.classList.toggle('open',should);if(st)meta.textContent=`${st.module} • ${st.status} • ${st.message||'Cần kiểm tra recovery'}`;else meta.textContent='Không có recovery event đang chờ.';}
+  function restoreSafe(){const snap=latest();if(!snap?.data){toast('Chưa có Last Safe Snapshot');return;}try{const candidate=runDataMigrations(snap.data).state;validateCoreState(candidate);state=candidate;if(!saveState({cloudDirty:false}))throw new Error('Không thể lưu snapshot phục hồi.');v133ClearRecoveryStatus();toast('Đã phục hồi Last Safe Snapshot');renderRecovery(false);renderPage(activePage);}catch(err){v133Log('recovery-restore',err);renderRecovery(true);}}
+  function importBackup(){boxClose();showPage('data');setTimeout(()=>document.getElementById('importJson')?.click(),80);}
+  function boxClose(){document.getElementById('v133Recovery')?.classList.remove('open');}
+  function openDiagnostics(){try{localStorage.setItem('trueTrainDevModeV13','1');}catch(_){}boxClose();showPage('more');setTimeout(()=>document.getElementById('v132DevSection')?.scrollIntoView({behavior:'smooth',block:'start'}),100);}
+  document.getElementById('v133Retry').onclick=()=>location.reload();document.getElementById('v133RestoreSafe').onclick=restoreSafe;document.getElementById('v133ImportBackup').onclick=importBackup;document.getElementById('v133OpenDiagnostics').onclick=openDiagnostics;
+  window.TRUE_TRAIN_RECOVERY={version:'13.3',status,latestSnapshot:latest,open:()=>renderRecovery(true),restoreSafe};
+  // Extend diagnostics without exposing secrets.
+  if(window.TRUE_TRAIN_DEV){const base=window.TRUE_TRAIN_DEV.diagnosticReport;window.TRUE_TRAIN_DEV.diagnosticReport=()=>{const st=status(),snap=latest();return base()+`
+Recovery Status: ${st?`${st.module}/${st.status}`:'OK'}
+Last Recovery Event: ${st?.at||'none'}
+Last Safe Snapshot: ${snap?.at||'none'}`;};}
+  setTimeout(()=>renderRecovery(false),0);
+})();
+</script>\n</body>
 </html><style>
 /* V12.0.5 PERSONAL HOME HERO POLISH */
 .v84-session-hero{
