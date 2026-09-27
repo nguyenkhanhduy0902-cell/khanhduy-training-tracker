@@ -3432,6 +3432,7 @@ body:not(.auth-locked) .auth-gate{
       <section class="page" id="page-schedule"></section>
       <section class="page" id="page-volume"></section>
       <section class="page" id="page-analytics"></section>
+      <section class="page" id="page-compliance"></section>
       <section class="page" id="page-progress"></section>
       <section class="page" id="page-coach"></section>
       <section class="page" id="page-history"></section>
@@ -3474,7 +3475,7 @@ body:not(.auth-locked) .auth-gate{
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_VERSION = '14.2';
+    const APP_VERSION = '14.3';
     // V11.1.1 Desktop Stability: core scope is intentionally global so legacy patch layers can extend the same runtime.
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
@@ -10436,7 +10437,7 @@ if(cloudLoggedIn()){
   }
   function v132PanelHtml(){
     const c=v132Counts(),logs=v132ReadLogs();
-    return `<div class="v132-dev-panel" id="v132DevPanel"><div class="v132-dev-head"><div><h3>Developer Tools <span class="v132-dev-badge">V14.2</span></h3><p>Diagnostics only • không chỉnh business data.</p></div></div><div class="v132-dev-grid"><div class="v132-dev-kpi"><span>App Version</span><b>${escapeHtml(String(APP_VERSION))}</b></div><div class="v132-dev-kpi"><span>Data Version</span><b>${escapeHtml(String(DATA_VERSION))}</b></div><div class="v132-dev-kpi"><span>Local Storage</span><b>${escapeHtml(v132StorageStatus())}</b></div><div class="v132-dev-kpi"><span>Cloud</span><b>${escapeHtml(v132CloudStatus())}</b></div><div class="v132-dev-kpi"><span>Active Client</span><b>${state?.coach?.activeClientId?'Present':'None'}</b></div><div class="v132-dev-kpi"><span>Clients / Programs</span><b>${c.clients} / ${c.programs}</b></div><div class="v132-dev-kpi"><span>History / Workouts</span><b>${c.history} / ${c.current}</b></div><div class="v132-dev-kpi"><span>Body Progress</span><b>${c.body}</b></div><div class="v132-dev-kpi"><span>Exercise Identity</span><b>V${window.TRUE_TRAIN_EXERCISE_IDENTITY?.version||'?'} • ${v132Integrity().identity?.uniqueIds||0} IDs</b></div></div><div class="v132-dev-actions"><button class="btn primary" id="v132IntegrityBtn">Run Data Integrity Check</button><button class="btn" id="v132CopyReport">Copy Diagnostic Report</button><button class="btn" id="v132ClearErrors">Clear Error Log (${logs.length})</button></div><div class="v132-dev-result" id="v132IntegrityResult">Integrity check chưa chạy.</div><div class="v132-dev-log" id="v132DevLog">${logs.length?logs.slice().reverse().slice(0,10).map(x=>`<div class="v132-dev-log-row"><b>${escapeHtml(new Date(x.at).toLocaleString('vi-VN'))} • ${escapeHtml(x.module)}</b><br>${escapeHtml(x.message)}</div>`).join(''):'<div class="v132-dev-empty">Chưa có runtime error được ghi nhận.</div>'}</div></div>`;
+    return `<div class="v132-dev-panel" id="v132DevPanel"><div class="v132-dev-head"><div><h3>Developer Tools <span class="v132-dev-badge">V14.3</span></h3><p>Diagnostics only • không chỉnh business data.</p></div></div><div class="v132-dev-grid"><div class="v132-dev-kpi"><span>App Version</span><b>${escapeHtml(String(APP_VERSION))}</b></div><div class="v132-dev-kpi"><span>Data Version</span><b>${escapeHtml(String(DATA_VERSION))}</b></div><div class="v132-dev-kpi"><span>Local Storage</span><b>${escapeHtml(v132StorageStatus())}</b></div><div class="v132-dev-kpi"><span>Cloud</span><b>${escapeHtml(v132CloudStatus())}</b></div><div class="v132-dev-kpi"><span>Active Client</span><b>${state?.coach?.activeClientId?'Present':'None'}</b></div><div class="v132-dev-kpi"><span>Clients / Programs</span><b>${c.clients} / ${c.programs}</b></div><div class="v132-dev-kpi"><span>History / Workouts</span><b>${c.history} / ${c.current}</b></div><div class="v132-dev-kpi"><span>Body Progress</span><b>${c.body}</b></div><div class="v132-dev-kpi"><span>Exercise Identity</span><b>V${window.TRUE_TRAIN_EXERCISE_IDENTITY?.version||'?'} • ${v132Integrity().identity?.uniqueIds||0} IDs</b></div></div><div class="v132-dev-actions"><button class="btn primary" id="v132IntegrityBtn">Run Data Integrity Check</button><button class="btn" id="v132CopyReport">Copy Diagnostic Report</button><button class="btn" id="v132ClearErrors">Clear Error Log (${logs.length})</button></div><div class="v132-dev-result" id="v132IntegrityResult">Integrity check chưa chạy.</div><div class="v132-dev-log" id="v132DevLog">${logs.length?logs.slice().reverse().slice(0,10).map(x=>`<div class="v132-dev-log-row"><b>${escapeHtml(new Date(x.at).toLocaleString('vi-VN'))} • ${escapeHtml(x.module)}</b><br>${escapeHtml(x.message)}</div>`).join(''):'<div class="v132-dev-empty">Chưa có runtime error được ghi nhận.</div>'}</div></div>`;
   }
   function v132InjectDeveloperMode(){
     const page=document.getElementById('page-more');if(!page||page.querySelector('#v132DevSection'))return;
@@ -10662,6 +10663,76 @@ Last Safe Snapshot: ${snap?.at||'none'}`;};}
 })();
 </script>
 
+
+
+<style id="v143-personal-compliance-style">
+/* TRUE TRAIN V14.3 — Personal Compliance */
+#page-compliance{min-width:0}
+.v143-page{display:grid;gap:14px;max-width:1380px;margin:0 auto}
+.v143-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+.v143-head small{display:block;color:#7de4ff;font-size:8px;font-weight:950;letter-spacing:.15em;text-transform:uppercase}
+.v143-head h2{margin:5px 0 4px;font-size:30px;letter-spacing:-.035em}
+.v143-head p{margin:0;color:#7890a3;font-size:10px;line-height:1.5;max-width:720px}
+.v143-range{display:flex;gap:5px;padding:4px;border:1px solid rgba(92,171,214,.14);border-radius:12px;background:#07131f}
+.v143-range button{min-height:32px;padding:0 11px;border:0;border-radius:9px;background:transparent;color:#71899c;font-size:8px;font-weight:900}
+.v143-range button.active{background:rgba(53,216,255,.11);color:#75e5fd;box-shadow:inset 0 0 0 1px rgba(53,216,255,.15)}
+.v143-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.v143-kpi{padding:14px;border:1px solid rgba(92,171,214,.14);border-radius:16px;background:linear-gradient(180deg,#091725,#07111d)}
+.v143-kpi span{display:block;color:#6f8799;font-size:7px;font-weight:950;letter-spacing:.11em;text-transform:uppercase}.v143-kpi b{display:block;margin-top:7px;font-size:22px;line-height:1;color:#edfaff}.v143-kpi em{display:block;margin-top:5px;color:#667f91;font-size:8px;font-style:normal}
+.v143-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.8fr);gap:12px}.v143-card{min-width:0;padding:15px;border:1px solid rgba(92,171,214,.14);border-radius:17px;background:linear-gradient(180deg,#081522,#06111d)}
+.v143-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:12px}.v143-card-head b{font-size:13px}.v143-card-head span{display:block;margin-top:3px;color:#6f8799;font-size:8px}
+.v143-week-list,.v143-session-list{display:grid;gap:8px}.v143-week,.v143-session{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px;border:1px solid rgba(255,255,255,.045);border-radius:13px;background:rgba(255,255,255,.018)}
+.v143-week b,.v143-session b{display:block;font-size:9px}.v143-week small,.v143-session small{display:block;margin-top:3px;color:#657e91;font-size:7px;line-height:1.4}.v143-week strong{font-size:12px;color:#6ee2fa}.v143-session strong{font-size:8px;padding:5px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.08)}
+.v143-session.completed strong{color:#78e4ac;background:rgba(62,210,139,.08)}.v143-session.partial strong{color:#ffd37a;background:rgba(255,187,70,.08)}.v143-session.missed strong{color:#ff8e9a;background:rgba(255,91,113,.08)}.v143-session.pending strong{color:#7dbfe8;background:rgba(77,166,222,.08)}
+.v143-empty{padding:30px 16px;text-align:center;border:1px dashed rgba(255,255,255,.09);border-radius:17px;background:#07121d;color:#71899b}.v143-empty b{display:block;color:#dcebf4;font-size:14px}.v143-empty span{display:block;margin-top:6px;font-size:9px;line-height:1.5}
+.v143-footnote{color:#597286;font-size:7.5px;line-height:1.55;padding:0 2px}
+@media(max-width:1000px) and (min-width:761px){.v143-kpis{grid-template-columns:repeat(2,1fr)}.v143-grid{grid-template-columns:1fr}}
+@media(max-width:760px){#page-compliance{padding-bottom:86px}.v143-page{gap:10px}.v143-head{display:grid;gap:10px;align-items:start}.v143-head h2{font-size:27px}.v143-range{width:100%;display:grid;grid-template-columns:repeat(3,1fr)}.v143-range button{min-height:36px}.v143-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.v143-kpi{padding:12px;border-radius:14px}.v143-kpi b{font-size:19px}.v143-grid{grid-template-columns:1fr;gap:9px}.v143-card{padding:13px;border-radius:16px}}
+</style>
+<script id="v143-personal-compliance-engine">
+(()=>{
+  const RANGE_KEY='trueTrainPersonalComplianceRangeV143';
+  const baseRenderPage=renderPage,baseRenderNav=renderNav,baseRenderMore=renderMore;
+  const DAY_KEYS=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+  function rangeValue(){try{const v=localStorage.getItem(RANGE_KEY);return ['7','30','84'].includes(v)?Number(v):30;}catch(_){return 30;}}
+  function setRange(v){try{localStorage.setItem(RANGE_KEY,String(v));}catch(_){}renderCompliance();}
+  function localDate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`;}
+  function dayStart(d){const x=new Date(d);x.setHours(0,0,0,0);return x;}
+  function plannedTemplate(date){const key=DAY_KEYS[date.getDay()],s=state.schedule?.[key];if(!s||!Array.isArray(s.exercises)||!s.exercises.length)return null;const name=String(s.name||key);if(/^rest$/i.test(name.trim()))return null;const plannedSets=s.exercises.reduce((n,e)=>n+(Number(e?.sets)||0),0);return {key,name,plannedSets,exercises:s.exercises};}
+  function historyDate(h){return String(h?.date||'').slice(0,10);}
+  function doneCount(h){if(Number.isFinite(Number(h?.completedSets)))return Number(h.completedSets)||0;return (h?.exercises||[]).reduce((n,e)=>n+(e?.sets||[]).filter(x=>{try{return !!(x?.done??isWorkoutSetComplete(x));}catch(_){return !!x?.done;}}).length,0);}
+  function totalCount(h){if(Number.isFinite(Number(h?.totalSets))&&Number(h.totalSets)>0)return Number(h.totalSets);return (h?.exercises||[]).reduce((n,e)=>n+(e?.sets||[]).length,0);}
+  function isFull(h){const t=totalCount(h),d=doneCount(h);return t>0&&d>=t;}
+  function weekStart(date){const d=dayStart(date),dow=d.getDay(),shift=(dow+6)%7;d.setDate(d.getDate()-shift);return d;}
+  function compute(days=30){
+    const today=dayStart(new Date()),start=new Date(today);start.setDate(start.getDate()-(days-1));
+    const byDate=new Map();(state.history||[]).forEach(h=>{const k=historyDate(h);if(!k)return;if(!byDate.has(k))byDate.set(k,[]);byDate.get(k).push(h);});
+    const rows=[];for(let d=new Date(start);d<=today;d.setDate(d.getDate()+1)){const plan=plannedTemplate(d);if(!plan)continue;const date=localDate(d),hist=byDate.get(date)||[],actualSets=hist.reduce((n,h)=>n+doneCount(h),0),full=hist.some(isFull),has=hist.length>0,isToday=date===localDate(today);let status=full?'completed':has?'partial':isToday?'pending':'missed';rows.push({date,day:plan.key,name:plan.name,plannedSets:plan.plannedSets,actualSets,status,history:hist});}
+    const due=rows.filter(r=>r.status!=='pending'),plannedWorkouts=due.length,completed=due.filter(r=>r.status==='completed').length,partial=due.filter(r=>r.status==='partial').length,missed=due.filter(r=>r.status==='missed').length;
+    const plannedSets=due.reduce((n,r)=>n+r.plannedSets,0),completedSets=due.reduce((n,r)=>n+Math.min(r.actualSets,r.plannedSets||r.actualSets),0);
+    const adherence=plannedWorkouts?Math.round(completed/plannedWorkouts*100):0,setCompletion=plannedSets?Math.round(completedSets/plannedSets*100):0;
+    const weeks=new Map();rows.forEach(r=>{const ws=weekStart(new Date(r.date+'T12:00:00')),key=localDate(ws),w=weeks.get(key)||{start:ws,planned:0,completed:0,partial:0,missed:0,pending:0,plannedSets:0,actualSets:0};w.planned++;w[r.status]++;if(r.status!=='pending'){w.plannedSets+=r.plannedSets;w.actualSets+=Math.min(r.actualSets,r.plannedSets||r.actualSets);}weeks.set(key,w);});
+    return {days,rows,plannedWorkouts,completed,partial,missed,plannedSets,completedSets,adherence,setCompletion,weeks:[...weeks.values()].sort((a,b)=>a.start-b.start)};
+  }
+  function rangeHtml(days){return `<div class="v143-range"><button data-v143-range="7" class="${days===7?'active':''}">7 DAYS</button><button data-v143-range="30" class="${days===30?'active':''}">30 DAYS</button><button data-v143-range="84" class="${days===84?'active':''}">12 WEEKS</button></div>`;}
+  function bindRange(){document.querySelectorAll('[data-v143-range]').forEach(b=>b.onclick=()=>setRange(Number(b.dataset.v143Range)));}
+  function weekLabel(w){const e=new Date(w.start);e.setDate(e.getDate()+6);return `${w.start.getDate()}/${w.start.getMonth()+1}–${e.getDate()}/${e.getMonth()+1}`;}
+  function renderCompliance(){
+    const page=document.getElementById('page-compliance');if(!page)return;const days=rangeValue(),d=compute(days);
+    if(!d.rows.length){page.innerHTML=`<div class="v143-page"><div class="v143-head"><div><small>PERSONAL • COMPLIANCE • V14.3</small><h2>Compliance</h2><p>Schedule → History → Compliance. Chỉ đánh giá những ngày đã đến hạn.</p></div>${rangeHtml(days)}</div><div class="v143-empty"><b>Không có workout được lên lịch trong khoảng này</b><span>Thêm workout vào Schedule để TRUE TRAIN có planned sessions làm mốc compliance.</span></div></div>`;bindRange();return;}
+    const weeks=d.weeks.slice().reverse().map(w=>{const due=w.completed+w.partial+w.missed,adh=due?Math.round(w.completed/due*100):0;return `<div class="v143-week"><div><b>Week ${weekLabel(w)}</b><small>${w.completed} completed • ${w.partial} partial • ${w.missed} missed${w.pending?` • ${w.pending} pending`:''}<br>${w.actualSets} / ${w.plannedSets} planned sets</small></div><strong>${adh}%</strong></div>`;}).join('');
+    const sessions=d.rows.slice().reverse().map(r=>`<div class="v143-session ${r.status}"><div><b>${escapeHtml(r.name)}</b><small>${escapeHtml(r.date)} • ${escapeHtml(r.day)} • ${r.actualSets}/${r.plannedSets} sets</small></div><strong>${r.status.toUpperCase()}</strong></div>`).join('');
+    page.innerHTML=`<div class="v143-page"><div class="v143-head"><div><small>PERSONAL • COMPLIANCE • V14.3</small><h2>Compliance</h2><p>So sánh Schedule hiện tại với History đã lưu. Hôm nay chưa tập = Pending, không tính Missed.</p></div>${rangeHtml(days)}</div><div class="v143-kpis"><div class="v143-kpi"><span>Workout Adherence</span><b>${d.adherence}%</b><em>${d.completed}/${d.plannedWorkouts} due workouts completed</em></div><div class="v143-kpi"><span>Set Completion</span><b>${d.setCompletion}%</b><em>${d.completedSets}/${d.plannedSets} planned sets</em></div><div class="v143-kpi"><span>Completed</span><b>${d.completed}</b><em>fully completed workouts</em></div><div class="v143-kpi"><span>Missed / Partial</span><b>${d.missed} / ${d.partial}</b><em>past scheduled sessions</em></div></div><div class="v143-grid"><section class="v143-card"><div class="v143-card-head"><div><b>Weekly Compliance</b><span>Planned vs completed by calendar week</span></div></div><div class="v143-week-list">${weeks}</div></section><section class="v143-card"><div class="v143-card-head"><div><b>Session Breakdown</b><span>Completed • Partial • Missed • Pending</span></div></div><div class="v143-session-list">${sessions}</div></section></div><div class="v143-footnote">V14.3 Personal Compliance được tính động từ Schedule hiện tại + Personal History, không lưu cứng %. Nếu sửa Schedule sau khi một tuần đã qua, planned baseline lịch sử có thể thay đổi; TRUE TRAIN chưa có historical schedule snapshot ở bản này.</div></div>`;bindRange();
+  }
+  function injectDesktopNav(){if(isMobileUI())return;const box=document.getElementById('sidebarAnalytics');if(!box||box.querySelector('[data-page="compliance"]'))return;const btn=document.createElement('button');btn.dataset.page='compliance';btn.className=activePage==='compliance'?'active':'';btn.title='Compliance';btn.innerHTML=`<span class="sb-icon">${appIcon('history')}</span><span>Compliance</span>`;btn.onclick=()=>showPage('compliance');const a=box.querySelector('[data-page="analytics"]');if(a)a.insertAdjacentElement('afterend',btn);else box.appendChild(btn);}
+  function injectMobileMore(){if(!isMobileUI())return;const page=document.getElementById('page-more');if(!page||page.querySelector('[data-v143-open-compliance]'))return;const root=page.querySelector('.m117-more,.m116-more');if(!root)return;const list=root.querySelector('.m117-more-list,.m116-menu-section');if(!list)return;const cls=list.classList.contains('m117-more-list')?'m117-more-btn':'m116-menu-btn';const b=document.createElement('button');b.className=cls;b.dataset.v143OpenCompliance='1';b.innerHTML=`<span class="ico">${appIcon('history')}</span><div><b>Compliance</b><small>Schedule vs History • adherence</small></div><i>›</i>`;b.onclick=()=>showPage('compliance');list.appendChild(b);}
+  renderPage=function(id){if(id==='compliance')return renderCompliance();return baseRenderPage(id);};
+  renderNav=function(){const out=baseRenderNav();injectDesktopNav();return out;};
+  renderMore=function(){const out=baseRenderMore();injectMobileMore();return out;};
+  window.TRUE_TRAIN_PERSONAL_COMPLIANCE={version:'14.3',compute,render:renderCompliance,range:rangeValue};
+  try{renderNav();if(document.getElementById('page-more')?.classList.contains('active'))renderMore();}catch(e){console.warn('V14.3 compliance init',e);}
+})();
+</script>
 </body>
 </html><style>
 /* V12.0.5 PERSONAL HOME HERO POLISH */
