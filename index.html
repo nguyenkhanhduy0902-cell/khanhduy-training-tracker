@@ -3475,14 +3475,14 @@ body:not(.auth-locked) .auth-gate{
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_VERSION = '14.3';
+    const APP_VERSION = '14.4';
     // V11.1.1 Desktop Stability: core scope is intentionally global so legacy patch layers can extend the same runtime.
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
     const BACKUP_ROLLBACK_KEY = 'gymTrackerBackupRollbackV13';
     const BACKUP_FORMAT = 'TRUE_TRAIN_BACKUP';
     const BACKUP_SCHEMA_VERSION = 1;
-    const DATA_VERSION = 1;
+    const DATA_VERSION = 2;
     const MIGRATION_SNAPSHOT_KEY = 'gymTrackerMigrationSnapshotV13';
     // V13.3 Error Handling / Recovery
     const RECOVERY_SNAPSHOTS_KEY = 'trueTrainRecoverySnapshotsV13';
@@ -3721,6 +3721,7 @@ body:not(.auth-locked) .auth-gate{
         settings:{ indirectFactor:0.5, restSeconds:90 },
         coach: defaultCoachState(),
         version: 6,
+        historicalSchedule:{version:1,activatedAt:isoDate(),snapshots:{}},
         dataVersion: DATA_VERSION
       };
     }
@@ -3759,6 +3760,10 @@ body:not(.auth-locked) .auth-gate{
       x.coach.exercise=Object.assign(dc.exercise,x.coach.exercise||{}); if(!Number.isFinite(Number(x.coach.exercise.limit)))x.coach.exercise.limit=48;
       if(x.currentWorkout?.exercises){x.currentWorkout.exercises.forEach(ex=>(ex.sets||[]).forEach(set=>{if(set.note==null)set.note='';set.done=isWorkoutSetComplete(set);}));}
       (x.history||[]).forEach(h=>(h.exercises||[]).forEach(ex=>(ex.sets||[]).forEach(set=>{if(set.note==null)set.note='';if(set.done==null)set.done=isWorkoutSetComplete(set);})));
+      if(!x.historicalSchedule||typeof x.historicalSchedule!=='object'||Array.isArray(x.historicalSchedule)) x.historicalSchedule={version:1,activatedAt:isoDate(),snapshots:{}};
+      x.historicalSchedule.version=1;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(String(x.historicalSchedule.activatedAt||''))) x.historicalSchedule.activatedAt=isoDate();
+      if(!x.historicalSchedule.snapshots||typeof x.historicalSchedule.snapshots!=='object'||Array.isArray(x.historicalSchedule.snapshots)) x.historicalSchedule.snapshots={};
       x.version=6.4;
       return x;
     }
@@ -3780,6 +3785,19 @@ body:not(.auth-locked) .auth-gate{
       0(source){
         // v0 -> v1 establishes explicit schema identity only; legacy normalization stays in migrateState().
         source.dataVersion=1;
+        return source;
+      },
+      1(source){
+        // V14.4: historical schedule snapshots start at migration day. Older plan history is intentionally not invented.
+        const today=(()=>{const d=new Date(),z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;})();
+        if(!source.historicalSchedule||typeof source.historicalSchedule!=='object'||Array.isArray(source.historicalSchedule)){
+          source.historicalSchedule={version:1,activatedAt:today,snapshots:{}};
+        }else{
+          source.historicalSchedule.version=1;
+          if(!/^\d{4}-\d{2}-\d{2}$/.test(String(source.historicalSchedule.activatedAt||''))) source.historicalSchedule.activatedAt=today;
+          if(!source.historicalSchedule.snapshots||typeof source.historicalSchedule.snapshots!=='object'||Array.isArray(source.historicalSchedule.snapshots)) source.historicalSchedule.snapshots={};
+        }
+        source.dataVersion=2;
         return source;
       }
     };
@@ -5797,7 +5815,7 @@ body:not(.auth-locked) .auth-gate{
     }
     function exportBackup(){
       const payload=buildBackupPayload(state);
-      download(`true_train_backup_v13_${isoDate()}.json`,JSON.stringify(payload,null,2),'application/json');
+      download(`true_train_backup_v14_${isoDate()}.json`,JSON.stringify(payload,null,2),'application/json');
       toast(`Đã tạo backup • ${payload.stats.historySessions} buổi history`);
     }
     function importBackup(e){
@@ -10437,7 +10455,7 @@ if(cloudLoggedIn()){
   }
   function v132PanelHtml(){
     const c=v132Counts(),logs=v132ReadLogs();
-    return `<div class="v132-dev-panel" id="v132DevPanel"><div class="v132-dev-head"><div><h3>Developer Tools <span class="v132-dev-badge">V14.3</span></h3><p>Diagnostics only • không chỉnh business data.</p></div></div><div class="v132-dev-grid"><div class="v132-dev-kpi"><span>App Version</span><b>${escapeHtml(String(APP_VERSION))}</b></div><div class="v132-dev-kpi"><span>Data Version</span><b>${escapeHtml(String(DATA_VERSION))}</b></div><div class="v132-dev-kpi"><span>Local Storage</span><b>${escapeHtml(v132StorageStatus())}</b></div><div class="v132-dev-kpi"><span>Cloud</span><b>${escapeHtml(v132CloudStatus())}</b></div><div class="v132-dev-kpi"><span>Active Client</span><b>${state?.coach?.activeClientId?'Present':'None'}</b></div><div class="v132-dev-kpi"><span>Clients / Programs</span><b>${c.clients} / ${c.programs}</b></div><div class="v132-dev-kpi"><span>History / Workouts</span><b>${c.history} / ${c.current}</b></div><div class="v132-dev-kpi"><span>Body Progress</span><b>${c.body}</b></div><div class="v132-dev-kpi"><span>Exercise Identity</span><b>V${window.TRUE_TRAIN_EXERCISE_IDENTITY?.version||'?'} • ${v132Integrity().identity?.uniqueIds||0} IDs</b></div></div><div class="v132-dev-actions"><button class="btn primary" id="v132IntegrityBtn">Run Data Integrity Check</button><button class="btn" id="v132CopyReport">Copy Diagnostic Report</button><button class="btn" id="v132ClearErrors">Clear Error Log (${logs.length})</button></div><div class="v132-dev-result" id="v132IntegrityResult">Integrity check chưa chạy.</div><div class="v132-dev-log" id="v132DevLog">${logs.length?logs.slice().reverse().slice(0,10).map(x=>`<div class="v132-dev-log-row"><b>${escapeHtml(new Date(x.at).toLocaleString('vi-VN'))} • ${escapeHtml(x.module)}</b><br>${escapeHtml(x.message)}</div>`).join(''):'<div class="v132-dev-empty">Chưa có runtime error được ghi nhận.</div>'}</div></div>`;
+    return `<div class="v132-dev-panel" id="v132DevPanel"><div class="v132-dev-head"><div><h3>Developer Tools <span class="v132-dev-badge">V14.4</span></h3><p>Diagnostics only • không chỉnh business data.</p></div></div><div class="v132-dev-grid"><div class="v132-dev-kpi"><span>App Version</span><b>${escapeHtml(String(APP_VERSION))}</b></div><div class="v132-dev-kpi"><span>Data Version</span><b>${escapeHtml(String(DATA_VERSION))}</b></div><div class="v132-dev-kpi"><span>Local Storage</span><b>${escapeHtml(v132StorageStatus())}</b></div><div class="v132-dev-kpi"><span>Cloud</span><b>${escapeHtml(v132CloudStatus())}</b></div><div class="v132-dev-kpi"><span>Active Client</span><b>${state?.coach?.activeClientId?'Present':'None'}</b></div><div class="v132-dev-kpi"><span>Clients / Programs</span><b>${c.clients} / ${c.programs}</b></div><div class="v132-dev-kpi"><span>History / Workouts</span><b>${c.history} / ${c.current}</b></div><div class="v132-dev-kpi"><span>Body Progress</span><b>${c.body}</b></div><div class="v132-dev-kpi"><span>Exercise Identity</span><b>V${window.TRUE_TRAIN_EXERCISE_IDENTITY?.version||'?'} • ${v132Integrity().identity?.uniqueIds||0} IDs</b></div></div><div class="v132-dev-actions"><button class="btn primary" id="v132IntegrityBtn">Run Data Integrity Check</button><button class="btn" id="v132CopyReport">Copy Diagnostic Report</button><button class="btn" id="v132ClearErrors">Clear Error Log (${logs.length})</button></div><div class="v132-dev-result" id="v132IntegrityResult">Integrity check chưa chạy.</div><div class="v132-dev-log" id="v132DevLog">${logs.length?logs.slice().reverse().slice(0,10).map(x=>`<div class="v132-dev-log-row"><b>${escapeHtml(new Date(x.at).toLocaleString('vi-VN'))} • ${escapeHtml(x.module)}</b><br>${escapeHtml(x.message)}</div>`).join(''):'<div class="v132-dev-empty">Chưa có runtime error được ghi nhận.</div>'}</div></div>`;
   }
   function v132InjectDeveloperMode(){
     const page=document.getElementById('page-more');if(!page||page.querySelector('#v132DevSection'))return;
@@ -10454,7 +10472,7 @@ if(cloudLoggedIn()){
   }
   const v132RenderMoreBase=renderMore;
   renderMore=function(){const out=v132RenderMoreBase();v132InjectDeveloperMode();return out;};
-  window.TRUE_TRAIN_DEV={version:'14.2',runIntegrity:v132Integrity,diagnosticReport:v132DiagnosticReport,readErrors:v132ReadLogs,logError:v132LogError};
+  window.TRUE_TRAIN_DEV={version:'14.4',runIntegrity:v132Integrity,diagnosticReport:v132DiagnosticReport,readErrors:v132ReadLogs,logError:v132LogError};
   try{if(document.getElementById('page-more')?.classList.contains('active'))renderMore();}catch(err){v132LogError(err?.message||err,'developer-mode-init',err?.stack||'');}
 })();
 </script>
@@ -10731,6 +10749,46 @@ Last Safe Snapshot: ${snap?.at||'none'}`;};}
   renderMore=function(){const out=baseRenderMore();injectMobileMore();return out;};
   window.TRUE_TRAIN_PERSONAL_COMPLIANCE={version:'14.3',compute,render:renderCompliance,range:rangeValue};
   try{renderNav();if(document.getElementById('page-more')?.classList.contains('active'))renderMore();}catch(e){console.warn('V14.3 compliance init',e);}
+})();
+</script>
+
+<style id="v144-historical-schedule-style">
+.v144-plan-note{margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(91,214,255,.13);background:rgba(91,214,255,.045);color:#91aabd;font-size:9px;line-height:1.55}.v144-plan-note b{color:#dbeefa}.v144-unavailable{color:#f6c86d}.v144-session.unavailable{opacity:.7;border-style:dashed}.v144-session.unavailable strong{color:#f6c86d}
+</style>
+<script id="v144-historical-schedule-snapshot">
+(()=>{
+  const V144_VERSION='14.4';
+  const DAY_KEYS=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+  const baseSaveState=saveState,baseRenderPage=renderPage,baseRenderNav=renderNav,baseRenderMore=renderMore;
+  let lastSchedule=deepClone(state.schedule||{}),insideSave=false;
+  function ymd(d){const z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;}
+  function parseYmd(v){const m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return null;const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));d.setHours(0,0,0,0);return Number.isNaN(d.getTime())?null:d;}
+  function startDay(d=new Date()){const x=new Date(d);x.setHours(0,0,0,0);return x;}
+  function ensureStore(){if(!state.historicalSchedule||typeof state.historicalSchedule!=='object'||Array.isArray(state.historicalSchedule))state.historicalSchedule={version:1,activatedAt:ymd(new Date()),snapshots:{}};const h=state.historicalSchedule;h.version=1;if(!parseYmd(h.activatedAt))h.activatedAt=ymd(new Date());if(!h.snapshots||typeof h.snapshots!=='object'||Array.isArray(h.snapshots))h.snapshots={};return h;}
+  function planForDate(date,scheduleSource){const day=DAY_KEYS[date.getDay()],s=scheduleSource?.[day]||null,exs=Array.isArray(s?.exercises)?s.exercises:[],name=String(s?.name||day),isRest=!s||!exs.length||/^rest$/i.test(name.trim());const exercises=exs.map((ex,i)=>({exerciseId:String(ex?.exerciseId||''),exerciseNameSnapshot:String(ex?.name||ex?.canonicalName||`Exercise ${i+1}`),canonicalName:String(ex?.canonicalName||ex?.name||''),plannedSets:Math.max(0,Number(ex?.sets)||0),order:i+1}));return {day,sessionId:`personal:${ymd(date)}:${day}`,sessionName:name,focus:String(s?.focus||''),isTraining:!isRest,plannedSets:isRest?0:exercises.reduce((n,e)=>n+e.plannedSets,0),exercises:isRest?[]:exercises};}
+  function makeSnapshot(date,scheduleSource,locked=true){const plan=planForDate(date,scheduleSource),dateKey=ymd(date);return {snapshotId:`ps_${dateKey.replaceAll('-','')}`,snapshotVersion:1,date:dateKey,day:plan.day,sessionId:plan.sessionId,sessionName:plan.sessionName,focus:plan.focus,isTraining:plan.isTraining,plannedSets:plan.plannedSets,exercises:plan.exercises,createdAt:new Date().toISOString(),locked:!!locked};}
+  function syncPast(scheduleSource=state.schedule,now=new Date()){const h=ensureStore(),activation=parseYmd(h.activatedAt),today=startDay(now);if(!activation)return 0;let changed=0;for(let d=new Date(activation);d<today;d.setDate(d.getDate()+1)){const k=ymd(d);if(h.snapshots[k])continue;h.snapshots[k]=makeSnapshot(d,scheduleSource,true);changed++;}return changed;}
+  function snapshotFor(date){const h=ensureStore(),k=ymd(date),today=startDay(new Date());if(date<today)return h.snapshots[k]||null;return makeSnapshot(date,state.schedule,false);}
+  function scheduleChanged(){try{return JSON.stringify(lastSchedule)!==JSON.stringify(state.schedule||{});}catch(_){return true;}}
+  saveState=function(opts={}){if(insideSave)return baseSaveState(opts);insideSave=true;try{if(scheduleChanged())syncPast(lastSchedule,new Date());else syncPast(state.schedule,new Date());const ok=baseSaveState(opts);if(ok!==false)lastSchedule=deepClone(state.schedule||{});return ok;}finally{insideSave=false;}};
+  function historyDate(h){return String(h?.date||'').slice(0,10);}
+  function doneCount(h){if(Number.isFinite(Number(h?.completedSets)))return Number(h.completedSets)||0;return (h?.exercises||[]).reduce((n,e)=>n+(e?.sets||[]).filter(x=>{try{return !!(x?.done??isWorkoutSetComplete(x));}catch(_){return !!x?.done;}}).length,0);}
+  function totalCount(h){if(Number.isFinite(Number(h?.totalSets))&&Number(h.totalSets)>0)return Number(h.totalSets);return (h?.exercises||[]).reduce((n,e)=>n+(e?.sets||[]).length,0);}
+  function isFull(h){const t=totalCount(h),d=doneCount(h);return t>0&&d>=t;}
+  function weekStart(date){const d=startDay(date),shift=(d.getDay()+6)%7;d.setDate(d.getDate()-shift);return d;}
+  function rangeValue(){try{const v=localStorage.getItem('trueTrainPersonalComplianceRangeV143');return ['7','30','84'].includes(v)?Number(v):30;}catch(_){return 30;}}
+  function setRange(v){try{localStorage.setItem('trueTrainPersonalComplianceRangeV143',String(v));}catch(_){}renderCompliance144();}
+  function rangeHtml(days){return `<div class="v143-range"><button data-v144-range="7" class="${days===7?'active':''}">7 DAYS</button><button data-v144-range="30" class="${days===30?'active':''}">30 DAYS</button><button data-v144-range="84" class="${days===84?'active':''}">12 WEEKS</button></div>`;}
+  function bindRange(){document.querySelectorAll('[data-v144-range]').forEach(b=>b.onclick=()=>setRange(Number(b.dataset.v144Range)));}
+  function compute(days=30,anchor=new Date()){syncPast(state.schedule,anchor);const h=ensureStore(),today=startDay(anchor),start=new Date(today);start.setDate(start.getDate()-(days-1));const activation=parseYmd(h.activatedAt)||today;const byDate=new Map();(state.history||[]).forEach(x=>{const k=historyDate(x);if(!k)return;if(!byDate.has(k))byDate.set(k,[]);byDate.get(k).push(x);});const rows=[];let unavailableDays=0;for(let d=new Date(start);d<=today;d.setDate(d.getDate()+1)){if(d<activation){unavailableDays++;continue;}const plan=snapshotFor(d);if(!plan||!plan.isTraining)continue;const date=ymd(d),hist=byDate.get(date)||[],actualSets=hist.reduce((n,x)=>n+doneCount(x),0),full=hist.some(isFull),has=hist.length>0,isToday=date===ymd(today),status=full?'completed':has?'partial':isToday?'pending':'missed';rows.push({date,day:plan.day,name:plan.sessionName,plannedSets:plan.plannedSets,actualSets,status,snapshotId:plan.snapshotId,history:hist});}const due=rows.filter(r=>r.status!=='pending'),plannedWorkouts=due.length,completed=due.filter(r=>r.status==='completed').length,partial=due.filter(r=>r.status==='partial').length,missed=due.filter(r=>r.status==='missed').length,plannedSets=due.reduce((n,r)=>n+r.plannedSets,0),completedSets=due.reduce((n,r)=>n+Math.min(r.actualSets,r.plannedSets||r.actualSets),0),adherence=plannedWorkouts?Math.round(completed/plannedWorkouts*100):0,setCompletion=plannedSets?Math.round(completedSets/plannedSets*100):0,weeks=new Map();rows.forEach(r=>{const ws=weekStart(new Date(r.date+'T12:00:00')),k=ymd(ws),w=weeks.get(k)||{start:ws,planned:0,completed:0,partial:0,missed:0,pending:0,plannedSets:0,actualSets:0};w.planned++;w[r.status]++;if(r.status!=='pending'){w.plannedSets+=r.plannedSets;w.actualSets+=Math.min(r.actualSets,r.plannedSets||r.actualSets);}weeks.set(k,w);});return {days,rows,plannedWorkouts,completed,partial,missed,plannedSets,completedSets,adherence,setCompletion,weeks:[...weeks.values()].sort((a,b)=>a.start-b.start),activatedAt:h.activatedAt,unavailableDays};}
+  function weekLabel(w){const e=new Date(w.start);e.setDate(e.getDate()+6);return `${w.start.getDate()}/${w.start.getMonth()+1}–${e.getDate()}/${e.getMonth()+1}`;}
+  function renderCompliance144(){const page=document.getElementById('page-compliance');if(!page)return;const days=rangeValue(),d=compute(days),legacy=d.unavailableDays?`<div class="v144-plan-note v144-unavailable"><b>Historical plan unavailable trước ${escapeHtml(formatDate(d.activatedAt))}.</b> TRUE TRAIN không suy đoán Schedule cũ; các ngày đó được loại khỏi Compliance.</div>`:'';if(!d.rows.length){page.innerHTML=`<div class="v143-page"><div class="v143-head"><div><small>PERSONAL • COMPLIANCE • V14.4</small><h2>Compliance</h2><p>Historical Schedule Snapshot → History → Compliance.</p></div>${rangeHtml(days)}</div><div class="v143-empty"><b>Không có planned workout có thể chấm trong khoảng này</b><span>Ngày trước khi V14.4 kích hoạt snapshot sẽ không bị tính 0% hoặc Missed.</span></div>${legacy}<div class="v144-plan-note"><b>Snapshot active:</b> ${escapeHtml(formatDate(d.activatedAt))} • Past days are locked; today remains live/pending.</div></div>`;bindRange();return;}const weeks=d.weeks.slice().reverse().map(w=>{const due=w.completed+w.partial+w.missed,adh=due?Math.round(w.completed/due*100):0;return `<div class="v143-week"><div><b>Week ${weekLabel(w)}</b><small>${w.completed} completed • ${w.partial} partial • ${w.missed} missed${w.pending?` • ${w.pending} pending`:''}<br>${w.actualSets} / ${w.plannedSets} planned sets</small></div><strong>${adh}%</strong></div>`;}).join(''),sessions=d.rows.slice().reverse().map(r=>`<div class="v143-session ${r.status}"><div><b>${escapeHtml(r.name)}</b><small>${escapeHtml(r.date)} • ${escapeHtml(r.day)} • ${r.actualSets}/${r.plannedSets} sets${r.status!=='pending'?' • 🔒 snapshot':''}</small></div><strong>${r.status.toUpperCase()}</strong></div>`).join('');page.innerHTML=`<div class="v143-page"><div class="v143-head"><div><small>PERSONAL • COMPLIANCE • V14.4</small><h2>Compliance</h2><p>Past plan = locked snapshot. Today = live Schedule và chưa tập vẫn là Pending.</p></div>${rangeHtml(days)}</div><div class="v143-kpis"><div class="v143-kpi"><span>Workout Adherence</span><b>${d.adherence}%</b><em>${d.completed}/${d.plannedWorkouts} due workouts completed</em></div><div class="v143-kpi"><span>Set Completion</span><b>${d.setCompletion}%</b><em>${d.completedSets}/${d.plannedSets} planned sets</em></div><div class="v143-kpi"><span>Completed</span><b>${d.completed}</b><em>fully completed workouts</em></div><div class="v143-kpi"><span>Missed / Partial</span><b>${d.missed} / ${d.partial}</b><em>past snapshotted sessions</em></div></div><div class="v143-grid"><section class="v143-card"><div class="v143-card-head"><div><b>Weekly Compliance</b><span>Historical planned baseline is locked</span></div></div><div class="v143-week-list">${weeks}</div></section><section class="v143-card"><div class="v143-card-head"><div><b>Session Breakdown</b><span>Completed • Partial • Missed • Pending</span></div></div><div class="v143-session-list">${sessions}</div></section></div>${legacy}<div class="v144-plan-note"><b>Historical Snapshot V1:</b> sửa Schedule hôm nay hoặc tuần sau không viết lại planned baseline của ngày đã qua. Backup/Restore giữ snapshot cùng state.</div></div>`;bindRange();}
+  function integrityAddon(base){const issues=[...(base?.issues||[])],h=ensureStore(),seen=new Set();for(const [date,snap] of Object.entries(h.snapshots||{})){if(!parseYmd(date))issues.push(`Historical Snapshot: key ngày không hợp lệ ${date}`);if(!snap||typeof snap!=='object'){issues.push(`Historical Snapshot ${date}: dữ liệu không hợp lệ`);continue;}if(String(snap.date||'')!==date)issues.push(`Historical Snapshot ${date}: date mismatch`);const id=String(snap.snapshotId||'').trim();if(!id)issues.push(`Historical Snapshot ${date}: thiếu snapshotId`);else if(seen.has(id))issues.push(`Duplicate historical snapshotId: ${id}`);else seen.add(id);if(!Array.isArray(snap.exercises))issues.push(`Historical Snapshot ${date}: exercises không phải array`);if(Number(snap.plannedSets)<0)issues.push(`Historical Snapshot ${date}: plannedSets âm`);}return {...base,ok:issues.length===0,issues:issues.slice(0,30),historicalSchedule:{activatedAt:h.activatedAt,snapshots:Object.keys(h.snapshots||{}).length}};}
+  try{const changed=syncPast(state.schedule,new Date());if(changed)baseSaveState();lastSchedule=deepClone(state.schedule||{});}catch(err){try{v133Log('historical-schedule',err);}catch(_){console.warn(err);}}
+  if(window.TRUE_TRAIN_DEV){const oldRun=window.TRUE_TRAIN_DEV.runIntegrity,oldReport=window.TRUE_TRAIN_DEV.diagnosticReport;window.TRUE_TRAIN_DEV.runIntegrity=()=>integrityAddon(oldRun());window.TRUE_TRAIN_DEV.diagnosticReport=()=>{const r=window.TRUE_TRAIN_DEV.runIntegrity(),h=r.historicalSchedule||{};return oldReport()+`\nHistorical Schedule: ${h.snapshots||0} locked snapshots • active ${h.activatedAt||'unknown'}`;};}
+  renderPage=function(id){if(id==='compliance')return renderCompliance144();return baseRenderPage(id);};renderNav=function(){return baseRenderNav();};renderMore=function(){const out=baseRenderMore();const ib=document.getElementById('v132IntegrityBtn');if(ib)ib.onclick=()=>{const r=window.TRUE_TRAIN_DEV?.runIntegrity?.(),box=document.getElementById('v132IntegrityResult');if(!r||!box)return;box.className=`v132-dev-result ${r.ok?'pass':'warn'}`;box.innerHTML=r.ok?`PASS • ${r.checkedExercises} exercise references • ${r.identity?.uniqueIds||0} unique IDs • ${r.clients} clients • ${r.historicalSchedule?.snapshots||0} historical snapshots.`:`WARN • ${r.issues.length} vấn đề:<br>${r.issues.map(x=>`• ${escapeHtml(x)}`).join('<br>')}`;};const cb=document.getElementById('v132CopyReport');if(cb)cb.onclick=async()=>{const report=window.TRUE_TRAIN_DEV?.diagnosticReport?.()||'';try{await navigator.clipboard.writeText(report);toast('Đã copy Diagnostic Report');}catch(_){const ta=document.createElement('textarea');ta.value=report;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Đã copy Diagnostic Report');}};return out;};
+  window.TRUE_TRAIN_HISTORICAL_SCHEDULE={version:1,appVersion:V144_VERSION,compute,syncPast,snapshotFor,store:()=>deepClone(ensureStore())};
+  try{if(activePage==='compliance'||document.getElementById('page-compliance')?.classList.contains('active'))renderCompliance144();}catch(err){try{v133Log('historical-schedule-ui',err);}catch(_){console.warn(err);}}
 })();
 </script>
 </body>
