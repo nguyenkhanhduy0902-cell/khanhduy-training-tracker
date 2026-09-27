@@ -3476,7 +3476,7 @@ body:not(.auth-locked) .auth-gate{
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_VERSION = '14.7';
+    const APP_VERSION = '14.7.1';
     // V11.1.1 Desktop Stability: core scope is intentionally global so legacy patch layers can extend the same runtime.
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
@@ -10900,7 +10900,7 @@ Last Safe Snapshot: ${snap?.at||'none'}`;};}
 </style>
 <script id="v147-workout-ux-script">
 (()=>{
-  const V147='14.7';
+  const V147='14.7.1';
   let finishLock=false;
   const baseComplete=isWorkoutSetComplete;
   isWorkoutSetComplete=function(set={}){if(Object.prototype.hasOwnProperty.call(set,'_uxManualDone'))return !!set._uxManualDone;if(set.done===true)return true;return baseComplete(set);};
@@ -10914,19 +10914,92 @@ Last Safe Snapshot: ${snap?.at||'none'}`;};}
   function toggleSet(w,ei,si){const ex=w?.exercises?.[ei],set=ex?.sets?.[si];if(!set)return;if(isWorkoutSetComplete(set)){set._uxManualDone=false;set.done=false;saveState();renderExerciseCards(w);updateWorkoutCompletionUI(w);return;}if(String(set.weight??'').trim()===''||String(set.reps??'').trim()===''||String(set.rir??'').trim()===''){toast('Nhập đủ KG • REPS • RIR trước khi Complete');return;}set._uxManualDone=true;set.done=true;saveState();renderExerciseCards(w);updateWorkoutCompletionUI(w);}
   function rest(ex){const sec=Math.max(10,Number(ex?.targetRestSeconds)||Number(state.settings?.restSeconds)||90);try{startRestTimer(sec);}catch(_){toast(`Rest ${sec}s`);}}
   function decorate(w){const root=document.getElementById('exerciseList');if(!root||!w?.exercises)return;ensureManual(w);const idx=currentIndex(w);try{mobileWorkoutOpen=idx;}catch(_){}
-    if(!document.getElementById('v147WorkoutBar')){const p=progress(w),bar=document.createElement('div');bar.id='v147WorkoutBar';bar.className='v147-workout-bar';bar.innerHTML=`<div class="v147-progress-copy"><small>WORKOUT PROGRESS • V14.7</small><b>${p.exDone} / ${w.exercises.length} exercises • ${p.done} / ${p.total} sets</b></div><div class="v147-ex-nav"><button data-v147-prev ${idx<=0?'disabled':''}>← PREV</button><button data-v147-next ${idx>=w.exercises.length-1?'disabled':''}>NEXT →</button></div>`;root.parentElement?.insertBefore(bar,root);bar.querySelector('[data-v147-prev]')?.addEventListener('click',()=>setIndex(w,idx-1));bar.querySelector('[data-v147-next]')?.addEventListener('click',()=>setIndex(w,idx+1));}
+    if(!document.getElementById('v147WorkoutBar')){const p=progress(w),bar=document.createElement('div');bar.id='v147WorkoutBar';bar.className='v147-workout-bar';bar.innerHTML=`<div class="v147-progress-copy"><small>WORKOUT PROGRESS • V14.7.1</small><b>${p.exDone} / ${w.exercises.length} exercises • ${p.done} / ${p.total} sets</b></div><div class="v147-ex-nav"><button data-v147-prev ${idx<=0?'disabled':''}>← PREV</button><button data-v147-next ${idx>=w.exercises.length-1?'disabled':''}>NEXT →</button></div>`;root.parentElement?.insertBefore(bar,root);bar.querySelector('[data-v147-prev]')?.addEventListener('click',()=>setIndex(w,idx-1));bar.querySelector('[data-v147-next]')?.addEventListener('click',()=>setIndex(w,idx+1));}
     if(!document.getElementById('v147ExStrip')){const strip=document.createElement('div');strip.id='v147ExStrip';strip.className='v147-ex-strip';strip.innerHTML=w.exercises.map((ex,i)=>{const d=(ex.sets||[]).filter(isWorkoutSetComplete).length,cl=d===(ex.sets||[]).length&&d?'done':(d?'partial':'');return `<button class="v147-ex-chip ${cl} ${i===idx?'active':''}" data-v147-jump="${i}" title="${escapeHtml(ex.name||'Exercise')}">${d===(ex.sets||[]).length&&d?'✓':i+1}</button>`;}).join('');const root2=document.getElementById('exerciseList');root2?.parentElement?.insertBefore(strip,root2);strip.querySelectorAll('[data-v147-jump]').forEach(b=>b.onclick=()=>setIndex(w,Number(b.dataset.v147Jump)));}
     w.exercises.forEach((ex,ei)=>(ex.sets||[]).forEach((set,si)=>{const row=root.querySelector(`[data-set-row="${ei}-${si}"]`);if(!row)return;const host=row.closest('.mobile-set-wrap,.v87-set-item')||row.parentElement;if(!host||host.querySelector(`.v147-set-actions[data-v147-set="${ei}-${si}"]`))return;const previous=prevFor(ex)?.sets?.[si]||null,done=isWorkoutSetComplete(set),actions=document.createElement('div');actions.className='v147-set-actions';actions.dataset.v147Set=`${ei}-${si}`;actions.innerHTML=`<button class="copy" data-v147-copy ${previous?'':'disabled'}>COPY PREV</button><button class="${done?'undo':'complete'}" data-v147-toggle>${done?'UNDO':'✓ COMPLETE'}</button>${done?'<button class="rest" data-v147-rest>START REST</button>':''}`;host.appendChild(actions);actions.querySelector('[data-v147-copy]')?.addEventListener('click',()=>copyPrev(w,ei,si));actions.querySelector('[data-v147-toggle]')?.addEventListener('click',()=>toggleSet(w,ei,si));actions.querySelector('[data-v147-rest]')?.addEventListener('click',()=>rest(ex));}));
     const save=document.getElementById('saveWorkout');if(save){const p=progress(w);save.textContent=p.done===p.total&&p.total?`✓ FINISH WORKOUT`:`FINISH WORKOUT • ${p.done}/${p.total}`;}
   }
   const baseCards=renderExerciseCards;renderExerciseCards=function(w){ensureManual(w);const out=baseCards(w);try{decorate(w);}catch(e){console.warn('V14.7 decorate',e);}return out;};
   const baseRenderWorkout147=renderWorkout;renderWorkout=function(){const w=state.currentWorkout;if(w)ensureManual(w);const out=baseRenderWorkout147();try{const live=state.currentWorkout;if(live){ensureManual(live);decorate(live);const sel=document.getElementById('workoutDay');if(sel){sel.onchange=e=>{const next=e.target.value,p=progress(live);if(p.done>0)confirmBox('Workout in progress',`${live.title||live.day} • ${p.done}/${p.total} sets. Đổi session sẽ bỏ workout đang nhập.`,()=>{state.currentDay=next;state.currentWorkout=null;ux().currentExercise=0;saveState();renderWorkout();});else{state.currentDay=next;state.currentWorkout=null;ux().currentExercise=0;saveState();renderWorkout();}};}}}catch(e){console.warn('V14.7 render workout',e);}return out;};
-  function finishModal(copy){let m=document.getElementById('v147FinishModal');if(!m){document.body.insertAdjacentHTML('beforeend','<div class="v147-finish-modal" id="v147FinishModal"><div class="v147-finish-card" id="v147FinishCard"></div></div>');m=document.getElementById('v147FinishModal');}const done=Number(copy.completedSets)||0,total=Number(copy.totalSets)||0,exDone=(copy.exercises||[]).filter(ex=>(ex.sets||[]).length&&(ex.sets||[]).every(isWorkoutSetComplete)).length,dur=Number(copy.durationSec)||0;document.getElementById('v147FinishCard').innerHTML=`<small>WORKOUT COMPLETE • V14.7</small><h3>${escapeHtml(copy.title||copy.day||'Workout')}</h3><div class="v147-finish-summary"><div><span>SETS</span><b>${done}/${total}</b></div><div><span>EXERCISES</span><b>${exDone}/${(copy.exercises||[]).length}</b></div><div><span>TIME</span><b>${dur?Math.round(dur/60)+'m':'—'}</b></div></div><div class="v147-finish-actions"><button class="btn" data-v147-done>DONE</button><button class="btn primary" data-v147-history>VIEW HISTORY</button></div>`;m.classList.add('open');m.querySelector('[data-v147-done]').onclick=()=>{m.classList.remove('open');showPage('dashboard');};m.querySelector('[data-v147-history]').onclick=()=>{m.classList.remove('open');showPage('history');};}
+  function finishModal(copy){let m=document.getElementById('v147FinishModal');if(!m){document.body.insertAdjacentHTML('beforeend','<div class="v147-finish-modal" id="v147FinishModal"><div class="v147-finish-card" id="v147FinishCard"></div></div>');m=document.getElementById('v147FinishModal');}const done=Number(copy.completedSets)||0,total=Number(copy.totalSets)||0,exDone=(copy.exercises||[]).filter(ex=>(ex.sets||[]).length&&(ex.sets||[]).every(isWorkoutSetComplete)).length,dur=Number(copy.durationSec)||0;document.getElementById('v147FinishCard').innerHTML=`<small>WORKOUT COMPLETE • V14.7.1</small><h3>${escapeHtml(copy.title||copy.day||'Workout')}</h3><div class="v147-finish-summary"><div><span>SETS</span><b>${done}/${total}</b></div><div><span>EXERCISES</span><b>${exDone}/${(copy.exercises||[]).length}</b></div><div><span>TIME</span><b>${dur?Math.round(dur/60)+'m':'—'}</b></div></div><div class="v147-finish-actions"><button class="btn" data-v147-done>DONE</button><button class="btn primary" data-v147-history>VIEW HISTORY</button></div>`;m.classList.add('open');m.querySelector('[data-v147-done]').onclick=()=>{m.classList.remove('open');showPage('dashboard');};m.querySelector('[data-v147-history]').onclick=()=>{m.classList.remove('open');showPage('history');};}
   function commitFinish(){if(finishLock)return;const w=state.currentWorkout;if(!w?.exercises?.length){toast('Đây là ngày nghỉ');return;}finishLock=true;try{const st=syncWorkoutCompletion(w),copy=deepClone(w),savedAt=new Date().toISOString();copy.savedAt=savedAt;copy.completedSets=st.done;copy.totalSets=st.total;const started=Date.parse(copy.startedAt||''),finished=Date.parse(savedAt);copy.durationSec=(Number.isFinite(started)&&finished>=started)?Math.min(43200,Math.round((finished-started)/1000)):null;state.history.unshift(copy);state.currentWorkout=null;ux().currentExercise=0;saveState();finishModal(copy);toast(st.complete?'Workout complete':'Đã lưu workout chưa hoàn tất');}finally{setTimeout(()=>{finishLock=false;},600);}}
   saveWorkoutToHistory=function(){const w=state.currentWorkout||ensureCurrentWorkout();ensureManual(w);const p=progress(w);if(!w.exercises.length){toast('Đây là ngày nghỉ');return;}if(p.done<p.total){confirmBox('Finish workout?',`${p.done}/${p.total} sets completed • ${p.total-p.done} set chưa hoàn thành.`,commitFinish);}else commitFinish();};
-  const dev=window.TRUE_TRAIN_DEV;if(dev){const baseReport=dev.diagnosticReport;dev.diagnosticReport=()=>`${baseReport()}\nWorkout UX: V14.7`;dev.version=V147;}
+  const dev=window.TRUE_TRAIN_DEV;if(dev){const baseReport=dev.diagnosticReport;dev.diagnosticReport=()=>`${baseReport()}\nWorkout UX: V14.7.1`;dev.version=V147;}
   window.TRUE_TRAIN_WORKOUT_UX={version:V147,progress,setIndex};
   try{if(document.getElementById('page-workout')?.classList.contains('active'))renderWorkout();}catch(e){console.warn('V14.7 init',e);}
+})();
+</script>
+
+<style id="v1471-hotfix-style">
+.v1471-auto-toggle{min-height:30px;padding:0 9px;border:1px solid rgba(79,214,245,.2);border-radius:9px;background:rgba(15,49,70,.72);color:#8eeaff;font-size:7px;font-weight:950;letter-spacing:.04em;white-space:nowrap}
+.v1471-auto-toggle.off{color:#7892a1;background:#081824;border-color:rgba(255,255,255,.08)}
+.v1471-active-only-note{display:none;color:#66899c;font-size:7px;font-weight:850;letter-spacing:.04em;margin:0 0 6px}
+@media(max-width:760px){.v147-workout-bar{flex-wrap:wrap}.v147-progress-copy{flex:1 1 150px}.v147-ex-nav{margin-left:auto}.v1471-auto-toggle{order:3;width:100%;min-height:28px}.v1471-active-only-note{display:block}}
+</style>
+<script id="v1471-hotfix-script">
+(()=>{
+  const V1471='14.7.1';
+  function ux(){state.settings=state.settings||{};state.settings.workoutUx=state.settings.workoutUx||{};const u=state.settings.workoutUx;if(typeof u.autoCompleteRest!=='boolean')u.autoCompleteRest=true;return u;}
+  function idxFor(w){const n=Number(ux().currentExercise);return Math.max(0,Math.min(Number.isFinite(n)?n:0,Math.max(0,(w?.exercises?.length||1)-1)));}
+  function setActiveCard(w){
+    const root=document.getElementById('exerciseList');if(!root||!w?.exercises?.length)return;
+    const idx=idxFor(w);
+    w.exercises.forEach((ex,ei)=>{
+      const card=root.querySelector(`[data-mobile-ex-card="${ei}"]`)||root.querySelector(`[data-exercise-card="${ei}"]`);
+      if(!card)return;
+      card.hidden=ei!==idx;
+      card.style.display=ei===idx?'':'none';
+      card.classList.toggle('open',ei===idx);
+      card.setAttribute('aria-hidden',ei===idx?'false':'true');
+    });
+    document.querySelectorAll('[data-v147-jump]').forEach((b,i)=>{
+      const ex=w.exercises[i],d=(ex?.sets||[]).filter(isWorkoutSetComplete).length,total=(ex?.sets||[]).length;
+      b.classList.toggle('active',i===idx);b.classList.toggle('done',!!total&&d===total);b.classList.toggle('partial',d>0&&d<total);
+      b.textContent=total&&d===total?'✓':String(i+1);
+    });
+    const prev=document.querySelector('[data-v147-prev]'),next=document.querySelector('[data-v147-next]');
+    if(prev)prev.disabled=idx<=0;if(next)next.disabled=idx>=w.exercises.length-1;
+  }
+  function validSet(set){
+    const weight=String(set?.weight??'').trim(),reps=String(set?.reps??'').trim(),rir=String(set?.rir??'').trim();
+    if(!weight||!reps||!rir)return false;
+    const w=Number(weight),r=Number(reps),ri=Number(rir);
+    return Number.isFinite(w)&&w>=0&&Number.isFinite(r)&&r>0&&Number.isFinite(ri)&&ri>=0;
+  }
+  function restSeconds(ex){return Math.max(10,Number(ex?.targetRestSeconds)||Number(state.settings?.restSeconds)||90);}
+  function completeAndRest(w,ei,si){
+    if(!ux().autoCompleteRest)return false;
+    const ex=w?.exercises?.[ei],set=ex?.sets?.[si];if(!ex||!set||isWorkoutSetComplete(set)||!validSet(set))return false;
+    set._uxManualDone=true;set.done=true;saveState();
+    try{updateWorkoutCompletionUI(w);}catch(_){}
+    const sec=restSeconds(ex);try{startRestTimer(sec);}catch(_){toast(`Rest ${sec}s`);}
+    try{renderExerciseCards(w);}catch(_){}
+    return true;
+  }
+  function bindAuto(w){
+    const root=document.getElementById('exerciseList');if(!root||!w?.exercises)return;
+    root.querySelectorAll('input[data-k="rir"][data-e][data-s]').forEach(inp=>{
+      if(inp.dataset.v1471Auto==='1')return;inp.dataset.v1471Auto='1';
+      const trigger=()=>{const live=state.currentWorkout;if(!live)return;completeAndRest(live,Number(inp.dataset.e),Number(inp.dataset.s));};
+      inp.addEventListener('change',trigger);
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();inp.blur();trigger();}});
+    });
+  }
+  function autoButton(w){
+    const bar=document.getElementById('v147WorkoutBar');if(!bar)return;
+    let b=document.getElementById('v1471AutoToggle');
+    if(!b){b=document.createElement('button');b.type='button';b.id='v1471AutoToggle';b.className='v1471-auto-toggle';bar.appendChild(b);b.onclick=()=>{const u=ux();u.autoCompleteRest=!u.autoCompleteRest;saveState({cloudDirty:false});refresh(w);toast(u.autoCompleteRest?'Auto complete + rest: ON':'Auto complete + rest: OFF');};}
+    const on=ux().autoCompleteRest;b.classList.toggle('off',!on);b.textContent=`AUTO COMPLETE + REST: ${on?'ON':'OFF'}`;
+  }
+  function refresh(w){if(!w)return;setActiveCard(w);bindAuto(w);autoButton(w);}
+  const baseCards=renderExerciseCards;
+  renderExerciseCards=function(w){const out=baseCards(w);try{refresh(w);}catch(e){console.warn('V14.7.1 cards',e);}return out;};
+  const baseWorkout=renderWorkout;
+  renderWorkout=function(){const out=baseWorkout();try{if(state.currentWorkout)refresh(state.currentWorkout);}catch(e){console.warn('V14.7.1 workout',e);}return out;};
+  document.addEventListener('click',e=>{const jump=e.target.closest?.('[data-v147-jump],[data-v147-prev],[data-v147-next]');if(!jump)return;requestAnimationFrame(()=>{if(state.currentWorkout)refresh(state.currentWorkout);});},true);
+  const dev=window.TRUE_TRAIN_DEV;if(dev){const baseReport=dev.diagnosticReport;dev.diagnosticReport=()=>`${baseReport()}\nWorkout Hotfix: V14.7.1 • active-card • auto-complete-rest ${ux().autoCompleteRest?'ON':'OFF'}`;dev.version=V1471;}
+  window.TRUE_TRAIN_WORKOUT_UX_HOTFIX={version:V1471,refresh,completeAndRest};
+  try{if(document.getElementById('page-workout')?.classList.contains('active')&&state.currentWorkout)refresh(state.currentWorkout);}catch(e){console.warn('V14.7.1 init',e);}
 })();
 </script>
 </body>
