@@ -950,7 +950,7 @@ body:not(.auth-locked) .auth-gate{
       .sidebar-nav button:hover{background:rgba(53,216,255,.055);color:#d9f7ff;border-color:rgba(53,216,255,.08)}
       .sidebar-nav button.active{background:linear-gradient(90deg,rgba(53,216,255,.13),rgba(53,216,255,.035));color:#eafcff;border-color:rgba(53,216,255,.20);box-shadow:inset 3px 0 0 #35d8ff;}
       .sidebar-nav button .sb-icon{width:28px;height:28px;display:grid;place-items:center;color:#63defb}.sidebar-nav button .sb-icon .ui-icon{width:18px;height:18px}.sidebar-nav button.active .sb-icon{color:#73e8ff}
-      .sidebar-spacer{flex:1;min-height:10px}
+      .sidebar-spacer{flex:0;min-height:10px}
       .sidebar-today{padding:12px;border-radius:15px;background:linear-gradient(180deg,#0d2035,#081522);border:1px solid rgba(53,216,255,.15);overflow:hidden;}
       .sidebar-today small{display:block;color:#718ca2;font-size:7px;font-weight:900;letter-spacing:.14em}.sidebar-today b{display:block;margin-top:5px;font-size:13px}.sidebar-today span{display:block;margin-top:3px;color:#58dfff;font-size:8px}.sidebar-start{width:100%;min-height:38px;margin-top:11px;border:0;border-radius:9px;background:linear-gradient(180deg,#43ddff,#22c4ec);color:#03131d;font-size:8px;font-weight:1000;letter-spacing:.08em;}
       .sidebar-sync{display:flex;align-items:center;gap:7px;padding:12px 8px 0;color:#6f879a;font-size:8px;font-weight:800;white-space:nowrap}.sidebar-sync i{width:7px;height:7px;border-radius:50%;background:#35d07f;box-shadow:0 0 10px rgba(53,208,127,.45)}
@@ -1871,53 +1871,16 @@ body:not(.auth-locked) .auth-gate{
     /* Navigation order / hierarchy: Dashboard -> Schedule -> WORKOUT hero -> analytics. */
     #sidebarOverview{margin-bottom:2px}
     #sidebarTraining{margin:5px 0 7px}
-    #sidebarTraining button[data-page="workout"]{
-      min-height:60px;
-      grid-template-columns:36px minmax(0,1fr);
-      gap:10px;
-      padding:9px 11px;
-      border-radius:15px;
-      border-color:rgba(72,219,255,.28);
-      background:linear-gradient(100deg,rgba(53,216,255,.17),rgba(42,119,165,.08));
-      color:#eafcff;
-      font-size:12.5px;
-      font-weight:950;
-      letter-spacing:.025em;
-      box-shadow:inset 3px 0 0 rgba(53,216,255,.9),0 10px 24px rgba(0,0,0,.16);
-    }
-    #sidebarTraining button[data-page="workout"] .sb-icon{
-      width:36px;height:36px;border-radius:11px;
-      background:rgba(53,216,255,.09);
-      border:1px solid rgba(53,216,255,.12);
-      color:#78e9ff;
-    }
-    #sidebarTraining button[data-page="workout"] .sb-icon .ui-icon{width:21px;height:21px}
-    #sidebarTraining button[data-page="workout"].active{
-      background:linear-gradient(100deg,rgba(53,216,255,.26),rgba(42,119,165,.11));
-      border-color:rgba(92,229,255,.48);
-      box-shadow:inset 4px 0 0 #35d8ff,0 13px 30px rgba(0,0,0,.22),0 0 0 1px rgba(53,216,255,.05);
-    }
-    .app.sidebar-collapsed #sidebarTraining button[data-page="workout"]{
-      width:54px;
-      min-height:54px;
-      justify-self:center;
-      grid-template-columns:1fr;
-      place-items:center;
-      padding:7px;
-      border-radius:15px;
-    }
-    .app.sidebar-collapsed #sidebarTraining button[data-page="workout"] .sb-icon{width:38px;height:38px}
+
+
+
+
+
+
 
     @media (hover:hover) and (pointer:fine){
-      #sidebarTraining button[data-page="workout"]:hover{
-        transform:translateX(4px) scale(1.055);
-        border-color:rgba(92,229,255,.55);
-        background:linear-gradient(100deg,rgba(53,216,255,.24),rgba(42,119,165,.11));
-        box-shadow:inset 4px 0 0 #35d8ff,0 15px 34px rgba(0,0,0,.24);
-      }
-      .app.sidebar-collapsed #sidebarTraining button[data-page="workout"]:hover{
-        transform:scale(1.075);
-      }
+
+
     }
 
     /* Compress the two-column selected-session area instead of stacking it. */
@@ -1979,7 +1942,7 @@ body:not(.auth-locked) .auth-gate{
   }
 
   @media(min-width:761px){
-    .app{grid-template-columns:224px minmax(0,1fr)!important;background:var(--tt-bg)}
+    .app{grid-template-columns:220px minmax(0,1fr)!important;background:var(--tt-bg)}
     .app.sidebar-collapsed{grid-template-columns:72px minmax(0,1fr)!important}
     .app-content{min-width:0;padding:0 24px 28px!important}
     main{max-width:1540px!important;margin:0 auto;width:100%}
@@ -2011,29 +1974,29 @@ body:not(.auth-locked) .auth-gate{
     /* Sidebar shell */
     .desktop-sidebar{
       padding:14px 12px!important;
-      background:linear-gradient(180deg,#07111b 0%,#050b12 58%,#06101a 100%)!important;
+      background:#081520!important;
       border-right:1px solid var(--tt-line)!important;
-      box-shadow:14px 0 34px rgba(0,0,0,.14)!important;
+      box-shadow:none!important;
     }
     .sidebar-brand{
-      grid-template-columns:46px minmax(0,1fr) 28px!important;
+      grid-template-columns:40px minmax(0,1fr) 20px!important;
       gap:9px!important;
       padding:2px 2px 14px!important;
       border-bottom:1px solid rgba(255,255,255,.045)!important;
     }
     .sidebar-logo{width:46px!important;height:46px!important;border-radius:14px!important}
-    .sidebar-brand-copy b{font-size:13px!important;letter-spacing:.11em!important}
-    .sidebar-brand-copy small{font-size:6.5px!important;letter-spacing:.16em!important;color:#76def4!important}
-    .sidebar-scroll{padding:10px 0 7px!important}
+    .sidebar-brand-copy b{font-size:12px!important;letter-spacing:.02em!important}
+    .sidebar-brand-copy small{font-size:10px!important;letter-spacing:.02em!important;color:#a3b6c5!important;white-space:normal}
+    .sidebar-scroll{padding:10px 0 7px!important;min-height:0;flex:1}
     .sidebar-label{
       padding:10px 9px 5px!important;
-      font-size:6.5px!important;
-      letter-spacing:.18em!important;
-      color:#516a7d!important;
+      font-size:12px!important;
+      letter-spacing:.08em!important;
+      color:#a3b6c5!important;
     }
     .sidebar-nav{gap:4px!important}
     .sidebar-nav button{
-      min-height:42px!important;
+      min-height:44px!important;
       padding:7px 9px!important;
       grid-template-columns:28px minmax(0,1fr)!important;
       gap:8px!important;
@@ -2041,8 +2004,8 @@ body:not(.auth-locked) .auth-gate{
       border:1px solid transparent!important;
       background:transparent!important;
       color:#8399aa!important;
-      font-size:10.5px!important;
-      font-weight:850!important;
+      font-size:14px!important;
+      font-weight:600!important;
       box-shadow:none!important;
       transform-origin:left center;
     }
@@ -2055,40 +2018,17 @@ body:not(.auth-locked) .auth-gate{
     .sidebar-nav button.active{
       color:#effcff!important;
       border-color:rgba(53,216,255,.20)!important;
-      background:linear-gradient(90deg,rgba(53,216,255,.115),rgba(53,216,255,.028))!important;
+      background:rgba(55,206,243,.10)!important;
       box-shadow:inset 3px 0 0 var(--tt-cyan)!important;
     }
     .sidebar-nav button.active .sb-icon{background:rgba(53,216,255,.07);color:#83eaff!important}
 
     /* Workout is the app's primary navigation action. */
     #sidebarTraining{margin-top:1px!important}
-    #sidebarTraining button[data-page="workout"]{
-      min-height:58px!important;
-      margin-top:3px!important;
-      padding:9px 10px!important;
-      grid-template-columns:36px minmax(0,1fr)!important;
-      gap:10px!important;
-      border-radius:15px!important;
-      border-color:rgba(53,216,255,.28)!important;
-      background:linear-gradient(105deg,rgba(53,216,255,.17),rgba(28,87,119,.08))!important;
-      color:#eefdff!important;
-      font-size:12px!important;
-      font-weight:950!important;
-      letter-spacing:.02em!important;
-      box-shadow:inset 3px 0 0 rgba(53,216,255,.82),0 9px 20px rgba(0,0,0,.13)!important;
-    }
-    #sidebarTraining button[data-page="workout"] .sb-icon{
-      width:36px!important;height:36px!important;
-      border-radius:11px!important;
-      background:rgba(53,216,255,.09)!important;
-      border:1px solid rgba(53,216,255,.12);
-    }
-    #sidebarTraining button[data-page="workout"] .sb-icon .ui-icon{width:20px!important;height:20px!important}
-    #sidebarTraining button[data-page="workout"].active{
-      border-color:rgba(83,224,255,.48)!important;
-      background:linear-gradient(105deg,rgba(53,216,255,.25),rgba(28,87,119,.10))!important;
-      box-shadow:inset 4px 0 0 var(--tt-cyan),0 12px 26px rgba(0,0,0,.18)!important;
-    }
+
+
+
+
 
     .sidebar-today{
       padding:11px!important;
@@ -2101,8 +2041,8 @@ body:not(.auth-locked) .auth-gate{
     .sidebar-today b{font-size:12px!important;margin-top:4px!important}
     .sidebar-today span{font-size:7.5px!important;margin-top:3px!important}
     .sidebar-start{min-height:36px!important;margin-top:9px!important;border-radius:10px!important}
-    .sidebar-sync{padding-top:10px!important;font-size:7px!important;color:#668093!important}
-    .sidebar-sync i{background:var(--tt-green)!important}
+    .sidebar-sync{padding-top:10px!important;font-size:12px!important;color:#a3b6c5!important}
+    .sidebar-sync i{background:#91a2ad;box-shadow:none}.sidebar-sync[data-status="synced"] i{background:var(--tt-green)}.sidebar-sync[data-status="syncing"] i{background:#37cef3}.sidebar-sync[data-status="warn"] i{background:#ebbe64}.sidebar-sync[data-status="error"] i{background:#f27575}
     .sidebar-motto{display:none!important}
 
     /* Collapse state remains usable and visually centered. */
@@ -2117,15 +2057,8 @@ body:not(.auth-locked) .auth-gate{
       padding:7px!important;
       transform-origin:center center!important;
     }
-    .app.sidebar-collapsed #sidebarTraining button[data-page="workout"]{
-      width:54px!important;
-      min-height:54px!important;
-      margin:4px auto!important;
-      grid-template-columns:1fr!important;
-      place-items:center!important;
-      padding:7px!important;
-    }
-    .app.sidebar-collapsed #sidebarTraining button[data-page="workout"] .sb-icon{width:38px!important;height:38px!important}
+
+
     .app.sidebar-collapsed .sidebar-toggle{display:grid!important}
 
     /* Shared interaction language. Scaling never changes layout flow. */
@@ -2144,14 +2077,9 @@ body:not(.auth-locked) .auth-gate{
       z-index:3;
     }
     .sidebar-nav button.active:hover{transform:translateX(3px) scale(1.045)!important}
-    #sidebarTraining button[data-page="workout"]:hover{
-      transform:translateX(4px) scale(1.055)!important;
-      border-color:rgba(83,224,255,.55)!important;
-      background:linear-gradient(105deg,rgba(53,216,255,.24),rgba(28,87,119,.12))!important;
-      box-shadow:inset 4px 0 0 var(--tt-cyan),0 14px 30px rgba(0,0,0,.22)!important;
-    }
+
     .app.sidebar-collapsed .sidebar-nav button:hover{transform:scale(1.07)!important}
-    .app.sidebar-collapsed #sidebarTraining button[data-page="workout"]:hover{transform:scale(1.10)!important}
+
     .sidebar-start:hover,.top-actions .btn:hover,.top-icon-btn:hover,.dock-open:hover,.sidebar-toggle:hover{
       transform:translateY(-1px) scale(1.045)!important;
       border-color:rgba(53,216,255,.30)!important;
@@ -2197,50 +2125,19 @@ body:not(.auth-locked) .auth-gate{
   /* ===== TRUE TRAIN V10.2 — DASHBOARD COMMAND CENTER ===== */
   @media(min-width:761px){
     /* Workout is no longer a special navigation item. Every item shares one hierarchy. */
-    #sidebarTraining button[data-page="workout"]{
-      min-height:42px!important;
-      margin-top:0!important;
-      padding:7px 9px!important;
-      grid-template-columns:28px minmax(0,1fr)!important;
-      gap:8px!important;
-      border-radius:12px!important;
-      border-color:transparent!important;
-      background:transparent!important;
-      color:#8399aa!important;
-      font-size:10.5px!important;
-      font-weight:850!important;
-      letter-spacing:normal!important;
-      box-shadow:none!important;
-    }
-    #sidebarTraining button[data-page="workout"] .sb-icon{
-      width:28px!important;height:28px!important;border-radius:9px!important;
-      background:transparent!important;border:0!important;color:#63d9f5!important;
-    }
-    #sidebarTraining button[data-page="workout"] .sb-icon .ui-icon{width:17px!important;height:17px!important}
-    #sidebarTraining button[data-page="workout"].active{
-      color:#effcff!important;
-      border-color:rgba(53,216,255,.20)!important;
-      background:linear-gradient(90deg,rgba(53,216,255,.115),rgba(53,216,255,.028))!important;
-      box-shadow:inset 3px 0 0 var(--tt-cyan)!important;
-    }
-    #sidebarTraining button[data-page="workout"].active .sb-icon{background:rgba(53,216,255,.07)!important;color:#83eaff!important}
-    .app.sidebar-collapsed #sidebarTraining button[data-page="workout"]{
-      width:52px!important;min-height:44px!important;margin:0!important;
-      grid-template-columns:1fr!important;place-items:center!important;justify-self:center!important;padding:7px!important;
-    }
-    .app.sidebar-collapsed #sidebarTraining button[data-page="workout"] .sb-icon{width:28px!important;height:28px!important}
+
+
+
+
+
+
+
   }
 
   @media (hover:hover) and (pointer:fine) and (min-width:761px){
-    #sidebarTraining button[data-page="workout"]:hover{
-      transform:translateX(3px) scale(1.035)!important;
-      color:#e9fbff!important;
-      border-color:rgba(53,216,255,.16)!important;
-      background:rgba(53,216,255,.065)!important;
-      box-shadow:none!important;
-    }
-    #sidebarTraining button[data-page="workout"].active:hover{transform:translateX(3px) scale(1.045)!important}
-    .app.sidebar-collapsed #sidebarTraining button[data-page="workout"]:hover{transform:scale(1.07)!important}
+
+
+
   }
 
   /* Dashboard hierarchy */
@@ -3399,16 +3296,15 @@ body:not(.auth-locked) .auth-gate{
         <button class="sidebar-toggle" id="sidebarToggle" title="Thu gọn sidebar">‹</button>
       </div>
       <div class="sidebar-scroll">
-        <div class="sidebar-label">Overview</div><nav class="sidebar-nav" id="sidebarOverview"></nav>
+        <nav class="sidebar-nav" id="sidebarOverview"></nav>
         <div class="sidebar-label">Training</div><nav class="sidebar-nav" id="sidebarTraining"></nav>
         <div class="sidebar-label">Analytics</div><nav class="sidebar-nav" id="sidebarAnalytics"></nav>
         <div class="sidebar-label">Coach</div><nav class="sidebar-nav" id="sidebarCoach"></nav>
         <div class="sidebar-label">System</div><nav class="sidebar-nav" id="sidebarSystem"></nav>
       </div>
       <div class="sidebar-spacer"></div>
-      <div class="sidebar-today"><small>TODAY</small><b id="sidebarTodayName">WORKOUT</b><span id="sidebarTodayMeta">Ready to train</span><button class="sidebar-start" id="sidebarStart">START WORKOUT</button></div>
       <div class="sidebar-motto"><small>TRUE TRAIN DNA</small><b>Train smarter. Build better. Stay accountable.</b></div>
-      <div class="sidebar-sync"><i></i><span>CLOUD SYNCED</span></div>
+      <div class="sidebar-sync" id="sidebarSync" role="status"><i></i><span>Local</span></div>
     </aside>
     <div class="app-content">
     <header class="topbar" id="desktopTopbar" data-page-title="Overview">
@@ -4371,6 +4267,8 @@ body:not(.auth-locked) .auth-gate{
       else if(cloud.dirty){label='Chờ sync';cls='warn';}
       else {label='Đã đồng bộ';cls='synced';}
       txt.textContent=label; if(cls)btn.classList.add(cls);
+      const sidebar=document.getElementById('sidebarSync');
+      if(sidebar){sidebar.querySelector('span').textContent=label;sidebar.dataset.status=cls;sidebar.title=cloud.lastSyncAt?'Last sync: '+new Date(cloud.lastSyncAt).toLocaleString():label;}
     }
     function dayFromDate(d){
       const map = ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
@@ -4469,11 +4367,11 @@ body:not(.auth-locked) .auth-gate{
       nav.innerHTML = navItems.map(([id,label])=>`<button data-page="${id}" class="${activePage===id?'active':''}">${label}</button>`).join('');
       nav.querySelectorAll('button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
 
-      const pageTitle={dashboard:'Overview',workout:'Workout',schedule:'Planner',coach:'Coach Tools',volume:'Volume Analytics',progress:'Progress',history:'History',data:'Manage Data',more:'Settings'};
+      const pageTitle={dashboard:'Home',workout:'Workout',schedule:'Planner',coach:'Coach Tools',volume:'Volume Analytics',progress:'Progress',history:'History',data:'Manage Data',more:'Settings'};
       const topbar=document.getElementById('desktopTopbar'); if(topbar)topbar.dataset.pageTitle=pageTitle[activePage]||'TRUE TRAIN';
       const sideGroups={
-        sidebarOverview:[['dashboard','home','Dashboard']],
-        sidebarTraining:[['schedule','schedule','Schedule'],['workout','workout','Workout']],
+        sidebarOverview:[['dashboard','home','Home']],
+        sidebarTraining:[['schedule','schedule','Schedule'],['workout','workout','Workout'],['nutrition','nutrition','Nutrition'],['exercise-library','exercise','Exercise Library']],
         sidebarAnalytics:[['volume','volume','Volume'],['progress','history','Progress'],['history','history','History']],
         sidebarCoach:[['coach','coach','Coach Tools']],
         sidebarSystem:[['data','data','Manage Data'],['more','more','Settings']]
@@ -10541,7 +10439,8 @@ Last Recovery Event: ${st?.at||'none'}
 Last Safe Snapshot: ${snap?.at||'none'}`;};}
   setTimeout(()=>renderRecovery(false),0);
 })();
-</script>\n
+</script>
+
 <script id="v140-exercise-identity-audit">
 /* V14.0 runtime identity audit/export. No new storage key; dataVersion remains unchanged. */
 (()=>{
@@ -11100,16 +10999,32 @@ Last Safe Snapshot: ${snap?.at||'none'}`;};}
   const baseMore=renderMore;renderMore=function(){const out=baseMore();injectMobile();return out;};
   const baseShow=showPage;showPage=function(id){const out=baseShow(id);if(id==='nutrition')render();return out;};
   const dev=window.TRUE_TRAIN_DEV;if(dev){const oldRun=dev.runIntegrity,oldReport=dev.diagnosticReport;dev.runIntegrity=()=>{const base=oldRun(),issues=[...(base.issues||[])],n=pn();if(!n.currentTarget||typeof n.currentTarget!=='object')issues.push('Personal Nutrition: thiếu currentTarget');if(!n.dailyLogs||typeof n.dailyLogs!=='object'||Array.isArray(n.dailyLogs))issues.push('Personal Nutrition: dailyLogs không hợp lệ');for(const [date,d] of Object.entries(n.dailyLogs||{})){if(!/^\d{4}-\d{2}-\d{2}$/.test(date))issues.push(`Personal Nutrition: date key không hợp lệ ${date}`);if(!Array.isArray(d?.entries))issues.push(`Personal Nutrition ${date}: entries không phải array`);for(const e of d?.entries||[]){if(!e.id)issues.push(`Personal Nutrition ${date}: entry thiếu id`);if(!Number.isFinite(Number(e.calories)))issues.push(`Personal Nutrition ${date}: calories không hợp lệ`);}}return {...base,ok:issues.length===0,issues:issues.slice(0,40),personalNutrition:{days:Object.values(n.dailyLogs||{}).filter(d=>d?.entries?.length).length,customFoods:(n.customFoods||[]).length}};};dev.diagnosticReport=()=>{const r=dev.runIntegrity(),p=r.personalNutrition||{};return oldReport()+`\nPersonal Nutrition: ${p.days||0} logged days • ${p.customFoods||0} custom foods`;};dev.version=V148;}
-  window.TRUE_TRAIN_PERSONAL_NUTRITION={version:V148,render,totals,effectiveTarget};
+  window.TRUE_TRAIN_PERSONAL_NUTRITION={version:V148,render,totals,effectiveTarget,
+    openToday(){pn().date=isoDate();pn().activeTab='today';ui.tab='today';ui.editingEntry='';saveState({cloudDirty:false});showPage('nutrition');const input=document.getElementById('v148FoodSearch');input?.scrollIntoView({block:'center'});input?.focus({preventScroll:true});},
+    openTarget(){pn().activeTab='target';ui.tab='target';saveState({cloudDirty:false});showPage('nutrition');}
+  };
   try{renderNav();if(document.getElementById('page-more')?.classList.contains('active'))renderMore();if(activePage==='nutrition')render();}catch(e){console.warn('V14.8 Personal Nutrition init',e);}
 })();
 </script>
 
 
 <style id="v149-personal-home-style">
-.v149-home{max-width:1380px;margin:0 auto;padding:4px 0 32px;display:grid;gap:14px}.v149-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}.v149-head small{display:block;color:#5eddf8;font-size:9px;font-weight:950;letter-spacing:.14em}.v149-head h2{margin:5px 0 3px;font-size:34px;letter-spacing:-.035em}.v149-head p{margin:0;color:#718b9d;font-size:11px}.v149-date{color:#7897a8;font-size:10px;font-weight:850}.v149-hero{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.55fr);gap:12px}.v149-card{min-width:0;border:1px solid rgba(83,194,230,.13);border-radius:18px;background:linear-gradient(180deg,#081823,#06131d);padding:16px}.v149-today{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;min-height:180px;background:radial-gradient(circle at 85% 15%,rgba(36,204,239,.12),transparent 34%),linear-gradient(135deg,#091c2a,#07131d)}.v149-kicker{display:flex;gap:8px;align-items:center;color:#60ddf7;font-size:8px;font-weight:950;letter-spacing:.12em}.v149-today h3{margin:9px 0 3px;font-size:30px;letter-spacing:-.035em}.v149-today p{margin:0;color:#7e98a8}.v149-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.v149-chip{padding:6px 9px;border-radius:999px;background:#0b2231;border:1px solid rgba(91,205,235,.12);color:#8aa5b4;font-size:8px;font-weight:800}.v149-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.v149-primary{min-width:160px}.v149-today-score{min-width:160px;text-align:right}.v149-today-score b{display:block;font-size:30px;color:#eafaff}.v149-today-score span{display:block;color:#708c9c;font-size:8px}.v149-mini-track{height:7px;margin-top:10px;border-radius:999px;background:#102432;overflow:hidden}.v149-mini-track i{display:block;height:100%;background:#35d5f4}.v149-week-card{display:grid;gap:13px}.v149-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.v149-card-head b{font-size:13px}.v149-card-head span{display:block;margin-top:3px;color:#6f8798;font-size:8px}.v149-link{border:0;background:transparent;color:#61dff8;font-size:8px;font-weight:950;cursor:pointer}.v149-week-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v149-kpi{padding:12px;border-radius:14px;background:#0a1c28;border:1px solid rgba(255,255,255,.045)}.v149-kpi span{display:block;color:#718c9d;font-size:8px;font-weight:850}.v149-kpi b{display:block;margin-top:6px;font-size:22px}.v149-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.v149-nutrition-main{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:12px}.v149-nutrition-main b{font-size:28px}.v149-nutrition-main span{color:#7895a5;font-size:9px}.v149-macros{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}.v149-macro{padding:10px;border-radius:12px;background:#091b27;border:1px solid rgba(255,255,255,.04)}.v149-macro span{display:block;color:#6e8999;font-size:7px}.v149-macro b{display:block;margin-top:4px;font-size:12px}.v149-compliance{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.v149-stat{padding:11px;border-radius:12px;background:#091b27;border:1px solid rgba(255,255,255,.04)}.v149-stat span{display:block;color:#708a9a;font-size:7px}.v149-stat b{display:block;margin-top:5px;font-size:20px}.v149-list{display:grid;gap:8px;margin-top:12px}.v149-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 11px;border-radius:12px;background:#091a26;border:1px solid rgba(255,255,255,.04)}.v149-row b{display:block;font-size:10px}.v149-row small{display:block;margin-top:3px;color:#6e8999;font-size:7px}.v149-row strong{font-size:10px;color:#a9ddea}.v149-empty{padding:20px 10px;text-align:center;color:#6e8999;font-size:9px}.v149-body{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-top:12px}.v149-body b{font-size:24px}.v149-body span{color:#7894a5;font-size:9px}.v149-section-span{grid-column:1/-1}.v149-volume-row{display:grid;grid-template-columns:100px minmax(0,1fr) auto;gap:9px;align-items:center}.v149-volume-row b{font-size:9px}.v149-volume-track{height:6px;border-radius:999px;background:#102432;overflow:hidden}.v149-volume-track i{display:block;height:100%;background:#35d5f4}.v149-volume-row span{font-size:8px;color:#91aab7}.v149-status{display:inline-flex;margin-top:9px;padding:5px 8px;border-radius:999px;border:1px solid rgba(94,205,235,.14);color:#70def5;font-size:7px;font-weight:950;letter-spacing:.08em}.v149-status.done{color:#79e4ad;border-color:rgba(84,221,157,.18);background:rgba(53,201,134,.05)}.v149-status.rest{color:#91a2ad}
-@media(max-width:900px){.v149-hero{grid-template-columns:1fr}.v149-grid{grid-template-columns:1fr}.v149-section-span{grid-column:auto}}
-@media(max-width:760px){.v149-home{padding:0 14px 112px;gap:10px}.v149-head{display:block}.v149-head h2{font-size:28px}.v149-date{margin-top:6px}.v149-card{padding:13px;border-radius:16px}.v149-today{grid-template-columns:1fr;min-height:0;gap:10px}.v149-today h3{font-size:25px}.v149-today-score{text-align:left;min-width:0}.v149-today-score b{font-size:22px}.v149-primary{width:100%}.v149-actions .btn{flex:1;min-height:42px}.v149-week-kpis{grid-template-columns:1fr 1fr}.v149-nutrition-main b{font-size:23px}.v149-macros{grid-template-columns:repeat(3,1fr)}.v149-volume-row{grid-template-columns:76px minmax(0,1fr) auto}.v149-card-head span{font-size:7px}}
+.v149-home{max-width:1280px;margin:0 auto;padding:4px 0 100px;display:grid;gap:24px;color:#edf4f7;font-size:15px;line-height:1.5}
+.v149-head h2{margin:0;font-size:36px;letter-spacing:-.035em}.v149-date{margin-top:3px;color:#a3b6c5;font-size:14px}
+.v149-hero{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:24px}.v149-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.v149-card{min-width:0;border:1px solid #203644;border-radius:16px;background:#0c1c28;padding:26px;overflow-wrap:anywhere}
+.v149-kicker{color:#37cef3;font-size:13px;font-weight:750;letter-spacing:.06em}.v149-today h3{margin:14px 0 2px;font-size:clamp(28px,3.4vw,44px);line-height:1.15;letter-spacing:-.03em}.v149-today p{margin:8px 0;color:#a3b6c5;font-size:15px}
+.v149-status{display:block;margin:14px 0 20px;color:#a3b6c5;font-size:14px}.v149-status:before{content:' ';display:inline-block;width:8px;height:8px;background:#37cef3;border-radius:50%;margin-right:8px}.v149-status.done:before{background:#57dba0}.v149-status.rest:before{background:#96a8b7}
+.v149-mini-track{height:7px;margin-top:12px;border-radius:8px;background:#203644;overflow:hidden}.v149-mini-track i{display:block;height:100%;background:#37cef3;width:0;min-width:0}
+.v149-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:26px}.v149-home .btn{min-height:46px;border-radius:10px;font-size:15px;padding:10px 20px;box-shadow:none;background:#102936}.v149-home .btn.primary{background:#37cef3;border:1px solid #37cef3;color:#04131c}.v149-primary{min-width:190px}
+.v149-link{border:0;background:none;color:#37cef3;font-size:14px;min-height:44px;padding:6px 0;cursor:pointer;text-align:left;flex-shrink:0}.v149-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.v149-card-head h3{margin:0;font-size:18px;font-weight:750}
+.v149-week-card{display:flex;flex-direction:column}.v149-week-count{margin-top:26px;font-size:clamp(40px,4.5vw,64px);line-height:1.1;font-weight:750;color:#37cef3}.v149-week-count span{font-size:.8em;color:#a3b6c5}.v149-week-caption{margin:8px 0 24px;font-size:16px}.v149-week-card .v149-mini-track{margin-top:auto}.v149-sub{margin:14px 0 0;color:#a3b6c5;font-size:14px}
+.v149-nutrition-main{margin:18px 0 0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.v149-nutrition-main b{font-size:42px;color:#37cef3;line-height:1.15}.v149-nutrition-main span{color:#a3b6c5;font-size:17px}
+.v149-macros{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}.v149-macro{min-width:0}.v149-macro+.v149-macro{border-left:1px solid #203644;padding-left:12px}.v149-macro span{display:block;color:#a3b6c5;font-size:13px}.v149-macro b{display:block;margin-top:5px;font-size:16px;font-weight:650}.v149-macro em{font-style:normal;color:#a3b6c5;font-size:13px;font-weight:400}
+.v149-last-title{font-size:22px;margin:16px 0 0;line-height:1.3}.v149-last-date{color:#a3b6c5;font-size:13px;margin-top:4px}.v149-list{margin-top:16px}.v149-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-top:1px solid #203644}.v149-row b{font-size:14px;font-weight:500}.v149-row strong{font-size:13px;font-weight:500;text-align:right;max-width:180px}.v149-empty{padding:24px 0;color:#a3b6c5;font-size:14px}
+@media(min-width:761px){#page-dashboard{background:#070f17}body:has(#page-dashboard.active),body:has(#page-dashboard.active) .app{background:#070f17}#page-dashboard .v149-home{padding-top:8px}}
+@media(min-width:761px) and (max-width:1100px){.v149-hero,.v149-grid{grid-template-columns:1fr}.v149-week-count{margin-top:16px}.v149-week-caption{margin-bottom:18px}}
+@media(max-width:760px){.v149-home{padding:8px 14px 180px;gap:16px;background:#070f17}.v149-head h2{font-size:30px}.v149-date{font-size:13px}.v149-hero,.v149-grid{grid-template-columns:1fr;gap:16px}.v149-card{padding:20px}.v149-today h3{font-size:32px}.v149-actions{gap:6px;margin-top:22px}.v149-primary{width:100%}.v149-actions .v149-link{width:100%;text-align:center}.v149-week-count{font-size:42px;margin-top:16px}.v149-week-caption{margin:6px 0 16px;font-size:14px}.v149-nutrition-main b{font-size:36px}.v149-nutrition-main span{font-size:14px}.v149-macros{gap:8px}.v149-macro+.v149-macro{padding-left:8px}.v149-macro b{font-size:15px}.v149-macro em{display:block}.v149-row{grid-template-columns:minmax(0,1fr) minmax(0,.8fr)}.v149-card-head{flex-wrap:wrap}.v149-card-head h3{font-size:18px}}
 </style>
 <script id="v149-personal-home-script">
 (()=>{
@@ -11128,36 +11043,59 @@ Last Safe Snapshot: ${snap?.at||'none'}`;};}
     if(current){const done=completedSetCount(current),total=totalSetCount(current),pct=total?Math.min(100,Math.round(done/total*100)):0;return {mode:'resume',day,title:current.title||current.day||sched.name,focus:current.focus||sched.focus,exercises:(current.exercises||[]).length,done,total,pct,date:current.date||date};}
     if(todayHistory){const done=num(todayHistory.completedSets)||completedSetCount(todayHistory),total=num(todayHistory.totalSets)||totalSetCount(todayHistory);return {mode:'completed',day,title:todayHistory.title||sched.name,focus:sched.focus,exercises:(todayHistory.exercises||[]).length,done,total,pct:100,date};}
     if((sched.exercises||[]).length)return {mode:'start',day,title:sched.name||day,focus:sched.focus||'',exercises:sched.exercises.length,done:0,total:plannedSets,pct:0,date};
+    if(!Object.values(state.schedule||{}).some(x=>(x?.exercises||[]).length))return {mode:'empty',day,title:'No schedule yet',focus:'Tạo lịch tập để bắt đầu.',exercises:0,done:0,total:0,pct:0,date};
     return {mode:'rest',day,title:sched.name||'REST DAY',focus:sched.focus||'Recovery',exercises:0,done:0,total:0,pct:0,date};
   }
   function nutritionData(){try{const api=window.TRUE_TRAIN_PERSONAL_NUTRITION,date=isoDate();return {sum:api?.totals?.(date)||{calories:0,protein:0,carb:0,fat:0},target:api?.effectiveTarget?.(date)||state.personalNutrition?.currentTarget||{calories:0,protein:0,carb:0,fat:0}};}catch(_){return {sum:{calories:0,protein:0,carb:0,fat:0},target:state.personalNutrition?.currentTarget||{calories:0,protein:0,carb:0,fat:0}};}}
   function complianceData(){try{return window.TRUE_TRAIN_HISTORICAL_SCHEDULE?.compute?.(7)||window.TRUE_TRAIN_PERSONAL_COMPLIANCE?.compute?.(7)||null;}catch(_){return null;}}
   function volumeRows(){try{const raw=completedVolumeThisWeek()||{};return Object.entries(raw).map(([name,v])=>({name,value:num(v?.direct)+num(v?.indirect)})).filter(x=>x.value>0).sort((a,b)=>b.value-a.value).slice(0,4);}catch(_){return [];}}
-  function recentPerformance(){const latest=(state.history||[])[0];if(!latest)return {session:null,rows:[]};const rows=(latest.exercises||[]).map(ex=>{const s=latestSet(ex);if(!s)return null;return {name:exerciseName(ex),value:`${num(s.weight)}kg × ${Math.round(num(s.reps))}${String(s.rir??'').trim()!==''?` @ RIR ${s.rir}`:''}`};}).filter(Boolean).slice(0,2);return {session:latest,rows};}
+  function recentPerformance(){const latest=(state.history||[]).filter(completeHistory).slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')))[0];if(!latest)return {session:null,rows:[]};const rows=(latest.exercises||[]).map(ex=>{const s=latestSet(ex);if(!s)return null;return {name:exerciseName(ex),value:`${num(s.weight)}kg × ${Math.round(num(s.reps))}${String(s.rir??'').trim()!==''?` @ RIR ${s.rir}`:''}`};}).filter(Boolean).slice(0,3);return {session:latest,rows};}
   function bodyData(){try{const rows=(state.bodyProgress||[]).filter(x=>num(x?.weight)>0).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));if(!rows.length)return null;const last=rows.at(-1),prev=rows.length>1?rows.at(-2):null,delta=prev?num(last.weight)-num(prev.weight):null;return {weight:num(last.weight),date:last.date,delta};}catch(_){return null;}}
   function render(){
     const page=document.getElementById('page-dashboard');if(!page)return;
-    const t=todayCard(),stats=dashboardStats(),nutrition=nutritionData(),comp=complianceData(),vol=volumeRows(),perf=recentPerformance(),body=bodyData();
-    const sessionPct=stats.plannedSessions?Math.min(100,Math.round(stats.completedSessions/stats.plannedSessions*100)):0;
-    const setPct=stats.plannedSets?Math.min(100,Math.round(stats.doneSets/stats.plannedSets*100)):0;
-    const tLabel=t.mode==='resume'?'WORKOUT IN PROGRESS':t.mode==='completed'?'TODAY • COMPLETED':t.mode==='rest'?'TODAY • RECOVERY':'TODAY';
-    const primary=t.mode==='resume'?'RESUME WORKOUT':t.mode==='completed'?'VIEW HISTORY':t.mode==='rest'?'VIEW SCHEDULE':'START WORKOUT';
-    const status=t.mode==='completed'?'<span class="v149-status done">COMPLETED</span>':t.mode==='rest'?'<span class="v149-status rest">REST DAY</span>':t.mode==='resume'?'<span class="v149-status">IN PROGRESS</span>':'<span class="v149-status">PLANNED</span>';
-    const nPct=nutrition.target.calories?Math.min(100,Math.round(num(nutrition.sum.calories)/num(nutrition.target.calories)*100)):0;
-    const volumeMax=Math.max(1,...vol.map(x=>x.value));
-    const perfRows=perf.rows.length?perf.rows.map(r=>`<div class="v149-row"><div><b>${escapeHtml(r.name)}</b><small>${perf.session?formatDate(perf.session.date):''} • ${escapeHtml(perf.session?.title||perf.session?.day||'Workout')}</small></div><strong>${escapeHtml(r.value)}</strong></div>`).join(''):'<div class="v149-empty">Complete a workout to start tracking recent performance.</div>';
-    const volumeHtml=vol.length?vol.map(x=>`<div class="v149-volume-row"><b>${escapeHtml(x.name)}</b><div class="v149-volume-track"><i style="width:${Math.min(100,x.value/volumeMax*100)}%"></i></div><span>${fmtVolume(x.value)}</span></div>`).join(''):'<div class="v149-empty">Chưa có volume đã hoàn thành trong tuần này.</div>';
-    const complianceHtml=comp&&comp.rows?.length?`<div class="v149-compliance"><div class="v149-stat"><span>WORKOUT ADHERENCE</span><b>${comp.adherence}%</b></div><div class="v149-stat"><span>SET COMPLETION</span><b>${comp.setCompletion}%</b></div></div>${comp.unavailableDays?'<div class="v149-empty" style="padding:10px 0 0">Một phần historical plan chưa có snapshot và được loại khỏi %.</div>':''}`:'<div class="v149-empty">Chưa đủ planned history để tính Compliance.</div>';
-    page.innerHTML=`<div class="v149-home"><div class="v149-head"><div><small>TRUE TRAIN • PERSONAL • V14.10</small><h2>Home</h2><p>Today command center • training, nutrition and progress.</p></div><div class="v149-date">${escapeHtml(formatDate(isoDate()))} • ${escapeHtml(dayFromDate(new Date()))}</div></div><div class="v149-hero"><section class="v149-card v149-today"><div><div class="v149-kicker"><span>${tLabel}</span><span>•</span><span>${escapeHtml(t.day)}</span></div><h3>${escapeHtml(t.title||'REST')}</h3><p>${escapeHtml(t.focus||'')}</p>${status}<div class="v149-meta"><span class="v149-chip">${t.exercises} exercises</span><span class="v149-chip">${t.total} sets</span>${t.mode==='resume'?`<span class="v149-chip">${t.done}/${t.total} complete</span>`:''}</div><div class="v149-actions"><button class="btn primary v149-primary" id="v149TodayPrimary">${primary}</button>${t.mode!=='rest'&&t.mode!=='completed'?'<button class="btn" id="v149OpenSchedule">SCHEDULE</button>':''}</div></div><div class="v149-today-score"><span>${t.mode==='resume'?'WORKOUT PROGRESS':t.mode==='completed'?'WORKOUT COMPLETE':'TODAY PROGRESS'}</span><b>${t.pct}%</b><div class="v149-mini-track"><i style="width:${t.pct}%"></i></div></div></section><aside class="v149-card v149-week-card"><div class="v149-card-head"><div><b>Weekly Progress</b><span>Current week • completed training</span></div><button class="v149-link" id="v149Plan">VIEW PLAN</button></div><div class="v149-week-kpis"><div class="v149-kpi"><span>WORKOUTS</span><b>${stats.completedSessions}/${stats.plannedSessions}</b></div><div class="v149-kpi"><span>SETS</span><b>${stats.doneSets}/${stats.plannedSets}</b></div></div><div><div class="v149-card-head"><div><span>SESSION PROGRESS</span></div><b>${sessionPct}%</b></div><div class="v149-mini-track"><i style="width:${sessionPct}%"></i></div></div><div><div class="v149-card-head"><div><span>SET PROGRESS</span></div><b>${setPct}%</b></div><div class="v149-mini-track"><i style="width:${setPct}%"></i></div></div></aside></div><div class="v149-grid"><section class="v149-card"><div class="v149-card-head"><div><b>Nutrition Today</b><span>Calories and macro target</span></div><button class="v149-link" id="v149Nutrition">VIEW NUTRITION</button></div><div class="v149-nutrition-main"><div><b>${Math.round(num(nutrition.sum.calories))} / ${Math.round(num(nutrition.target.calories))}</b><span> kcal</span></div><strong>${nPct}%</strong></div><div class="v149-mini-track"><i style="width:${nPct}%"></i></div><div class="v149-macros"><div class="v149-macro"><span>PROTEIN</span><b>${Math.round(num(nutrition.sum.protein))}/${Math.round(num(nutrition.target.protein))}g</b></div><div class="v149-macro"><span>CARBS</span><b>${Math.round(num(nutrition.sum.carb))}/${Math.round(num(nutrition.target.carb))}g</b></div><div class="v149-macro"><span>FAT</span><b>${Math.round(num(nutrition.sum.fat))}/${Math.round(num(nutrition.target.fat))}g</b></div></div></section><section class="v149-card"><div class="v149-card-head"><div><b>Compliance</b><span>Historical plan vs completed work</span></div><button class="v149-link" id="v149Compliance">VIEW DETAILS</button></div>${complianceHtml}</section><section class="v149-card"><div class="v149-card-head"><div><b>Latest Performance</b><span>${perf.session?`${escapeHtml(perf.session.title||perf.session.day||'Workout')} • ${formatDate(perf.session.date)}`:'Recent completed work'}</span></div><button class="v149-link" id="v149History">VIEW HISTORY</button></div><div class="v149-list">${perfRows}</div></section><section class="v149-card"><div class="v149-card-head"><div><b>Weekly Volume</b><span>Top muscle groups • effective sets</span></div><button class="v149-link" id="v149Volume">VIEW VOLUME</button></div><div class="v149-list">${volumeHtml}</div></section>${body?`<section class="v149-card v149-section-span"><div class="v149-card-head"><div><b>Body Progress</b><span>Latest weight check-in</span></div><button class="v149-link" id="v149Progress">VIEW PROGRESS</button></div><div class="v149-body"><div><b>${body.weight.toFixed(1)} kg</b><span>${formatDate(body.date)}</span></div><strong>${body.delta==null?'':`${body.delta>0?'+':''}${body.delta.toFixed(1)} kg`}</strong></div></section>`:''}</div></div>`;
-    const primaryBtn=document.getElementById('v149TodayPrimary');if(primaryBtn)primaryBtn.onclick=()=>{if(t.mode==='completed')showPage('history');else if(t.mode==='rest')showPage('schedule');else{if(!state.currentWorkout)state.currentDay=t.day;saveState({cloudDirty:false});showPage('workout');}};
+    const t=todayCard(),stats=dashboardStats(),nutrition=nutritionData(),perf=recentPerformance();
+    const sessionPct=stats.plannedSessions?Math.max(0,Math.min(100,Math.round(stats.completedSessions/stats.plannedSessions*100))):0;
+    const primary=t.mode==='resume'?'Resume workout':t.mode==='completed'?'View history':t.mode==='empty'?'Create schedule':t.mode==='rest'?'View schedule':'Start workout';
+    const statusText={resume:'In progress',completed:'Completed',rest:'Rest day',empty:'No schedule',start:'Not started'}[t.mode];
+    const nPct=num(nutrition.target.calories)>0?Math.max(0,Math.min(100,num(nutrition.sum.calories)/num(nutrition.target.calories)*100)):0;
+    const perfRows=perf.rows.length?perf.rows.map(r=>`<div class="v149-row"><b>${escapeHtml(r.name)}</b><strong>${escapeHtml(r.value)}</strong></div>`).join(''):'<div class="v149-empty">Chưa có bài tập đã hoàn thành để hiển thị.</div>';
+    const track=(pct,label)=>`<div class="v149-mini-track" role="progressbar" aria-label="${label}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"><i style="width:${pct}%"></i></div>`;
+    page.innerHTML=`<div class="v149-home">
+      <header class="v149-head"><h2>Home</h2><div class="v149-date">${escapeHtml(dayFromDate(new Date()))} · ${escapeHtml(formatDate(isoDate()))}</div></header>
+      <div class="v149-hero">
+        <section class="v149-card v149-today"><div class="v149-kicker">CURRENT WORKOUT</div><h3>${escapeHtml(t.title)}</h3>
+          <p>${t.exercises} exercises · ${t.total} sets</p>
+          <div class="v149-status ${t.mode==='completed'?'done':t.mode==='rest'||t.mode==='empty'?'rest':''}">${statusText}</div>
+          ${t.mode==='resume'&&String(t.date).slice(0,10)!==isoDate()?`<p>Workout date: ${escapeHtml(formatDate(t.date))}</p>`:''}
+          ${t.mode==='empty'?'<p>Tạo lịch tập trong Schedule để bắt đầu.</p>':''}
+          <div>${t.done} / ${t.total} sets completed</div>${track(t.pct,'Workout sets')}
+          <div class="v149-actions"><button class="btn primary v149-primary" id="v149TodayPrimary">${primary}</button>${t.mode!=='rest'&&t.mode!=='empty'?'<button class="v149-link" id="v149OpenSchedule">View schedule →</button>':''}</div>
+        </section>
+        <section class="v149-card v149-week-card"><div class="v149-card-head"><h3>Weekly progress</h3></div>
+          <div class="v149-week-count">${stats.completedSessions}<span> / ${stats.plannedSessions}</span></div><div class="v149-week-caption">workouts completed</div>
+          ${track(sessionPct,'Weekly workouts')}<p class="v149-sub">${stats.doneSets} / ${stats.plannedSets} sets completed</p>
+        </section>
+      </div>
+      <div class="v149-grid">
+        <section class="v149-card"><div class="v149-card-head"><h3>Nutrition today</h3></div>
+          <div class="v149-nutrition-main"><b>${Math.round(num(nutrition.sum.calories))}</b><span>${num(nutrition.target.calories)>0?'/ '+Math.round(num(nutrition.target.calories))+' kcal':'kcal'}</span></div>
+          ${track(nPct,'Daily calories')}
+          ${num(nutrition.target.calories)<=0?'<p class="v149-sub">Chưa có mục tiêu. <button class="v149-link" id="v149SetTarget">Thiết lập mục tiêu →</button></p>':''}
+          <div class="v149-macros">${[['Protein','protein'],['Carbs','carb'],['Fat','fat']].map(([label,key])=>`<div class="v149-macro"><span>${label}</span><b>${Math.round(num(nutrition.sum[key]))} <em>${num(nutrition.target[key])>0?'/ '+Math.round(num(nutrition.target[key])):''} g</em></b></div>`).join('')}</div>
+          <button class="btn primary" id="v149Nutrition">Add food +</button>
+        </section>
+        <section class="v149-card"><div class="v149-card-head"><h3>Last workout</h3><button class="v149-link" id="v149History">View history →</button></div>
+          ${perf.session?`<h4 class="v149-last-title">${escapeHtml(perf.session.title||perf.session.day||'Workout')}</h4><div class="v149-last-date">${escapeHtml(formatDate(perf.session.date))}</div><div class="v149-list">${perfRows}</div>`:'<div class="v149-empty">Chưa có buổi tập hoàn thành.</div>'}
+        </section>
+      </div>
+    </div>`;
+    document.getElementById('v149TodayPrimary').onclick=()=>{if(t.mode==='completed')showPage('history');else if(t.mode==='rest'||t.mode==='empty')showPage('schedule');else{if(!state.currentWorkout)state.currentDay=t.day;saveState({cloudDirty:false});showPage('workout');}};
     document.getElementById('v149OpenSchedule')?.addEventListener('click',()=>showPage('schedule'));
-    document.getElementById('v149Plan')?.addEventListener('click',()=>showPage('schedule'));
-    document.getElementById('v149Nutrition')?.addEventListener('click',()=>showPage('nutrition'));
-    document.getElementById('v149Compliance')?.addEventListener('click',()=>showPage('compliance'));
-    document.getElementById('v149History')?.addEventListener('click',()=>showPage('history'));
-    document.getElementById('v149Volume')?.addEventListener('click',()=>showPage('volume'));
-    document.getElementById('v149Progress')?.addEventListener('click',()=>showPage('progress'));
+    document.getElementById('v149Nutrition').onclick=()=>window.TRUE_TRAIN_PERSONAL_NUTRITION.openToday();
+    document.getElementById('v149SetTarget')?.addEventListener('click',()=>window.TRUE_TRAIN_PERSONAL_NUTRITION.openTarget());
+    document.getElementById('v149History').onclick=()=>showPage('history');
   }
+
   renderDashboard=function(){try{return render();}catch(e){console.warn('V14.9 Home V2',e);return oldRenderDashboard();}};
   if(window.TRUE_TRAIN_DEV)window.TRUE_TRAIN_DEV.version=V149;
   window.TRUE_TRAIN_PERSONAL_HOME={version:V149,render};
