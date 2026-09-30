@@ -4387,8 +4387,20 @@ body:not(.auth-locked) .auth-gate{
         compliance:'<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/>'
       };
       const alias={plan:'schedule',mealLog:'meal',add:'plus',remove:'minus',trash:'delete',client:'personal'};
-      const body=icons[name]||icons[alias[name]]||icons.more;
-      return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
+      const key=icons[name]?name:(alias[name]||'more');
+      const tones={schedule:'training',calendar:'training',today:'training',workout:'training',exercise:'training',plus:'training',play:'training',program:'training',target:'training',meal:'nutrition',nutrition:'nutrition',tdee:'nutrition',scan:'nutrition',macro:'tools',coach:'tools',clients:'tools',assign:'tools',timer:'tools',pause:'tools',edit:'tools',notes:'tools',muscle:'progress',volume:'progress',progress:'progress',analytics:'progress',body:'progress',weight:'progress',measurement:'progress',check:'progress',finish:'progress',compliance:'progress',recovery:'progress',trophy:'award',warning:'award',delete:'danger',minus:'danger',logout:'danger'};
+      const palette={training:'#439AA8',nutrition:'#B87F58',progress:'#719780',tools:'#8C819F',neutral:'#617488',award:'#B89454',danger:'#B7736E'};
+      const tone=tones[key]||'neutral',color=palette[tone];
+      const filled={
+        home:'<path d="M2 10.5 12 2l10 8.5-2 2-2-1.7V22h-5v-7h-2v7H6V10.8l-2 1.7z"/>',
+        workout:'<rect x="2" y="8" width="3" height="8" rx="1"/><rect x="5" y="5" width="4" height="14" rx="1.4"/><rect x="9" y="10.5" width="6" height="3"/><rect x="15" y="5" width="4" height="14" rx="1.4"/><rect x="19" y="8" width="3" height="8" rx="1"/>',
+        more:'<circle cx="4" cy="12" r="2.5"/><circle cx="12" cy="12" r="2.5"/><circle cx="20" cy="12" r="2.5"/>',
+        bookmark:'<path d="M6 2h12a1 1 0 0 1 1 1v19l-7-4-7 4V3a1 1 0 0 1 1-1z"/>',
+        water:'<path d="M12 2S5 10 5 15a7 7 0 0 0 14 0c0-5-7-13-7-13z"/>'
+      };
+      const bowls='<path d="M3 11h18c0 6-4 10-9 10S3 17 3 11Z"/><path d="m13 9 6-6"/>';
+      const body=filled[key]||(key==='meal'||key==='nutrition'?bowls:key==='finish'?icons.check:icons[key]||icons.more);
+      return `<svg class="ui-icon tt-app-icon" data-icon="${key}" data-icon-tone="${tone}" viewBox="0 0 44 44" aria-hidden="true" focusable="false"><rect class="tt-icon-tile" width="44" height="44" rx="11" fill="${color}" stroke="none"/><g transform="translate(11 11) scale(0.916667)" fill="${filled[key]?'#EDF1F3':'none'}" stroke="${filled[key]?'none':'#EDF1F3'}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${body}</g></svg>`;
     }
     function emptyState(kind,title,subtitle=''){
       const iconMap={workout:'workout',schedule:'schedule',history:'history',volume:'volume',cloud:'cloud',nutrition:'nutrition'};
@@ -11156,7 +11168,7 @@ Last Safe Snapshot: ${snap?.at||'none'}`;};}
     page.innerHTML=`<div class="v149-home">
       <header class="v149-head"><h2>Home</h2><div class="v149-date">${escapeHtml(dayFromDate(new Date()))} · ${escapeHtml(formatDate(isoDate()))}</div></header>
       <div class="v149-hero">
-        <section class="v149-card v149-today"><div class="v149-kicker">CURRENT WORKOUT</div><h3>${escapeHtml(t.title)}</h3>
+        <section class="v149-card v149-today"><div class="v149-kicker tt-icon-heading">${appIcon('workout')}<span>CURRENT WORKOUT</span></div><h3>${escapeHtml(t.title)}</h3>
           <p>${t.exercises} exercises · ${t.total} sets</p>
           <div class="v149-status ${t.mode==='completed'?'done':t.mode==='rest'||t.mode==='empty'?'rest':''}">${statusText}</div>
           ${t.mode==='resume'&&String(t.date).slice(0,10)!==isoDate()?`<p>Workout date: ${escapeHtml(formatDate(t.date))}</p>`:''}
@@ -11164,20 +11176,20 @@ Last Safe Snapshot: ${snap?.at||'none'}`;};}
           <div>${t.done} / ${t.total} sets completed</div>${track(t.pct,'Workout sets')}
           <div class="v149-actions"><button class="btn primary v149-primary" id="v149TodayPrimary">${primary}</button>${t.mode!=='rest'&&t.mode!=='empty'?'<button class="v149-link" id="v149OpenSchedule">View schedule →</button>':''}</div>
         </section>
-        <section class="v149-card v149-week-card"><div class="v149-card-head"><h3>Weekly progress</h3></div>
+        <section class="v149-card v149-week-card"><div class="v149-card-head"><h3 class="tt-icon-heading">${appIcon('progress')}<span>Weekly progress</span></h3></div>
           <div class="v149-week-count">${stats.completedSessions}<span> / ${stats.plannedSessions}</span></div><div class="v149-week-caption">workouts completed</div>
           ${track(sessionPct,'Weekly workouts')}<p class="v149-sub">${stats.doneSets} / ${stats.plannedSets} sets completed</p>
         </section>
       </div>
       <div class="v149-grid">
-        <section class="v149-card"><div class="v149-card-head"><h3>Nutrition today</h3></div>
+        <section class="v149-card"><div class="v149-card-head"><h3 class="tt-icon-heading">${appIcon('nutrition')}<span>Nutrition today</span></h3></div>
           <div class="v149-nutrition-main"><b>${Math.round(num(nutrition.sum.calories))}</b><span>${num(nutrition.target.calories)>0?'/ '+Math.round(num(nutrition.target.calories))+' kcal':'kcal'}</span></div>
           ${track(nPct,'Daily calories')}
           ${num(nutrition.target.calories)<=0?'<p class="v149-sub">Chưa có mục tiêu. <button class="v149-link" id="v149SetTarget">Thiết lập mục tiêu →</button></p>':''}
           <div class="v149-macros">${[['Protein','protein'],['Carbs','carb'],['Fat','fat']].map(([label,key])=>`<div class="v149-macro"><span>${label}</span><b>${Math.round(num(nutrition.sum[key]))} <em>${num(nutrition.target[key])>0?'/ '+Math.round(num(nutrition.target[key])):''} g</em></b></div>`).join('')}</div>
           <button class="btn" id="v149Nutrition">Add food +</button>
         </section>
-        <section class="v149-card"><div class="v149-up-next"><div class="v149-kicker">UP NEXT</div>${upcoming?`<h4>${escapeHtml(upcoming.session.name||upcoming.day)}</h4><p>${escapeHtml(upcoming.day)} · ${escapeHtml(formatDate(upcoming.date))} · ${upcoming.session.exercises.length} exercises</p>`:'<p>No upcoming session. Add a session in Plan.</p>'}<button class="v149-link" id="v149NextPlan">View plan →</button></div><div class="v149-card-head"><h3>Last workout</h3><button class="v149-link" id="v149History">View history →</button></div>
+        <section class="v149-card"><div class="v149-up-next"><div class="v149-kicker tt-icon-heading">${appIcon('schedule')}<span>UP NEXT</span></div>${upcoming?`<h4>${escapeHtml(upcoming.session.name||upcoming.day)}</h4><p>${escapeHtml(upcoming.day)} · ${escapeHtml(formatDate(upcoming.date))} · ${upcoming.session.exercises.length} exercises</p>`:'<p>No upcoming session. Add a session in Plan.</p>'}<button class="v149-link" id="v149NextPlan">View plan →</button></div><div class="v149-card-head"><h3 class="tt-icon-heading">${appIcon('history')}<span>Last workout</span></h3><button class="v149-link" id="v149History">View history →</button></div>
           ${perf.session?`<h4 class="v149-last-title">${escapeHtml(perf.session.title||perf.session.day||'Workout')}</h4><div class="v149-last-date">${escapeHtml(formatDate(perf.session.date))}</div><div class="v149-list">${perfRows}</div>`:'<div class="v149-empty">Chưa có buổi tập hoàn thành.</div>'}
         </section>
       </div>
@@ -11730,5 +11742,30 @@ body #restTimerFloat{background:#1B2632!important;border-color:#344350!important
   if(activePage==='more')renderMore();
 })();
 </script>
+
+<style id="true-train-rounded-icons">
+/* SVG tiles carry their own semantic colors and stay crisp at every size. */
+body .ui-icon.tt-app-icon{display:inline-block;width:28px!important;height:28px!important;min-width:28px;flex:0 0 auto;vertical-align:middle;overflow:visible;pointer-events:none;filter:none!important;box-shadow:none!important}
+body .tt-app-icon .tt-icon-tile{stroke:none}
+body .tt-icon-heading{display:flex;align-items:center;gap:10px}
+body .tt-icon-heading .tt-app-icon,body .m117-more-btn .ico .tt-app-icon,body .more-item>span .tt-app-icon,body .v83-coach-command .tool-icon .tt-app-icon{width:44px!important;height:44px!important;min-width:44px}
+body .m117-more-btn{grid-template-columns:44px minmax(0,1fr) 16px!important;gap:11px!important;min-height:66px!important}
+body .m117-more-btn .ico,body .more-item>span,body .v83-coach-command .tool-icon{width:44px!important;height:44px!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+body .sidebar-nav button .sb-icon{width:32px!important;height:32px!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+body .sidebar-nav button .sb-icon .tt-app-icon{width:32px!important;height:32px!important;min-width:32px}
+body .sidebar-nav button{min-height:46px}
+body #bottomNav button .bn-icon{width:32px!important;height:32px!important;background:transparent!important;border:0!important;border-radius:0!important;padding:0!important}
+body #bottomNav button .bn-icon .tt-app-icon{width:32px!important;height:32px!important;min-width:32px}
+body #bottomNav button{position:relative;min-height:66px!important;gap:4px!important;padding:3px 2px 10px!important;background:transparent!important}
+body #bottomNav button.active,body #bottomNav button.active:not(.workout-primary){background:transparent!important;color:#EDF1F3!important}
+body #bottomNav button:after{content:none!important}
+body #bottomNav button.active:after{content:''!important;position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#58BCCA;box-shadow:none}
+body #bottomNav button .bn-label{font-size:10px!important;line-height:1.2}
+body .tt2-ex-quick button,body .tt2-ex-tools button,body .tt2-ex-nav button,body .tt2-manage{gap:6px;min-height:44px;padding:5px 8px}
+body .tt2-ex-thumb .tt-app-icon{width:36px!important;height:36px!important;min-width:36px}
+body #restTimerFloat button .tt-app-icon,body .tt-meal-sheet-close .tt-app-icon{width:24px!important;height:24px!important;min-width:24px}
+body .tt-meal-sheet-close,body .v8-rest-close{min-width:36px;min-height:36px}
+@media(max-width:760px){body .bottom-nav{min-height:80px!important}body .tt2-workout{padding-bottom:235px!important}.tt-workout-head-actions{max-width:115px}body .tt-icon-heading .tt-app-icon{width:40px!important;height:40px!important;min-width:40px}body .tt-icon-heading{gap:9px}body .tt2-ex-tools button,body .tt2-ex-nav button{font-size:10px}body .tt2-session-actions>button{gap:6px}}
+</style>
 </body>
 </html>
