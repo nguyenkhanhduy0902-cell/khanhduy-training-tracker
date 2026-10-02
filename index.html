@@ -5796,10 +5796,10 @@ body:not(.auth-locked) .auth-gate{
           try{
             const previousState=state,rollbackPayload=JSON.stringify(buildBackupPayload(state));
             v133Snapshot(state,'before-restore');
+            try{localStorage.setItem(BACKUP_ROLLBACK_KEY,rollbackPayload);}
+            catch(err){throw new Error(`Không thể lưu snapshot rollback. Restore đã dừng: ${v133SafeMessage(err)}`);}
             state=candidate;
             if(saveState()===false){state=previousState;throw new Error('Không thể lưu dữ liệu restore. Dữ liệu hiện tại vẫn được giữ.');}
-            try{localStorage.setItem(BACKUP_ROLLBACK_KEY,rollbackPayload);}
-            catch(err){v133Log('restore-rollback-snapshot',err);input.value='';toast('Restore thành công • không thể lưu snapshot rollback');showPage(isMobileUI()?'more':'dashboard');return;}
             input.value='';
             toast('Restore thành công • đã lưu snapshot rollback');
             showPage(isMobileUI()?'more':'dashboard');
