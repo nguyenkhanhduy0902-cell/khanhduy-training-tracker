@@ -1,21 +1,26 @@
-/* TRUE TRAIN V12.0 — GitHub Pages safe service worker */
+/* TRUE TRAIN V15.1.1 — GitHub Pages safe service worker */
 const CACHE_PREFIX = 'true-train-';
-const CACHE_NAME = 'true-train-v12-0-12-20260923';
+const CACHE_NAME = 'true-train-v15-1-1-stabilization-2';
 
 const OPTIONAL_STATIC_ASSETS = [
   './index.html',
   './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png',
-  './icons/favicon-48.png'
+  './icons/icon-192-7848ae2a.png',
+  './icons/icon-512-7848ae2a.png',
+  './icons/apple-touch-icon-7848ae2a.png'
 ];
 
 async function cacheOptionalAssets() {
   const cache = await caches.open(CACHE_NAME);
+  const documentAsset = OPTIONAL_STATIC_ASSETS[0];
+  const documentResponse = await fetch(documentAsset, { cache: 'no-store' });
+  if (!documentResponse || !documentResponse.ok) {
+    throw new Error('Unable to cache the offline document.');
+  }
+  await cache.put(documentAsset, documentResponse.clone());
+
   await Promise.allSettled(
-    OPTIONAL_STATIC_ASSETS.map(async asset => {
+    OPTIONAL_STATIC_ASSETS.slice(1).map(async asset => {
       try {
         const response = await fetch(asset, { cache: 'no-store' });
         if (response && response.ok) await cache.put(asset, response.clone());
