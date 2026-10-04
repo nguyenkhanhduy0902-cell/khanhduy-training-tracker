@@ -11947,5 +11947,303 @@ body #restTimerFloat .tt107-time b{font-variant-numeric:tabular-nums;white-space
 @media(max-width:760px){body .tt2-workout-title h2{font-size:32px}body #trainSession{font-size:16px!important}body .tt2-ex-summary{grid-template-columns:28px 52px minmax(0,1fr) 44px 18px;gap:8px}body .tt2-ex-thumb{width:52px}body #restTimerFloat{gap:4px!important;min-height:66px!important;padding:7px!important}body #restTimerFloat [data-train-timer-edit],body #restTimerFloat [data-train-timer-hide]{width:36px!important;height:44px!important}body #restTimerFloat .tt107-actions{gap:4px!important}body #restTimerFloat .tt107-actions button{font-size:10px!important}}
 @media(max-width:390px){body .tt2-ex-summary{grid-template-columns:26px 44px minmax(0,1fr) 40px 18px;gap:6px}body .tt2-ex-thumb{width:44px}body #restTimerFloat .tt107-time b{font-size:25px!important}}
 </style>
+
+<style id="v1511-plan-progression-style">
+/* TRUE TRAIN V15.1.1 — Plan + Per-Set Progression */
+#page-workout .tt2-set-reference{display:grid;grid-template-columns:minmax(0,auto) minmax(0,auto) 1fr;align-items:center;gap:6px 8px;padding:9px 12px;background:linear-gradient(135deg,rgba(14,27,43,.82),rgba(9,22,35,.62));border-top:1px solid rgba(118,177,210,.08)}
+#page-workout .tt-prog-previous{min-width:0;color:#849aaa;font-size:11px;white-space:nowrap}
+#page-workout .tt-prog-previous b{color:#c8d8e1;font-weight:750;font-variant-numeric:tabular-nums}
+#page-workout .tt-prog-target{min-height:30px;display:inline-flex;align-items:center;justify-content:flex-start;gap:6px;width:max-content;max-width:100%;padding:5px 8px;border:1px solid rgba(123,166,191,.12);border-radius:9px;background:rgba(75,112,133,.08);color:#a8bac5;font:750 11px/1.2 inherit;letter-spacing:0;cursor:pointer;font-variant-numeric:tabular-nums}
+#page-workout .tt-prog-target .tt-prog-icon{width:15px;height:15px;flex:0 0 15px}
+#page-workout .tt-prog-target.up{color:#66dff5;border-color:rgba(87,218,245,.23);background:rgba(35,167,197,.09)}
+#page-workout .tt-prog-target.hold{color:#a5b8c4;border-color:rgba(145,169,184,.17);background:rgba(91,112,126,.08)}
+#page-workout .tt-prog-target.below{color:#e9b65e;border-color:rgba(233,182,94,.25);background:rgba(181,121,31,.10)}
+#page-workout .tt-prog-target.down{color:#e69a55;border-color:rgba(230,154,85,.26);background:rgba(179,92,35,.11)}
+#page-workout .tt-prog-target.empty{color:#778d9b;border-style:dashed;background:rgba(87,106,119,.05)}
+#page-workout .tt2-set-reference .v145-feedback{justify-self:end;margin-left:0;font-size:10px}
+#page-workout .tt-prog-reason{grid-column:1/-1;display:block;padding:7px 9px;border-radius:8px;background:rgba(4,14,24,.52);color:#8ea6b5;font-size:10px;line-height:1.45}
+#page-workout .tt-prog-reason[hidden]{display:none}
+#page-workout .tt-prog-settings-only{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#page-workout .tt-prog-settings-only small{margin:0;color:#6e8999}
+#page-workout .tt-prog-settings-only button{margin:0}
+#v145Modal .tt-prog-equipment-step span{color:#68dff5}
+
+#page-schedule .tt-plan-desktop-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin:14px 0 10px}
+#page-schedule .tt-plan-desktop-week button{min-width:0;min-height:82px;padding:9px;text-align:left;border:1px solid rgba(127,172,199,.10);border-radius:13px;background:linear-gradient(145deg,rgba(11,27,43,.86),rgba(7,19,31,.82));color:#dbe9f0;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.018)}
+#page-schedule .tt-plan-desktop-week button small{display:block;color:#617d90;font-size:8px;font-weight:900;letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#page-schedule .tt-plan-desktop-week button b{display:block;margin-top:6px;font-size:11px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#page-schedule .tt-plan-desktop-week button span{display:block;margin-top:5px;color:#71899a;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#page-schedule .tt-plan-desktop-week button.selected{border-color:rgba(74,211,241,.38);background:linear-gradient(145deg,rgba(20,69,88,.48),rgba(8,28,42,.88));box-shadow:inset 0 0 0 1px rgba(75,215,245,.08),0 8px 22px rgba(0,0,0,.12)}
+#page-schedule .tt-plan-desktop-week button.today small{color:#64dff7}
+#page-schedule .tt-plan-desktop-week button.rest{opacity:.7}
+#page-schedule .tt-plan-session-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:10px 0 14px;padding:18px;border:1px solid rgba(83,205,235,.14);border-radius:18px;background:radial-gradient(circle at 15% 0%,rgba(48,176,209,.11),transparent 38%),linear-gradient(145deg,#0b1b2a,#07141f);box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 14px 35px rgba(0,0,0,.13)}
+#page-schedule .tt-plan-session-hero>div:first-child{min-width:0}
+#page-schedule .tt-plan-session-hero small{display:block;color:#5fdcf4;font-size:9px;font-weight:950;letter-spacing:.10em}
+#page-schedule .tt-plan-session-hero h2{margin:5px 0 3px;font-size:27px;line-height:1.1;letter-spacing:-.035em}
+#page-schedule .tt-plan-session-hero p{margin:0;color:#718b9c;font-size:11px}
+#page-schedule .tt-plan-session-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+#page-schedule .tt-plan-session-meta span{display:inline-flex;align-items:center;min-height:24px;padding:0 8px;border:1px solid rgba(120,167,194,.10);border-radius:999px;background:rgba(7,17,28,.56);color:#91a8b6;font-size:8px;font-weight:850;letter-spacing:.03em}
+#page-schedule .tt-plan-hero-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+#page-schedule .tt-plan-hero-actions button,#page-schedule .tt-plan-primary-actions button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 12px;border:1px solid rgba(105,161,190,.14);border-radius:12px;background:#0a1a29;color:#d8e8ef;font-size:9px;font-weight:900;cursor:pointer}
+#page-schedule .tt-plan-hero-actions button.primary,#page-schedule .tt-plan-primary-actions button.primary{border-color:rgba(76,217,244,.35);background:linear-gradient(135deg,#279eb3,#36bad0);color:#03131a;box-shadow:0 8px 22px rgba(33,177,205,.15)}
+#page-schedule .tt-plan-hero-actions .tt-icon-container,#page-schedule .tt-plan-primary-actions .tt-icon-container{width:24px!important;height:24px!important;min-width:24px!important;border-radius:8px!important}
+#page-schedule .tt-plan-rest-input{width:76px!important;min-width:68px;text-align:center;font-variant-numeric:tabular-nums}
+
+#page-schedule .v8-day-row.tt-plan-today{border-color:rgba(80,211,241,.28);box-shadow:inset 3px 0 0 rgba(83,215,242,.56)}
+#page-schedule .v8-day-row.tt-plan-training:not(.active) .v8-day-copy b{color:#dfeaf0}
+#page-schedule .tt-plan-today-badge{display:inline-flex;margin-left:6px;padding:2px 5px;border-radius:999px;background:rgba(47,188,216,.12);color:#63dff5;font-style:normal;font-size:7px;font-weight:950;letter-spacing:.05em}
+#page-schedule .mobile-session-card h3{font-size:24px;line-height:1.12;letter-spacing:-.03em}
+#page-schedule .mobile-session-card>.tt-plan-primary-actions{display:grid;grid-template-columns:1fr 1.2fr;gap:7px;margin-top:10px}
+#page-schedule .mobile-session-card>.tt-plan-primary-actions button{min-width:0;padding:0 8px}
+#page-schedule .mobile-session-card>.tt-plan-primary-actions button span:last-child{white-space:normal;line-height:1.15;text-align:center}
+
+@media(max-width:1180px) and (min-width:761px){#page-schedule .tt-plan-desktop-week{grid-template-columns:repeat(4,minmax(0,1fr))}#page-schedule .tt-plan-session-hero{align-items:flex-start;flex-direction:column}#page-schedule .tt-plan-hero-actions{justify-content:flex-start}}
+@media(max-width:760px){
+  #page-workout .tt2-set-reference{grid-template-columns:1fr auto;gap:6px 7px;padding:8px 9px}
+  #page-workout .tt-prog-previous{font-size:10px;white-space:normal}
+  #page-workout .tt-prog-target{justify-self:end;font-size:10px;min-height:28px;padding:4px 7px}
+  #page-workout .tt2-set-reference .v145-feedback{grid-column:1/-1;justify-self:start;font-size:9px}
+  #page-workout .tt-prog-reason{font-size:9px;padding:6px 8px}
+  #page-schedule .mobile-page-head h2{font-size:30px}
+  #page-schedule .mobile-session-card{border-color:rgba(72,204,234,.16);background:radial-gradient(circle at 12% 0%,rgba(52,182,213,.10),transparent 38%),linear-gradient(145deg,#0a1b2a,#07141f)}
+  #page-schedule .mobile-session-card .tt-plan-session-meta{margin-top:8px}
+}
+@media(max-width:390px){
+  #page-workout .tt2-set-reference{grid-template-columns:1fr}
+  #page-workout .tt-prog-target{justify-self:start}
+  #page-schedule .mobile-session-card>.tt-plan-primary-actions{grid-template-columns:1fr}
+}
+#page-schedule .v8-day-icon .tt-icon-container{width:32px!important;height:32px!important;min-width:32px!important;border-radius:10px!important}
+#page-schedule .v8-day-icon .tt-tabler-icon{width:18px!important;height:18px!important}
+
+</style>
+<script id="v1511-plan-progression-script">
+/* TRUE TRAIN V15.1.1 — Plan + Per-Set Progression Patch */
+(()=>{
+  'use strict';
+  const PATCH_VERSION='15.1.1-plan-progression-1';
+  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:null;};
+  const roundHalf=v=>Math.round((Number(v)||0)*2)/2;
+  const fmt=v=>{const n=Number(v);if(!Number.isFinite(n))return '—';const x=Math.round(n*100)/100;return Number.isInteger(x)?String(x):String(x).replace(/0+$/,'').replace(/\.$/,'');};
+  function parseRange(value,fallbackMin=6,fallbackMax=12){
+    const nums=String(value??'').match(/\d+(?:\.\d+)?/g)?.map(Number).filter(Number.isFinite)||[];
+    if(nums.length>=2)return {min:Math.min(nums[0],nums[1]),max:Math.max(nums[0],nums[1])};
+    if(nums.length===1)return {min:nums[0],max:nums[0]};
+    return {min:fallbackMin,max:fallbackMax};
+  }
+  function exerciseId(ex){return String(ex?.exerciseId||'').trim()||(window.TRUE_TRAIN_EXERCISE_IDENTITY?.key?.(ex)||'');}
+  function settingsFor(ex){
+    const api=window.TRUE_TRAIN_WORKOUT_INTELLIGENCE;
+    if(api?.settingsFor){
+      try{return api.settingsFor(ex);}catch(_){}
+    }
+    const saved=(state.settings?.workoutIntelligence||{})[exerciseId(ex)]||{};
+    const rr=parseRange(saved.repRange||ex?.targetReps||ex?.reps||'6-12');
+    const rir=parseRange(saved.rirRange||ex?.targetRir||ex?.rir||'1-2',1,2);
+    return {id:exerciseId(ex),repMin:num(saved.repMin)??rr.min,repMax:num(saved.repMax)??rr.max,rirMin:num(saved.rirMin)??rir.min,rirMax:num(saved.rirMax)??rir.max,weightStep:num(saved.weightStep)};
+  }
+  function equipmentMap(create=true){state.settings=state.settings||{};const key='workoutIntelligenceEquipmentSteps',current=state.settings[key];if(current&&typeof current==='object'&&!Array.isArray(current))return current;if(!create)return {};state.settings[key]={};return state.settings[key];}
+  function normalizeEquipment(value){return String(value||'').trim().toLowerCase();}
+  function equipmentFor(ex,w){
+    if(ex?.equipment)return String(ex.equipment);
+    const id=exerciseId(ex),sync=String(ex?._syncId||'');
+    const sched=state.schedule?.[w?.day||state.currentDay];
+    const sx=(sched?.exercises||[]).find(x=>(id&&exerciseId(x)===id)||(sync&&String(x?._syncId||'')===sync));
+    if(sx?.equipment)return String(sx.equipment);
+    const lib=(typeof EXERCISE_LIBRARY!=='undefined'?EXERCISE_LIBRARY:[]).find(x=>String(x?.id||x?.exerciseId||'')===id);
+    return String(lib?.equipment||'');
+  }
+  function weightStepFor(ex,w){
+    const cfg=settingsFor(ex),override=num(cfg.weightStep);
+    if(override&&override>0)return {step:override,source:'exercise-override'};
+    const equipment=equipmentFor(ex,w),key=normalizeEquipment(equipment),map=equipmentMap(false),saved=num(map[key]);
+    if(saved&&saved>0)return {step:saved,source:'equipment-setting',equipment};
+    if(key==='cable')return {step:2.5,source:'cable-default',equipment:'Cable'};
+    return {step:null,source:'fallback-5pct',equipment};
+  }
+  function validPreviousSet(set){
+    if(!set)return false;
+    const w=num(set.weight),r=num(set.reps),rir=num(set.rir);
+    return w!==null&&w>=0&&r!==null&&r>0&&rir!==null&&rir>=0;
+  }
+  function targetRirFor(cfg){return Number.isFinite(Number(cfg.rirMax))?Number(cfg.rirMax):Number(cfg.rirMin)||0;}
+  function computeTargetForSet(ex,prevSet,w=null){
+    const cfg=settingsFor(ex),rirTarget=targetRirFor(cfg);
+    if(!validPreviousSet(prevSet))return {hasTarget:false,kind:'empty',action:'none',title:'Chưa đủ dữ liệu',detail:'Set tương ứng của buổi trước chưa có đủ KG, reps và RIR hợp lệ.',repMin:cfg.repMin,repMax:cfg.repMax,rir:rirTarget};
+    const weight=num(prevSet.weight),reps=num(prevSet.reps),rir=num(prevSet.rir),tooHard=rir<cfg.rirMin,fixed=cfg.repMin===cfg.repMax;
+    const base={hasTarget:true,weight,reps,rir:rirTarget,repMin:cfg.repMin,repMax:cfg.repMax,previous:{weight,reps,rir}};
+    if(reps<cfg.repMin){
+      if(tooHard){
+        const stepInfo=weightStepFor(ex,w);let nextWeight,delta;
+        if(stepInfo.step&&stepInfo.step>0){delta=stepInfo.step;nextWeight=Math.max(0,weight-stepInfo.step);}else{nextWeight=Math.max(0,roundHalf(weight*0.95));delta=Math.max(0,weight-nextWeight);}
+        return {...base,kind:'down',action:'load-down',weight:nextWeight,reps:cfg.repMin,stepSource:stepInfo.source,step:delta,title:`${fmt(nextWeight)} kg × ${fmt(cfg.repMin)} @${fmt(rirTarget)}`,detail:`Thiếu reps (${fmt(reps)}/${fmt(cfg.repMin)}) và RIR ${fmt(rir)} thấp hơn mục tiêu. Giảm ${stepInfo.step?`${fmt(delta)} kg`:'khoảng 5%'} rồi quay lại đầu rep range.`};
+      }
+      return {...base,kind:'below',action:'return-to-range',weight,reps:cfg.repMin,stepSource:'hold',title:`${fmt(weight)} kg × ${fmt(cfg.repMin)} @${fmt(rirTarget)}`,detail:`Buổi trước đạt ${fmt(reps)} reps, dưới range ${fmt(cfg.repMin)}–${fmt(cfg.repMax)}. Giữ tạ và đưa set trở lại tối thiểu ${fmt(cfg.repMin)} reps.`};
+    }
+    if(reps<cfg.repMax){
+      if(tooHard)return {...base,kind:'hold',action:'rir-recovery',weight,reps,stepSource:'hold',title:`${fmt(weight)} kg × ${fmt(reps)} @${fmt(rirTarget)}`,detail:`Reps đang trong range nhưng RIR ${fmt(rir)} thấp hơn mục tiêu. Giữ tạ và reps, ưu tiên đạt RIR ${fmt(rirTarget)}.`};
+      const nextReps=Math.min(cfg.repMax,reps+1);
+      return {...base,kind:'up',action:'rep-up',weight,reps:nextReps,stepSource:'hold',title:`${fmt(weight)} kg × ${fmt(nextReps)} @${fmt(rirTarget)}`,detail:`Đã ở trong rep range với RIR phù hợp. Giữ tạ và tăng 1 rep cho set này.`};
+    }
+    if(tooHard)return {...base,kind:'hold',action:'rir-recovery',weight,reps:fixed?cfg.repMin:cfg.repMax,stepSource:'hold',title:`${fmt(weight)} kg × ${fmt(fixed?cfg.repMin:cfg.repMax)} @${fmt(rirTarget)}`,detail:`Đã chạm trần reps nhưng RIR ${fmt(rir)} thấp hơn mục tiêu. Giữ mức hiện tại và cải thiện RIR trước khi tăng tạ.`};
+    const stepInfo=weightStepFor(ex,w);let nextWeight,delta;
+    if(!(stepInfo.step>0)&&weight<=0)return {...base,kind:'hold',action:'load-config',weight,reps:fixed?cfg.repMin:cfg.repMax,stepSource:'no-load-step',title:`${fmt(weight)} kg × ${fmt(fixed?cfg.repMin:cfg.repMax)} @${fmt(rirTarget)}`,detail:'Đã đạt trần reps nhưng chưa có nấc tăng tải khả dụng cho mức 0 kg. Giữ mức hiện tại hoặc cấu hình Weight Step / external load.'};
+    if(stepInfo.step&&stepInfo.step>0){delta=stepInfo.step;nextWeight=weight+stepInfo.step;}else{nextWeight=roundHalf(weight*1.05);if(nextWeight<=weight&&weight>0)nextWeight=roundHalf(weight+0.5);delta=Math.max(0,nextWeight-weight);}
+    const nextReps=cfg.repMin;
+    return {...base,kind:'up',action:'load-up',weight:nextWeight,reps:nextReps,stepSource:stepInfo.source,step:delta,title:`${fmt(nextWeight)} kg × ${fmt(nextReps)} @${fmt(rirTarget)}`,detail:`Đã đạt trần ${fmt(cfg.repMax)} reps với RIR phù hợp. ${stepInfo.step?`Tăng 1 nấc ${fmt(stepInfo.step)} kg`:'Dùng mức tham khảo khoảng +5% vì chưa có nấc tạ thiết bị'} và quay về ${fmt(nextReps)} reps.`};
+  }
+
+  function sessionTs(h){if(typeof v109SessionTs==='function')return v109SessionTs(h);return Date.parse(h?.savedAt||`${h?.date||''}T12:00:00`)||0;}
+  function previousSessionFor(ex,w){
+    const id=exerciseId(ex);if(!id)return null;
+    const start=Date.parse(w?.startedAt||`${w?.date||''}T23:59:59`)||Date.parse(`${w?.date||''}T23:59:59`)||Date.now();
+    return (state.history||[]).map(h=>{const match=(h?.exercises||[]).find(x=>exerciseId(x)===id);if(!match)return null;const sets=(match.sets||[]).filter(validPreviousSet);return sets.length?{session:h,exercise:match,sets,ts:sessionTs(h)}:null;}).filter(Boolean).filter(x=>x.ts<start).sort((a,b)=>b.ts-a.ts)[0]||null;
+  }
+  function previousSetFor(ex,w,si){const p=previousSessionFor(ex,w);return p?.exercise?.sets?.[si]||null;}
+
+  window.TRUE_TRAIN_PROGRESSION_V2={version:PATCH_VERSION,computeTargetForSet,weightStepFor,equipmentFor,parseRange,previousSessionFor,previousSetFor};
+  if(typeof document==='undefined')return;
+
+  const esc=typeof escapeHtml==='function'?escapeHtml:(s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c])));
+  function icon(kind){
+    const paths={
+      up:'<path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7h7v7"/>',
+      hold:'<path d="M5 9h14"/><path d="M5 15h14"/>',
+      below:'<path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0"/><path d="M12 16h.01"/>',
+      down:'<path d="M12 5v14"/><path d="M18 13l-6 6"/><path d="M6 13l6 6"/>',
+      empty:'<path d="M5 12h14"/>'
+    };
+    const k=paths[kind]?kind:'empty';
+    return `<svg class="tt-prog-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[k]}</svg>`;
+  }
+  function previousText(set){return validPreviousSet(set)?`${fmt(set.weight)} kg × ${fmt(set.reps)} @${fmt(set.rir)}`:'Chưa có dữ liệu';}
+  function enrichExercise(ex,w){return {...ex,equipment:equipmentFor(ex,w)};}
+  function targetSignature(t,prev){return [t.kind,t.action,t.title,t.detail,prev?.weight,prev?.reps,prev?.rir].join('|');}
+  function decorateWorkout(){
+    const page=document.getElementById('page-workout'),w=state.currentWorkout;if(!page||!w?.exercises?.length)return;
+    const card=page.querySelector('.tt2-ex-card.active[data-train-card]')||page.querySelector('.tt2-ex-card.active');if(!card)return;
+    const ei=Math.max(0,Number(card.dataset.trainCard)||0),ex=w.exercises[ei];if(!ex)return;
+    const ref=enrichExercise(ex,w),lines=[...card.querySelectorAll('.tt2-set-reference')];
+    lines.forEach((line,si)=>{
+      const prev=previousSetFor(ex,w,si),target=computeTargetForSet(ref,prev,w),sig=targetSignature(target,prev);
+      if(line.dataset.ttProgSig===sig)return;
+      const feedback=line.querySelector('.v145-feedback')?.outerHTML||'';
+      line.dataset.ttProgSig=sig;
+      line.innerHTML=`<span class="tt-prog-previous">Lần trước: <b>${esc(previousText(prev))}</b></span><button type="button" class="tt-prog-target ${esc(target.kind)}" data-tt-prog-toggle aria-expanded="false" aria-label="${esc(target.hasTarget?`Mục tiêu set ${si+1}: ${target.title}`:`Set ${si+1}: chưa đủ dữ liệu đề xuất`)}">${icon(target.kind)}<span>${esc(target.hasTarget?target.title:'Chưa đủ dữ liệu')}</span></button>${feedback}<span class="tt-prog-reason" hidden>${esc(target.detail)}</span>`;
+    });
+    const oldDetail=card.querySelector('.tt2-target-detail');
+    if(oldDetail){
+      oldDetail.classList.add('tt-prog-settings-only');
+      const small=oldDetail.querySelector('small');if(small)small.textContent='Thiết lập progression';
+      const b=oldDetail.querySelector('b');if(b)b.hidden=true;
+      const p=oldDetail.querySelector('p');if(p)p.hidden=true;
+    }
+    if(!page.dataset.ttProgBound){
+      page.dataset.ttProgBound='1';
+      page.addEventListener('click',e=>{
+        const btn=e.target.closest?.('[data-tt-prog-toggle]');if(!btn||!page.contains(btn))return;
+        const reason=btn.parentElement?.querySelector('.tt-prog-reason');if(!reason)return;
+        const open=reason.hidden;reason.hidden=!open;btn.setAttribute('aria-expanded',String(open));
+      });
+    }
+  }
+  let workoutQueued=false;
+  function queueWorkoutDecorate(){if(workoutQueued)return;workoutQueued=true;(window.requestAnimationFrame||setTimeout)(()=>{workoutQueued=false;try{decorateWorkout();}catch(e){console.warn('TRUE TRAIN progression decorate',e);}},0);}
+  const workoutPage=document.getElementById('page-workout');
+  if(workoutPage&&typeof MutationObserver!=='undefined')new MutationObserver(queueWorkoutDecorate).observe(workoutPage,{childList:true,subtree:true});
+
+  function enhanceProgressionSettings(ex,w){
+    const modal=document.getElementById('v145Modal');if(!modal?.classList.contains('open'))return;
+    const equipment=equipmentFor(ex,w)||'Unknown',key=normalizeEquipment(equipment),map=equipmentMap(false),explicit=num(map[key]);
+    const oldStep=document.getElementById('v145WeightStep');
+    if(oldStep){const label=oldStep.closest('label');if(label){const text=[...label.childNodes].find(n=>n.nodeType===3);if(text)text.textContent='OVERRIDE RIÊNG BÀI (KG)';}}
+    let eq=document.getElementById('v1511EquipmentStep');
+    if(!eq){
+      const form=modal.querySelector('.v145-form');if(!form)return;
+      const label=document.createElement('label');label.className='wide tt-prog-equipment-step';label.innerHTML=`EQUIPMENT DEFAULT • <span id="v1511EquipmentName"></span><input id="v1511EquipmentStep" type="number" step="0.25" min="0" placeholder="Chưa đặt → dùng ±5% tham khảo">`;form.appendChild(label);eq=label.querySelector('input');
+    }
+    const name=document.getElementById('v1511EquipmentName');if(name)name.textContent=equipment;
+    eq.value=explicit??(key==='cable'?2.5:'');
+    const note=modal.querySelector('.v145-modal-note');if(note)note.textContent='Ưu tiên: override riêng bài → nấc tạ theo thiết bị → ±5% tham khảo. Cable mặc định 2.5 kg; các thiết bị khác không bị hard-code khi chưa cấu hình.';
+    const save=document.getElementById('v145ModalSave');if(save){
+      const old=save.onclick;save.onclick=()=>{const v=num(eq.value);if(key){if(v&&v>0)equipmentMap()[key]=v;else delete equipmentMap()[key];}return old?.();};
+    }
+  }
+  const intel=window.TRUE_TRAIN_WORKOUT_INTELLIGENCE;
+  if(intel){
+    const oldOpen=intel.openSettings;
+    intel.openSettings=function(ex,w){const out=oldOpen?.(ex,w);setTimeout(()=>enhanceProgressionSettings(enrichExercise(ex,w),w),0);return out;};
+    intel.targetForSet=computeTargetForSet;
+    intel.previousSessionBefore=previousSessionFor;
+    intel.equipmentStepFor=weightStepFor;
+    intel.version=PATCH_VERSION;
+  }
+
+  function totalSets(session){return (session?.exercises||[]).reduce((n,x)=>n+(Number(x?.sets)||0),0);}
+  function todayDay(){try{return typeof dayFromDate==='function'?dayFromDate(new Date()):'';}catch(_){return '';}}
+  function shortDay(day){return {'Thứ 2':'T2','Thứ 3':'T3','Thứ 4':'T4','Thứ 5':'T5','Thứ 6':'T6','Thứ 7':'T7','Chủ nhật':'CN'}[day]||day;}
+  function hasWorkoutDataSafe(w){return (w?.exercises||[]).some(ex=>(ex?.sets||[]).some(s=>['weight','reps','rir','note'].some(k=>String(s?.[k]??'').trim()!=='')));}
+  function openExerciseLibrary(day){state.scheduleEditorDay=day;try{saveState({cloudDirty:false});}catch(_){}showPage('exercise-library');}
+  function goWorkout(day){
+    if(state.currentWorkout&&state.currentWorkout.day!==day&&hasWorkoutDataSafe(state.currentWorkout)){
+      if(typeof toast==='function')toast(`Đang có dữ liệu ở ${state.currentWorkout.day}. Hãy lưu/hoàn tất buổi đó trước khi đổi Plan.`);
+      showPage('workout');return;
+    }
+    state.currentDay=day;if(state.currentWorkout&&state.currentWorkout.day!==day)state.currentWorkout=null;try{saveState({cloudDirty:false});}catch(_){}showPage('workout');
+  }
+  function bindPlanActions(root,day){
+    root.querySelectorAll('[data-tt-plan-day]').forEach(b=>b.onclick=()=>{state.scheduleEditorDay=b.dataset.ttPlanDay;renderSchedule();});
+    root.querySelectorAll('[data-tt-plan-library]').forEach(b=>b.onclick=()=>openExerciseLibrary(day));
+    root.querySelectorAll('[data-tt-plan-workout]').forEach(b=>b.onclick=()=>goWorkout(day));
+  }
+  function decoratePlan(){
+    const page=document.getElementById('page-schedule');if(!page)return;
+    const day=state.scheduleEditorDay||'Thứ 2',session=state.schedule?.[day];if(!session)return;
+    const exercises=session.exercises||[],sets=totalSets(session),today=todayDay(),mobile=typeof isMobileUI==='function'&&isMobileUI();
+    if(mobile){
+      const head=page.querySelector('.mobile-page-head');if(head){const eye=head.querySelector('.eyebrow');if(eye)eye.textContent='PLAN • CHUẨN BỊ BUỔI TẬP';const h=head.querySelector('h2');if(h)h.textContent='Plan';const p=head.querySelector('p');if(p)p.textContent='Chọn buổi → chỉnh mục tiêu → vào Workout';}
+      page.querySelectorAll('.v8-day-row[data-schedule-day]').forEach(row=>{const d=row.dataset.scheduleDay,s=state.schedule?.[d],rest=!(s?.exercises||[]).length;row.classList.toggle('tt-plan-today',d===today);row.classList.toggle('tt-plan-training',!rest);const ico=row.querySelector('.v8-day-icon');if(ico&&typeof appIcon==='function')ico.innerHTML=appIcon(rest?'recovery':'workout');const small=row.querySelector('.v8-day-copy small');if(small&&d===today&&!small.querySelector('.tt-plan-today-badge'))small.insertAdjacentHTML('beforeend','<em class="tt-plan-today-badge">HÔM NAY</em>');});
+      const card=page.querySelector('.mobile-session-card');if(card){
+        card.querySelector('.tt-plan-session-meta')?.remove();
+        const copy=card.querySelector(':scope > div:first-child');if(copy)copy.insertAdjacentHTML('beforeend',`<div class="tt-plan-session-meta"><span>${exercises.length} bài tập</span><span>${sets} sets</span>${exercises.length?'<span>TRAINING</span>':'<span>REST</span>'}</div>`);
+        let actions=card.querySelector('.tt-plan-primary-actions');if(!actions){actions=document.createElement('div');actions.className='tt-plan-primary-actions';card.appendChild(actions);}actions.innerHTML=`<button type="button" data-tt-plan-library>${typeof appIcon==='function'?appIcon('exercise'):''}<span>EXERCISE LIBRARY</span></button><button type="button" class="primary" data-tt-plan-workout>${typeof appIcon==='function'?appIcon('workout'):''}<span>LƯU & VÀO WORKOUT</span></button>`;
+      }
+    }else{
+      const card=page.querySelector('.card.pad');if(!card)return;
+      const sec=card.querySelector('.section-head');if(sec){const h=sec.querySelector('h3');if(h)h.textContent='Plan / Lịch tập';const p=sec.querySelector('p');if(p)p.textContent='Chọn buổi → chỉnh sets, reps, RIR, rest → vào Workout.';}
+      card.querySelector('.tt-plan-desktop-week')?.remove();
+      card.querySelector('.tt-plan-session-hero')?.remove();
+      const days=Object.keys(state.schedule||{});
+      const week=document.createElement('div');week.className='tt-plan-desktop-week';week.innerHTML=days.map(d=>{const s=state.schedule[d],rest=!(s?.exercises||[]).length;return `<button type="button" data-tt-plan-day="${esc(d)}" class="${d===day?'selected':''} ${d===today?'today':''} ${rest?'rest':'training'}"><small>${esc(shortDay(d))}${d===today?' • HÔM NAY':''}</small><b>${esc(s?.name||'REST')}</b><span>${rest?'Nghỉ':`${s.exercises.length} bài · ${totalSets(s)} set`}</span></button>`;}).join('');
+      const hero=document.createElement('div');hero.className='tt-plan-session-hero';hero.innerHTML=`<div><small>${esc(day)} • ${exercises.length?'TRAINING DAY':'REST DAY'}</small><h2>${esc(session.name||'REST')}</h2><p>${esc(session.focus||'')}</p><div class="tt-plan-session-meta"><span>${exercises.length} bài tập</span><span>${sets} sets</span><span>${exercises.length?'SẴN SÀNG CHỈNH TARGET':'RECOVERY'}</span></div></div><div class="tt-plan-hero-actions"><button type="button" data-tt-plan-library>${typeof appIcon==='function'?appIcon('exercise'):''}<span>Exercise Library</span></button><button type="button" class="primary" data-tt-plan-workout>${typeof appIcon==='function'?appIcon('workout'):''}<span>Lưu & vào Workout</span></button></div>`;
+      const toolbar=card.querySelector('.toolbar');if(toolbar){toolbar.insertAdjacentElement('beforebegin',hero);hero.insertAdjacentElement('beforebegin',week);}else{sec?.insertAdjacentElement('afterend',week);week.insertAdjacentElement('afterend',hero);}
+    }
+    bindPlanActions(page,day);
+  }
+  function decorateDesktopRows(day){
+    if(typeof isMobileUI==='function'&&isMobileUI())return;
+    const table=document.querySelector('#page-schedule .schedule-table'),body=document.getElementById('scheduleRows'),arr=state.schedule?.[day]?.exercises;if(!table||!body||!arr)return;
+    const headRow=table.querySelector('thead tr');if(headRow&&!headRow.querySelector('[data-tt-rest-head]')){const th=document.createElement('th');th.dataset.ttRestHead='1';th.textContent='Rest';headRow.insertBefore(th,headRow.lastElementChild);}
+    const empty=body.querySelector('tr td[colspan]');if(empty)empty.setAttribute('colspan','10');
+    [...body.querySelectorAll('tr')].forEach((tr,i)=>{const ex=arr[i];if(!ex||tr.querySelector('[data-tt-rest-cell]'))return;const action=tr.lastElementChild,td=document.createElement('td');td.dataset.ttRestCell='1';td.dataset.label='Rest';let rest=Number(ex.restSeconds);if(!(rest>0)&&typeof v1075EnsureScheduleRest==='function')rest=v1075EnsureScheduleRest(ex);td.innerHTML=`<input class="tt-plan-rest-input" data-tt-rest="${i}" type="number" min="0" max="3600" step="5" inputmode="numeric" value="${Number(rest)||0}" aria-label="Rest giây cho ${esc(ex.name||`bài ${i+1}`)}">`;tr.insertBefore(td,action);});
+    body.querySelectorAll('[data-tt-rest]').forEach(inp=>{inp.oninput=()=>{const i=Number(inp.dataset.ttRest),ex=arr[i];if(!ex)return;const v=Math.max(0,Math.min(3600,Number(inp.value)||0));if(v>0){ex._restAuto=false;ex.restSeconds=v;}else{ex._restAuto=true;ex.restSeconds=typeof v1075DefaultRestByRule==='function'?v1075DefaultRestByRule(ex):0;}invalidateWorkoutFor(day);saveState();};});
+  }
+
+  if(typeof renderScheduleRows==='function'){
+    const baseRows1511=renderScheduleRows;
+    renderScheduleRows=function(day){const out=baseRows1511(day);try{decorateDesktopRows(day);}catch(e){console.warn('TRUE TRAIN Plan Rest column',e);}return out;};
+  }
+  if(typeof renderSchedule==='function'){
+    const baseSchedule1511=renderSchedule;
+    renderSchedule=function(){const out=baseSchedule1511();try{decoratePlan();}catch(e){console.warn('TRUE TRAIN Plan decorate',e);}return out;};
+  }
+  if(typeof showPage==='function'){
+    const baseShow1511=showPage;
+    showPage=function(id){const out=baseShow1511(id);if(id==='workout')setTimeout(queueWorkoutDecorate,0);if(id==='schedule')setTimeout(()=>{try{decoratePlan();}catch(_){}},0);return out;};
+  }
+  try{if(document.getElementById('page-schedule')?.classList.contains('active'))decoratePlan();if(document.getElementById('page-workout')?.classList.contains('active'))queueWorkoutDecorate();}catch(e){console.warn('TRUE TRAIN Plan/Progression init',e);}
+})();
+
+</script>
 </body>
 </html>
