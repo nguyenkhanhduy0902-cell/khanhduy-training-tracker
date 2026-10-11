@@ -1,88 +1,34 @@
-/* TRUE TRAIN V16.0 — GitHub Pages safe service worker */
-const CACHE_PREFIX = 'true-train-';
-const CACHE_NAME = 'true-train-v16-0-master-ui-1';
-
-const OPTIONAL_STATIC_ASSETS = [
-  './index.html',
-  './manifest.webmanifest',
-  './icons/icon-192-7848ae2a.png',
-  './icons/icon-512-7848ae2a.png',
-  './icons/apple-touch-icon-7848ae2a.png'
-];
-
-async function cacheOptionalAssets() {
-  const cache = await caches.open(CACHE_NAME);
-  const documentAsset = OPTIONAL_STATIC_ASSETS[0];
-  const documentResponse = await fetch(documentAsset, { cache: 'no-store' });
-  if (!documentResponse || !documentResponse.ok) {
-    throw new Error('Unable to cache the offline document.');
-  }
-  await cache.put(documentAsset, documentResponse.clone());
-
-  await Promise.allSettled(
-    OPTIONAL_STATIC_ASSETS.slice(1).map(async asset => {
-      try {
-        const response = await fetch(asset, { cache: 'no-store' });
-        if (response && response.ok) await cache.put(asset, response.clone());
-      } catch (_) {}
-    })
-  );
-}
+/* TRUE TRAIN service worker. Cache name đổi theo mỗi bản để máy cũ tự bỏ cache cũ. */
+const CACHE = 'true-train-v16-1-master-ui-1';
+const CORE = ['./', './index.html'];
 
 self.addEventListener('install', event => {
-  event.waitUntil(cacheOptionalAssets().then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key))))
+      .then(keys => Promise.all(keys.filter(k => k.startsWith('true-train-') && k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('message', event => {
-  if (event.data === 'SKIP_WAITING') self.skipWaiting();
-});
-
-async function networkFirstDocument(request) {
-  try {
-    const response = await fetch(request, { cache: 'no-store' });
-    if (response && response.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      await cache.put(request, response.clone());
-      const canonicalIndex = new Request(new URL('./index.html', self.registration.scope).href);
-      await cache.put(canonicalIndex, response.clone());
-    }
-    return response;
-  } catch (error) {
-    const cached = await caches.match(request, { ignoreSearch: true });
-    if (cached) return cached;
-    const fallback = await caches.match('./index.html', { ignoreSearch: true });
-    if (fallback) return fallback;
-    throw error;
-  }
-}
-
-async function staleWhileRevalidate(request) {
-  const cache = await caches.open(CACHE_NAME);
-  const cached = await caches.match(request, { ignoreSearch: true });
-  const networkPromise = fetch(request, { cache: 'no-store' })
-    .then(async response => {
-      if (response && response.ok) await cache.put(request, response.clone());
-      return response;
-    })
-    .catch(() => null);
-  return cached || (await networkPromise) || Response.error();
-}
-
+/* Network trước, cache dự phòng: mở app ngoại tuyến vẫn chạy, có mạng thì luôn lấy bản mới. Không đụng request tới server khác (Supabase). */
 self.addEventListener('fetch', event => {
-  const request = event.request;
-  if (request.method !== 'GET') return;
-  const url = new URL(request.url);
-  if (request.mode === 'navigate' || request.destination === 'document') {
-    event.respondWith(networkFirstDocument(request));
-    return;
-  }
-  if (url.origin === self.location.origin) event.respondWith(staleWhileRevalidate(request));
+  const req = event.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  event.respondWith(
+    fetch(req)
+      .then(res => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+        }
+        return res;
+      })
+      .catch(() => caches.match(req).then(hit => hit || caches.match('./index.html')))
+  );
 });
