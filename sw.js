@@ -1,5 +1,5 @@
 /* TRUE TRAIN service worker. Cache name đổi theo mỗi bản để máy cũ tự bỏ cache cũ. */
-const CACHE = 'true-train-v16-3-master-ui-1';
+const CACHE = 'true-train-v16-4-master-ui-1';
 const CORE = ['./', './index.html'];
 
 self.addEventListener('install', event => {
@@ -14,14 +14,14 @@ self.addEventListener('activate', event => {
   );
 });
 
-/* Network trước, cache dự phòng: mở app ngoại tuyến vẫn chạy, có mạng thì luôn lấy bản mới. Không đụng request tới server khác (Supabase). */
+/* Network trước, cache dự phòng: mở app ngoại tuyến vẫn chạy, có mạng thì luôn lấy bản mới, bỏ qua HTTP cache của GitHub Pages. Không đụng request tới server khác (Supabase). */
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
   event.respondWith(
-    fetch(req)
+    fetch(req, { cache: 'no-store' })
       .then(res => {
         if (res && res.ok) {
           const copy = res.clone();
