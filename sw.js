@@ -1,5 +1,5 @@
 /* TRUE TRAIN service worker. Cache name đổi theo mỗi bản để máy cũ tự bỏ cache cũ. */
-const CACHE = 'true-train-v16-2-master-ui-1';
+const CACHE = 'true-train-v16-3-master-ui-1';
 const CORE = ['./', './index.html'];
 
 self.addEventListener('install', event => {
