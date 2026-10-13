@@ -1,6 +1,6 @@
 /* TRUE TRAIN service worker. Cache name đổi theo mỗi bản để máy cũ tự bỏ cache cũ.
-   Khi phát hành: tên cache phải khớp APP_VERSION trong index.html (16.8 -> v16-8). */
-const CACHE = 'true-train-v16-8-release-1';
+   Khi phát hành: tên cache phải khớp APP_VERSION trong index.html (16.8.1 -> v16-8-1). */
+const CACHE = 'true-train-v16-8-1-release-1';
 const CORE = ['./', './index.html'];
 
 self.addEventListener('install', event => {
