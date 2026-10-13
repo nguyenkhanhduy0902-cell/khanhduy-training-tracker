@@ -1,7 +1,7 @@
 {
-  "latest": "16.8",
+  "latest": "16.8.2",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Thêm thông báo bản mới và chế độ bảo trì."
+  "notes": "Sửa thanh trên cùng bị đè lên giờ và pin khi mở app từ icon iPhone."
 }
