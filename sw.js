@@ -1,5 +1,6 @@
-/* TRUE TRAIN service worker. Cache name đổi theo mỗi bản để máy cũ tự bỏ cache cũ. */
-const CACHE = 'true-train-v16-7-macro-ui-1';
+/* TRUE TRAIN service worker. Cache name đổi theo mỗi bản để máy cũ tự bỏ cache cũ.
+   Khi phát hành: tên cache phải khớp APP_VERSION trong index.html (16.8 -> v16-8). */
+const CACHE = 'true-train-v16-8-release-1';
 const CORE = ['./', './index.html'];
 
 self.addEventListener('install', event => {
@@ -14,12 +15,15 @@ self.addEventListener('activate', event => {
   );
 });
 
-/* Network trước, cache dự phòng: mở app ngoại tuyến vẫn chạy, có mạng thì luôn lấy bản mới, bỏ qua HTTP cache của GitHub Pages. Không đụng request tới server khác (Supabase). */
+/* Network trước, cache dự phòng: mở app ngoại tuyến vẫn chạy, có mạng thì luôn lấy bản mới, bỏ qua HTTP cache của GitHub Pages. Không đụng request tới server khác (Supabase).
+   16.8: version.json và version-test.json luôn đi thẳng mạng, không lưu cache, để cờ bảo trì hoặc bắt buộc không bị kẹt bản cũ khi mất mạng.
+   16.8: chỉ trả index.html dự phòng khi mở trang (navigate). File khác không có trong cache thì trả lỗi mạng, không trả nhầm HTML. */
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+  if (/\/version(-test)?\.json$/.test(url.pathname)) return;
   event.respondWith(
     fetch(req, { cache: 'no-store' })
       .then(res => {
@@ -29,6 +33,6 @@ self.addEventListener('fetch', event => {
         }
         return res;
       })
-      .catch(() => caches.match(req).then(hit => hit || caches.match('./index.html')))
+      .catch(() => caches.match(req).then(hit => hit || (req.mode === 'navigate' ? caches.match('./index.html') : Response.error())))
   );
 });
