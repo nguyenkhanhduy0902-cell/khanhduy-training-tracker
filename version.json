@@ -1,7 +1,7 @@
 {
-  "latest": "16.11",
+  "latest": "16.12",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập trên mobile theo giao diện mới: chip bài tập, 4 ô thông tin, bảng set gọn."
+  "notes": "Màn Tập trên mobile: nền đen, bỏ cyan, lime cho hành động chính và trạng thái xong."
 }
