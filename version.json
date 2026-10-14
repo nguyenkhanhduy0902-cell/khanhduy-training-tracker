@@ -1,7 +1,7 @@
 {
-  "latest": "16.9",
+  "latest": "16.10",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Từ bản này, máy chỉ đổi sang bản mới khi bấm Cập nhật."
+  "notes": "Giao diện rõ hơn: mục tiêu buổi tập, set đang tập, màu riêng cho từng chất, nước có giờ và ghi chú."
 }
