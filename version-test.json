@@ -1,7 +1,7 @@
 {
-  "latest": "16.9",
+  "latest": "16.10",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Đây là thông báo thử, chỉ hiện khi mở app với ?release=test."
+  "notes": "Giao diện rõ hơn: mục tiêu buổi tập, set đang tập, màu riêng cho từng chất, nước có giờ và ghi chú."
 }
