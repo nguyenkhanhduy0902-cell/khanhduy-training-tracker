@@ -1,7 +1,7 @@
 {
-  "latest": "16.10",
+  "latest": "16.11",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Giao diện rõ hơn: mục tiêu buổi tập, set đang tập, màu riêng cho từng chất, nước có giờ và ghi chú."
+  "notes": "Màn Tập trên mobile theo giao diện mới: chip bài tập, 4 ô thông tin, bảng set gọn."
 }
