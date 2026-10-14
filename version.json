@@ -1,7 +1,7 @@
 {
-  "latest": "16.12",
+  "latest": "16.13",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập trên mobile: nền đen, bỏ cyan, lime cho hành động chính và trạng thái xong."
+  "notes": "Màn Tập mobile: ô bài đang chọn cố định khi cuộn, icon Lucide, nền đen."
 }
