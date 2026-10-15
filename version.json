@@ -1,7 +1,7 @@
 {
-  "latest": "16.18",
+  "latest": "16.19",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập mobile: chip và tên bài đang tập ghim ở đầu màn khi cuộn để đổi bài nhanh."
+  "notes": "Màn Tập mobile: ghi chú set thành icon, ô ghi chú gọn không tràn, nhãn so sánh với lần trước tách rõ."
 }
