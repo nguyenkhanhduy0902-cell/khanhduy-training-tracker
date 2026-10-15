@@ -1,7 +1,7 @@
 {
-  "latest": "16.14",
+  "latest": "16.15",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập mobile: chip và tên bài cố định đúng vị trí, hàng set không tràn, tab và nút chế độ đổi sang lime."
+  "notes": "Màn Tập mobile: sửa màu xanh còn sót ở tiêu đề KG/REPS/RIR và ô RIR đang nhập."
 }
