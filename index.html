@@ -16919,7 +16919,7 @@ html body .ttn19-sheet:not([data-tt-master-ui]){background:rgba(1,7,12,.72)!impo
   const mobile=()=>{try{return isMobileUI();}catch(_){return false;}};
   const pn=()=>{try{return state.personalNutrition||{};}catch(_){return {};}};
   const vn=v=>Math.round(Number(v)||0).toLocaleString('vi-VN');
-  const TABS=[['today','Log'],['tdee','TDEE'],['macro','Macro'],['history','History']];
+  const TABS=[['today','Log'],['tdee','TDEE'],['macro','Macro'],['history','Lịch sử']];
   const mark=el=>{el.setAttribute('data-tt-master-ui','');el.querySelectorAll('*').forEach(x=>x.setAttribute('data-tt-master-ui',''));return el;};
   function rootOf(page){return page.querySelector(':scope > .v148-page, :scope > main');}
   function legacyTab(page,id){
@@ -16934,13 +16934,13 @@ html body .ttn19-sheet:not([data-tt-master-ui]){background:rgba(1,7,12,.72)!impo
   }
   function subText(){
     try{const api=window.TRUE_TRAIN_PERSONAL_NUTRITION,date=isoDate(),sum=api?.totals?.(date)||{calories:0},tg=api?.effectiveTarget?.(date)||pn().currentTarget||{calories:0};
-      return Number(tg.calories)>0?`Hôm nay: ${vn(sum.calories)} / ${vn(tg.calories)} kcal`:`Hôm nay: ${vn(sum.calories)} kcal`;}catch(_){return '';}
+      const D=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'],now=new Date(),u=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())),dn=u.getUTCDay()||7;u.setUTCDate(u.getUTCDate()+4-dn);const wk=Math.ceil(((u-Date.UTC(u.getUTCFullYear(),0,1))/864e5+1)/7);return `${D[now.getDay()]} · ${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')} · Tuần ${wk}`;}catch(_){return '';}
   }
   function ensureHead(root,tab){
     let head=root.querySelector(':scope > .ttds-mealhead');
     if(!head){
       head=document.createElement('header');head.className='ttds-mealhead';
-      head.innerHTML='<h1>Meal</h1><p class="sub"></p><div class="ttds-seg" role="group" aria-label="Meal">'+TABS.map(([id,l])=>`<button type="button" data-ttds-tab="${id}">${l}</button>`).join('')+'</div>';
+      head.innerHTML='<h1>Ăn uống</h1><p class="sub"></p><div class="ttds-seg" role="group" aria-label="Meal">'+TABS.map(([id,l])=>`<button type="button" data-ttds-tab="${id}">${l}</button>`).join('')+'</div>';
       mark(head);
       head.querySelectorAll('[data-ttds-tab]').forEach(b=>b.addEventListener('click',()=>goTab(b.dataset.ttdsTab)));
     }
@@ -16956,7 +16956,7 @@ html body .ttn19-sheet:not([data-tt-master-ui]){background:rgba(1,7,12,.72)!impo
       const num=parseFloat(String(b.textContent).replace(',','.')),tg=parseFloat(String(small.textContent).replace(',','.'));
       if(!Number.isFinite(num))return;
       const isCal=/kcal/i.test(b.textContent);
-      if(isCal){b.textContent=Number.isFinite(tg)&&tg>0?`${vn(num)} / ${vn(tg)} kcal`:`${vn(num)} kcal`;label.textContent='Tổng hôm nay';}
+      if(isCal){b.textContent=Number.isFinite(tg)&&tg>0?`${vn(num)} / ${vn(tg)} kcal`:`${vn(num)} kcal`;label.textContent='Kcal hôm nay';}
       else b.textContent=Number.isFinite(tg)&&tg>0?`${Math.round(num)} / ${Math.round(tg)} g`:`${Math.round(num)} g`;
       card.dataset.ttdsFmt='1';
     });
@@ -16966,7 +16966,7 @@ html body .ttn19-sheet:not([data-tt-master-ui]){background:rgba(1,7,12,.72)!impo
     const exist=root.querySelector(':scope > .ttds-groups');
     if(!card){
       if(!exist&&!root.querySelector(':scope > .ttds-empty')&&root.querySelector('.v148-food-add')){
-        const e=document.createElement('div');e.className='ttds-empty';e.textContent='Chưa log món nào hôm nay. Bấm Add food để thêm món đầu tiên.';mark(e);root.appendChild(e);
+        const e=document.createElement('div');e.className='ttds-empty';e.textContent='Chưa ghi bữa nào hôm nay. Bấm Thêm bữa để bắt đầu.';mark(e);root.appendChild(e);
       }
       return;
     }
@@ -16991,7 +16991,7 @@ html body .ttn19-sheet:not([data-tt-master-ui]){background:rgba(1,7,12,.72)!impo
     }
     let add=root.querySelector(':scope > .ttds-addfood');
     if(!add){
-      add=document.createElement('button');add.type='button';add.className='ttds-addfood';add.textContent='+ Add food';mark(add);
+      add=document.createElement('button');add.type='button';add.className='ttds-addfood';add.textContent='Thêm bữa';mark(add);
       add.addEventListener('click',()=>{root.classList.add('ttds-form-open');setTimeout(()=>root.querySelector('.v148-food-add input')?.focus(),40);});
       root.appendChild(add);
     }
@@ -17006,9 +17006,9 @@ html body .ttn19-sheet:not([data-tt-master-ui]){background:rgba(1,7,12,.72)!impo
     const h=root.querySelector(':scope > section.v148-card > h3');if(h&&h.textContent==='Water')h.textContent='Nước';
   }
   function mobileLabels(page){
-    const l=page.querySelector('.ttn19-hero .ttn19-label');if(l&&l.textContent!=='Tổng hôm nay')l.textContent='Tổng hôm nay';
+    const l=page.querySelector('.ttn19-hero .ttn19-label');if(l&&l.textContent!=='Kcal hôm nay')l.textContent='Kcal hôm nay';
     const w=page.querySelector('.ttn19-water-copy > span');if(w&&w.textContent!=='Nước')w.textContent='Nước';
-    const a=page.querySelector('#ttn19AddMeal > span:last-child');if(a&&a.textContent!=='Add food')a.textContent='Add food';
+    const a=page.querySelector('#ttn19AddMeal > span:last-child');if(a&&a.textContent!=='Thêm bữa')a.textContent='Thêm bữa';
     const t=page.querySelector('.ttn19-water-actions [data-water-custom]');if(t&&t.textContent!=='Tùy chỉnh')t.textContent='Tùy chỉnh';
     page.querySelectorAll('.ttn19-group-copy b').forEach(b=>{const s=b.textContent.trim();const f=s.charAt(0)+s.slice(1).toLowerCase();if(b.textContent!==f)b.textContent=f;});
   }
@@ -19139,44 +19139,72 @@ html body #appShell #bottomNav .tt1625-ring b{position:relative!important;font:7
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
 <style id="v1627-meal-mobile">
-/* 16.27 · Meal theo quy chuẩn Workout: lime cho hành động/xong, hồng cho cảnh báo, nền đen, danh sách có đường kẻ. Chỉ lớp trình bày. */
-html body #page-nutrition{--ds-accent:#c6ff3d;--ds-bg:#0c0d0f;--ds-surface:#15171a;--ds-surface-raised:#1c1f23;--ds-line:#26292e;--ds-text-strong:#f2f3f1;--ds-text-muted:#8b9096;--ds-text-subtle:#8b9096;--tt-mau-text:#f2f3f1;--tt-mau-muted:#8b9096;--tt-mau-border:#26292e;--tt-mau-hairline:#26292e;--tt-mau-cyan:#c6ff3d;color:#f2f3f1}
-html body #page-nutrition,html body #page-nutrition :is(b,span,small,strong,p,h2,h3,h4,label,input,select,button,div,time,article),html body .tt-meal-sheet :is(b,span,small,strong,p,h3,label,input,select,button,div){font-family:Archivo,system-ui,sans-serif!important}
-html body #page-nutrition :is(.ttn19-macro b,.ttn19-cal-main b,.ttn19-group-kcal,.ttn19-macro-pct,.ttn19-track-meta,.ttn111-history-kcal,.v148-kpi b,time){font-variant-numeric:tabular-nums!important}
-html body #page-nutrition :is(.ttn19-card,.ttn19-hero,.ttn19-macro,.ttn19-meal-group,.ttn19-water,.v148-card,.v148-current-target,.v148-food-card,.ttn111-history-card,.ttn111-summary>div,.ttn111-detail-section){background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}
-html body #page-nutrition :is(.ttn19-meal-group,.ttn19-food-row,.ttn19-water-row,.v148-entry,.v148-history-row,.ttn111-history-card,.ttn111-detail-food){border-left:0!important;border-bottom:1px solid #26292e!important}
-html body #page-nutrition :is(.ttn19-head small,.v148-head small,.ttn19-label,.ttn19-section-head span){color:#8b9096!important;font-size:11px!important;font-weight:600!important;letter-spacing:.08em!important;text-transform:uppercase;white-space:nowrap}
-html body #page-nutrition :is(.ttn19-head h2,.v148-head h2,.ttn111-history-head h2){font-size:30px!important;font-weight:800!important;line-height:1.1!important;color:#f2f3f1!important;letter-spacing:0!important;white-space:nowrap}
-html body #page-nutrition :is(.ttn111-history-head p,.ttn19-head p){color:#8b9096!important;font-size:13px!important}
-html body #page-nutrition :is([data-ttn110-nav],[data-ttn111-nav],.v148-tabs){display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:3px!important;max-width:560px;border:1px solid #26292e!important;border-radius:10px!important;padding:3px!important;margin:0 0 16px!important;overflow:visible!important;background:transparent!important}
-html body #page-nutrition :is([data-ttn110-nav],[data-ttn111-nav],.v148-tabs) button{min-height:40px!important;padding:0 6px!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#8b9096!important;font-weight:600!important;font-size:13px!important;white-space:nowrap;display:flex!important;align-items:center;justify-content:center;box-shadow:none!important}
-html body #page-nutrition :is([data-ttn110-nav],[data-ttn111-nav],.v148-tabs) button::before{content:none!important;display:none!important}
-html body #page-nutrition :is([data-ttn110-nav],[data-ttn111-nav],.v148-tabs) button :is(.ui-icon,svg){display:none!important}
-html body #page-nutrition :is([data-ttn110-nav],[data-ttn111-nav],.v148-tabs) button span{font:inherit!important;color:inherit!important}
-html body #page-nutrition :is([data-ttn110-nav],[data-ttn111-nav],.v148-tabs) button.active{background:#c6ff3d!important;color:#0c0d0f!important;font-weight:700!important}
-html body #page-nutrition :is(.btn.primary,.ttn19-add),html body .tt-meal-sheet .btn.primary{background:#c6ff3d!important;background-image:none!important;color:#0c0d0f!important;border:0!important;border-radius:12px!important;min-height:50px!important;font-weight:700!important;font-size:15px!important;box-shadow:none!important;text-transform:none!important;letter-spacing:0!important}
-html body #page-nutrition .ttn19-add{display:flex!important;align-items:center;justify-content:center;gap:8px;width:100%}
-html body #page-nutrition :is(.btn:not(.primary),.ttn111-history-actions button,.ttn111-back),html body .tt-meal-sheet .btn:not(.primary){background:transparent!important;background-image:none!important;border:1px solid #26292e!important;color:#f2f3f1!important;border-radius:10px!important;min-height:44px!important;box-shadow:none!important}
-html body #page-nutrition :is(input,select),html body .tt-meal-sheet :is(input,select,textarea){background:#1c1f23!important;border:1px solid #26292e!important;border-radius:8px!important;color:#f2f3f1!important;min-height:44px!important;box-shadow:none!important}
-html body #page-nutrition :is(.v148-track,.ttn19-track,.ttn19-mini-track){height:4px!important;background:#1c1f23!important;border-radius:2px!important;box-shadow:none!important}
-html body #page-nutrition :is(.v148-track,.ttn19-track,.ttn19-mini-track) i{background:#f2f3f1!important;background-image:none!important;box-shadow:none!important}
-html body #page-nutrition .ttn19-macro-dot{display:none!important}
-html body #page-nutrition .ttn19-cal-main b{font-size:44px!important;font-weight:800!important;font-stretch:75%;line-height:1!important;color:#f2f3f1!important}
-html body #page-nutrition :is(.ttn19-remaining,.ttn19-remaining span){color:#8b9096!important;background:transparent!important;border:0!important}
-html body #page-nutrition .ttn19-remaining :is(.ui-icon,svg){display:none!important}
-html body #page-nutrition :is(.v148-over,.ttn111-history-actions .danger){color:#ff3d8b!important}
-html body #page-nutrition .ttn111-history-kcal small{display:block}
-html body #page-nutrition .tt1627-ok{color:#c6ff3d!important;font-weight:600}
-html body #page-nutrition .tt1627-warn{color:#ff3d8b!important;font-weight:600}
-html body #page-nutrition .tt1627-muted{color:#8b9096!important}
-html body #page-nutrition .tt1627-hide{display:none!important}
-html body #page-nutrition .tt1627-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;max-width:560px;border:1px solid #26292e;border-radius:10px;padding:3px;margin:0 0 12px;grid-column:1/-1}
-html body #page-nutrition .tt1627-seg button{min-height:40px;border:0;border-radius:8px;background:transparent;color:#8b9096;font:600 13px/1 Archivo,system-ui,sans-serif;white-space:nowrap;cursor:pointer}
-html body #page-nutrition .tt1627-seg button.on{background:#c6ff3d;color:#0c0d0f;font-weight:700}
-html body .tt-meal-sheet{background:rgba(12,13,15,.6)!important;backdrop-filter:none!important}
-html body .tt-meal-sheet .tt-meal-sheet-panel{background:#15171a!important;background-image:none!important;border:1px solid #26292e!important;border-radius:16px 16px 0 0!important;box-shadow:none!important;color:#f2f3f1!important}
+/* 16.27 · Meal theo quy chuẩn Workout. Ghi đè lớp tt-ds-meal bằng id kép (như #page-workout#page-workout). Chỉ trình bày. */
+html body #appShell #page-nutrition#page-nutrition{--cy:#c6ff3d;--am:#f2f3f1;--s1:#15171a;--s2:#1c1f23;--inset:#1c1f23;--line:#26292e;--line2:#26292e;--tx:#f2f3f1;--txs:#f2f3f1;--tx2:#8b9096;--tx3:#8b9096;--ds-accent:#c6ff3d;--ds-on-accent:#0c0d0f;--ds-bg:#0c0d0f;--ds-surface:#15171a;--ds-surface-raised:#1c1f23;--ds-line:#26292e;--ds-text-strong:#f2f3f1;--ds-text-muted:#8b9096;--ds-text-subtle:#8b9096;--tt-mau-cyan:#c6ff3d;--tt-mau-text:#f2f3f1;--tt-mau-muted:#8b9096;--tt-mau-border:#26292e;--tt-mau-hairline:#26292e;background:#0c0d0f!important;color:#f2f3f1}
+html body #appShell #page-nutrition#page-nutrition,html body #appShell #page-nutrition#page-nutrition *,html body .ttn19-sheet *,html body .tt-meal-sheet *{font-family:Archivo,system-ui,sans-serif!important}
+html body #appShell #page-nutrition#page-nutrition :is(b,strong,em,time,.ttn19-group-kcal,.ttn111-history-kcal){font-variant-numeric:tabular-nums!important;font-style:normal}
+html body #appShell #page-nutrition#page-nutrition .ttds-mealhead{display:flex!important;flex-direction:column;gap:4px;margin:0 0 4px}
+html body #appShell #page-nutrition#page-nutrition .ttds-mealhead .sub{display:block!important;order:-1;margin:0!important;color:#8b9096!important;font-size:11px!important;font-weight:600!important;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+html body #appShell #page-nutrition#page-nutrition .ttds-mealhead h1{margin:0!important;font-size:30px!important;font-weight:800!important;line-height:1.1!important;color:#f2f3f1!important;white-space:nowrap}
+html body #appShell #page-nutrition#page-nutrition .ttds-seg{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px!important;margin:12px 0 4px!important;padding:3px!important;border:1px solid #26292e!important;border-radius:10px!important;background:transparent!important;max-width:560px}
+html body #appShell #page-nutrition#page-nutrition .ttds-seg button{min-height:40px!important;padding:0 4px!important;border-radius:8px!important;background:transparent!important;color:#8b9096!important;font-size:13px!important;font-weight:600!important;white-space:nowrap;box-shadow:none!important}
+html body #appShell #page-nutrition#page-nutrition .ttds-seg button.on{background:#c6ff3d!important;color:#0c0d0f!important;font-weight:700!important}
+html body #appShell #page-nutrition#page-nutrition :is(.ttn19-card,.ttn19-hero,.ttn19-macros,.ttn19-macro,.ttn19-meal-group,.v148-card,.v148-kpis,.v148-kpi,.v148-food-card,.ttn111-history-card,.ttn111-summary>div,.ttn111-detail-section,.tt-mau-chart-card){background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}
+html body #appShell #page-nutrition#page-nutrition :is(.ttn19-track,.ttn19-mini-track,.v148-track){height:4px!important;border:0!important;border-radius:2px!important;background:#1c1f23!important}
+html body #appShell #page-nutrition#page-nutrition :is(.ttn19-track,.ttn19-mini-track,.v148-track) i{background:#f2f3f1!important;background-image:none!important;border-radius:2px!important;box-shadow:none!important}
+html body #appShell #page-nutrition#page-nutrition :is(.ttn19-macro-dot,.ttn19-macro-pct,.ttn19-remaining :is(svg,.ui-icon)){display:none!important}
+html body #appShell #page-nutrition#page-nutrition :is(.v148-over,.ttn111-history-actions .danger,.tt1627-warn){color:#ff3d8b!important}
+html body #appShell #page-nutrition#page-nutrition .tt1627-ok{color:#c6ff3d!important;font-weight:600}html body #appShell #page-nutrition#page-nutrition .tt1627-muted{color:#8b9096!important}html body #appShell #page-nutrition#page-nutrition .tt1627-warn{font-weight:600}
+html body #appShell #page-nutrition#page-nutrition .tt1627-hide{display:none!important}
+html body #appShell #page-nutrition#page-nutrition :is(.btn.primary,.ttds-addfood,#ttn19AddMeal){background:#c6ff3d!important;background-image:none!important;color:#0c0d0f!important;border:0!important;border-radius:12px!important;min-height:50px!important;font-size:15px!important;font-weight:700!important;box-shadow:none!important;text-transform:none!important;letter-spacing:0!important}
+html body #appShell #page-nutrition#page-nutrition #ttn19AddMeal :is(span,svg){color:#0c0d0f!important}
+html body #appShell #page-nutrition#page-nutrition :is(.btn:not(.primary),.ttn111-history-actions button,.ttn111-back,.ttn19-water-actions button,.ttds-formclose){background:transparent!important;background-image:none!important;border:1px solid #26292e!important;color:#f2f3f1!important;border-radius:10px!important;min-height:44px!important;box-shadow:none!important}
+html body #appShell #page-nutrition#page-nutrition :is(input,select,textarea),html body :is(.ttn19-sheet,.tt-meal-sheet) :is(input,select,textarea){background:#1c1f23!important;border:1px solid #26292e!important;border-radius:8px!important;color:#f2f3f1!important;min-height:44px!important;box-shadow:none!important}
+html body #appShell #page-nutrition#page-nutrition .tt-mau-nutrition-heading button{background:transparent!important;color:#8b9096!important;border:1px solid #26292e!important;border-radius:8px!important}
+html body #appShell #page-nutrition#page-nutrition .tt-mau-nutrition-heading button:is(.active,.on,[aria-pressed="true"]){background:#c6ff3d!important;color:#0c0d0f!important;border-color:#c6ff3d!important}
+html body #appShell #page-nutrition#page-nutrition .tt1627-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;max-width:560px;border:1px solid #26292e;border-radius:10px;padding:3px;margin:0 0 12px;grid-column:1/-1}
+html body #appShell #page-nutrition#page-nutrition .tt1627-seg button{min-height:40px;border:0;border-radius:8px;background:transparent;color:#8b9096;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer}
+html body #appShell #page-nutrition#page-nutrition .tt1627-seg button.on{background:#c6ff3d;color:#0c0d0f;font-weight:700}
+html body :is(.ttn19-sheet,.tt-meal-sheet){background:rgba(12,13,15,.6)!important;backdrop-filter:none!important}
+html body :is(.ttn19-sheet-panel,.tt-meal-sheet-panel){background:#15171a!important;background-image:none!important;border:1px solid #26292e!important;border-radius:16px 16px 0 0!important;box-shadow:none!important;color:#f2f3f1!important}
+html body :is(.ttn19-sheet,.tt-meal-sheet) :is(.btn.primary,button[type="submit"]){background:#c6ff3d!important;color:#0c0d0f!important;border:0!important;border-radius:12px!important;min-height:50px!important;font-weight:700!important;box-shadow:none!important}
 @media(max-width:760px){
-html body #page-nutrition .ttn19-head{order:0}html body #page-nutrition .ttn19-hero{order:1}html body #page-nutrition .ttn19-macros{order:2}html body #page-nutrition .ttn19-water{order:3}html body #page-nutrition .ttn19-section{order:4}html body #page-nutrition .ttn19-offer{order:5}html body #page-nutrition .ttn19-add{order:6}
+html body #appShell #page-nutrition#page-nutrition .tt154-module-label{display:none!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal{gap:0!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal>.ttds-mealhead{order:0!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal>.ttn19-hero{order:1!important;padding:18px 0 0!important;margin:0!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal>.ttn19-macros{order:2!important;margin:12px 0 0!important;padding:0!important;gap:10px!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal>.ttn19-water{order:3!important;margin:20px 0 0!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal>.ttn19-section{order:4!important;margin:6px 0 0!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal>.ttn19-offer{order:5!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal>#ttn19AddMeal{order:6!important;margin:16px 0 0!important;width:100%!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-meal>.tt-mau-charts{order:7!important;margin-top:24px!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-hero .ttn19-label{font-size:11px!important;font-weight:600!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#8b9096!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-cal-main{display:flex!important;align-items:baseline;gap:8px;text-align:left!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-cal-main b{font-size:44px!important;font-weight:800!important;font-stretch:75%!important;line-height:1!important;color:#f2f3f1!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-cal-main span{font-size:14px!important;color:#8b9096!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-hero>.ttn19-track{display:none!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-macro{display:grid!important;grid-template-columns:64px minmax(0,1fr) auto!important;align-items:center!important;gap:10px!important;padding:0!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-macro-top{grid-column:1!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-macro-top span{font-size:12px!important;font-weight:600!important;color:#8b9096!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-macro>.ttn19-mini-track{grid-column:2!important;grid-row:1!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-macro>b{grid-column:3!important;grid-row:1!important;font-size:12px!important;font-weight:600!important;color:#8b9096!important;white-space:nowrap}
+html body #appShell #page-nutrition#page-nutrition .ttn19-macro>b span{font-size:12px!important;color:#8b9096!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-water{padding:14px 16px!important;border:1px solid #26292e!important;border-radius:16px!important;background:#15171a!important;box-shadow:none!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-water-copy>span{font-size:13px!important;font-weight:600!important;color:#f2f3f1!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-water-copy :is(b,em){font-size:12px!important;font-weight:500!important;color:#8b9096!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-water-actions{gap:8px!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-water-row{border:1px solid #26292e!important;background:transparent!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-groups{gap:0!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-group-head{padding:14px 0 6px!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-group-copy b{font-size:11px!important;font-weight:600!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#8b9096!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-group-kcal{font-size:12px!important;color:#8b9096!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-group-body{gap:0!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-food-row{min-height:56px!important;padding:12px 0!important;border:0!important;border-bottom:1px solid #26292e!important;border-radius:0!important;background:transparent!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-food-row strong{font-size:15px!important;font-weight:700!important;color:#f2f3f1!important}
+html body #appShell #page-nutrition#page-nutrition .ttn19-empty{padding:16px 0!important;border:0!important;border-bottom:1px solid #26292e!important;background:transparent!important;color:#8b9096!important;text-align:left!important}
+html body #appShell #page-nutrition#page-nutrition .ttn111-history-card{padding:14px 0!important;border-bottom:1px solid #26292e!important}
+html body #appShell #page-nutrition#page-nutrition .ttn111-history-head h2{font-size:22px!important;font-weight:800!important}
 }
 </style>
 <script id="v1627-meal-goal">
