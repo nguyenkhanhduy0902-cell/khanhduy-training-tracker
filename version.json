@@ -1,7 +1,7 @@
 {
-  "latest": "16.19",
+  "latest": "16.22",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập mobile: ghi chú set thành icon, ô ghi chú gọn không tràn, nhãn so sánh với lần trước tách rõ."
+  "notes": "Màn Tập mobile: nút (i) hướng dẫn chuyển lên cạnh tên buổi."
 }
