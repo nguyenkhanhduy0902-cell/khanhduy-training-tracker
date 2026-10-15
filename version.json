@@ -1,7 +1,7 @@
 {
-  "latest": "16.16",
+  "latest": "16.17",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập mobile: chip và tên bài ghim đúng dưới thanh trên, ô kg set đầu không còn tự xanh."
+  "notes": "Màn Tập mobile: chip và tên bài gộp thành một khối ghim, hết khoảng đen khi cuộn."
 }
