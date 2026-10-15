@@ -3,15 +3,15 @@
    thì máy khách chỉ TẢI SẴN bản mới vào cache riêng, vẫn chạy bản đang ghim.
    Máy chỉ đổi sang bản mới khi người dùng bấm "Cập nhật" (trang gửi lệnh TT_PIN).
 
-   Khi phát hành: VERSION phải khớp APP_VERSION trong index.html (16.15 -> '16.15').
+   Khi phát hành: VERSION phải khớp APP_VERSION trong index.html (16.16 -> '16.16').
    Nếu index.html tải về chưa khớp VERSION (GitHub Pages chưa cập nhật xong), cài đặt thất bại,
    máy giữ nguyên service worker và bản cũ, trình duyệt tự thử lại lần sau.
 
    Giao thức với trang (phải giữ tương thích ở các bản sau, vì service worker mới có thể phục vụ trang cũ):
    - {type:'TT_STATUS'} -> {version, pinned}
    - {type:'TT_PIN'}    -> ghim bản của service worker này, xóa cache cũ -> {ok, version} */
-const VERSION = '16.15';
-const CACHE = 'true-train-v16-15';
+const VERSION = '16.16';
+const CACHE = 'true-train-v16-16';
 const META = 'true-train-meta';
 const PIN_KEY = './__tt_pinned__';
 const SCOPE = self.registration.scope;

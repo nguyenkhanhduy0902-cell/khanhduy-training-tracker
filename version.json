@@ -1,7 +1,7 @@
 {
-  "latest": "16.15",
+  "latest": "16.16",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập mobile: sửa màu xanh còn sót ở tiêu đề KG/REPS/RIR và ô RIR đang nhập."
+  "notes": "Màn Tập mobile: chip và tên bài ghim đúng dưới thanh trên, ô kg set đầu không còn tự xanh."
 }
