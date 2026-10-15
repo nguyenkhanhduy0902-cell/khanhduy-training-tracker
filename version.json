@@ -1,7 +1,7 @@
 {
-  "latest": "16.13",
+  "latest": "16.14",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập mobile: ô bài đang chọn cố định khi cuộn, icon Lucide, nền đen."
+  "notes": "Màn Tập mobile: chip và tên bài cố định đúng vị trí, hàng set không tràn, tab và nút chế độ đổi sang lime."
 }
