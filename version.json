@@ -1,7 +1,7 @@
 {
-  "latest": "16.26",
+  "latest": "16.27",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập mobile: nút (i) hướng dẫn chuyển lên cạnh tên buổi."
+  "notes": "Màn Meal: theo quy chuẩn Workout (lime, danh sách có đường kẻ), chữ tiếng Việt, Lịch sử có trạng thái, TDEE chọn mục tiêu bằng 3 nút."
 }
