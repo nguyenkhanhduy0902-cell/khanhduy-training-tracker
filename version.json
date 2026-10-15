@@ -1,7 +1,7 @@
 {
-  "latest": "16.27",
+  "latest": "16.28",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Meal: theo quy chuẩn Workout (tab lime, số Archivo, danh sách có đường kẻ, Thêm bữa ở cuối), chữ tiếng Việt, Lịch sử có trạng thái, TDEE chọn mục tiêu bằng 3 nút."
+  "notes": "Màn Meal mobile theo prototype v3: đầu trang ngày + Ăn uống, số kcal lớn, macro dạng dòng, nước một dòng, danh sách bữa có đường kẻ, nút Thêm bữa ở cuối."
 }
