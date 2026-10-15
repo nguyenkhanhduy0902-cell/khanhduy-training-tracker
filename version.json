@@ -1,7 +1,7 @@
 {
-  "latest": "16.17",
+  "latest": "16.18",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Tập mobile: chip và tên bài gộp thành một khối ghim, hết khoảng đen khi cuộn."
+  "notes": "Màn Tập mobile: chip và tên bài đang tập ghim ở đầu màn khi cuộn để đổi bài nhanh."
 }
