@@ -1,7 +1,7 @@
 {
-  "latest": "16.28",
+  "latest": "16.29",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Màn Meal mobile theo prototype v3: đầu trang ngày + Ăn uống, số kcal lớn, macro dạng dòng, nước một dòng, danh sách bữa có đường kẻ, nút Thêm bữa ở cuối."
+  "notes": "Meal mobile theo prototype v4: cột Còn và gợi ý món ở Log, TDEE gọn với kết quả ở đầu, Macro xem/tự chỉnh, Lịch sử bấm cả dòng và tóm tắt tuần."
 }
