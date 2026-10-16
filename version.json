@@ -1,7 +1,7 @@
 {
-  "latest": "16.29",
+  "latest": "16.30",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Meal mobile theo prototype v4: cột Còn và gợi ý món ở Log, TDEE gọn với kết quả ở đầu, Macro xem/tự chỉnh, Lịch sử bấm cả dòng và tóm tắt tuần."
+  "notes": "Schedule mobile theo prototype 3c: màn Tuần 7 dòng, màn Buổi có Sửa tại chỗ (bút sửa bài, ↑↓, Xóa bài/Xóa ngày), Thêm bài từ thư viện hoặc tự tạo (lưu vào thư viện)."
 }
