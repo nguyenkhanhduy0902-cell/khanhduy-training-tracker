@@ -1,7 +1,7 @@
 {
-  "latest": "16.30",
+  "latest": "16.31",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Schedule mobile theo prototype 3c: màn Tuần 7 dòng, màn Buổi có Sửa tại chỗ (bút sửa bài, ↑↓, Xóa bài/Xóa ngày), Thêm bài từ thư viện hoặc tự tạo (lưu vào thư viện)."
+  "notes": "Home mobile mới: thẻ buổi hôm nay, dải tuần, biểu đồ Calo (bấm từng ngày xem P/C/F) · Cân nặng · Set theo nhóm cơ."
 }
