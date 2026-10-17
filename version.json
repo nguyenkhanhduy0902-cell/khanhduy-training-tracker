@@ -1,7 +1,7 @@
 {
-  "latest": "16.32",
+  "latest": "16.33",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "More mobile mới (mặc định tiếng Việt, có English): Tuân thủ 6/12 tuần, Khối lượng, Lịch sử tập + chi tiết buổi, Cài đặt gọn, Hồ sơ dạng màn riêng."
+  "notes": "Logo và icon mới tông lime (tự đổi theo giao diện), thanh tab dưới mới, gợi ý món theo nhóm (thịt / tinh bột / hạt) + tìm món tính gram, sửa đồng hồ nghỉ khi quay lại Workout, sửa mở Thư viện món."
 }
