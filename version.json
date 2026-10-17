@@ -1,7 +1,7 @@
 {
-  "latest": "16.33",
+  "latest": "16.34",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Logo và icon mới tông lime (tự đổi theo giao diện), thanh tab dưới mới, gợi ý món theo nhóm (thịt / tinh bột / hạt) + tìm món tính gram, sửa đồng hồ nghỉ khi quay lại Workout, sửa mở Thư viện món."
+  "notes": "Thư viện bài tập và món ăn giao diện mới: danh sách gọn, chip lọc nhóm cơ / nhóm món, sheet Bài tùy chỉnh và Thêm món kiểu mới."
 }
