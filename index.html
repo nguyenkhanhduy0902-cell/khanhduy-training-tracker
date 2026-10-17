@@ -2,6 +2,14 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
+<script id="v1632-theme-boot">try{if(localStorage.getItem('trueTrainThemeV1632')==='light')document.documentElement.classList.add('tt-light');}catch(_){}</script>
+<style id="v1632-theme">
+/* 16.32 · Giao diện sáng: đảo màu toàn app ở thẻ html (không phá position:fixed), đảo lại ảnh / video / canvas để giữ màu thật.
+   Lime thành xanh lá đậm, hồng và hổ phách đậm hơn, đủ tương phản trên nền sáng. Bật/tắt ở More › Cài đặt › Giao diện (key trueTrainThemeV1632). */
+html.tt-light{filter:invert(1) hue-rotate(180deg);background:#0c0d0f}
+html.tt-light :is(img,video,canvas,iframe,embed,object){filter:invert(1) hue-rotate(180deg)}
+</style>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#08111f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -13,7 +21,7 @@
   <meta name="application-name" content="TRUE TRAIN" />
   
   <link rel="icon" type="image/png" sizes="48x48" href="data:image/png;base64,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" />
-<title>TRUE TRAIN • MASTER TRAINING TRACKER V16.31</title>
+<title>TRUE TRAIN • MASTER TRAINING TRACKER V16.32</title>
   <script id="true-train-v157-account-storage">
 /* V15.7: storage boundary, installed before the existing engines initialize. */
 const ttAccountStorage = (() => {
@@ -4811,7 +4819,7 @@ body.auth-locked #appShell[data-tt-master-ui]{display:none}
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_VERSION = '16.31';
+    const APP_VERSION = '16.32';
     // V11.1.1 Desktop Stability: core scope is intentionally global so legacy patch layers can extend the same runtime.
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
@@ -19517,6 +19525,434 @@ window.TRUE_TRAIN_V1629_MEAL={version:'16.29',run,dayStatus};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
+<style id="v1632-more">
+/* 16.32 · More mobile theo TRUE TRAIN More Mobile v5. Chỉ mobile + chế độ Personal. Desktop và Coach giữ nguyên. */
+@media(max-width:760px){
+html body #appShell #page-more#page-more.v1632-on{background:#0c0d0f!important;background-image:none!important;gap:0!important}
+html body #appShell #page-more#page-more.v1632-on>:not(.v1632-more){display:none!important}
+html body #appShell #page-more#page-more>.v1632-more{display:flex;flex-direction:column;gap:22px;padding:4px 0 28px;font-family:Archivo,system-ui,sans-serif;color:#f2f3f1;-webkit-font-smoothing:antialiased;text-align:left}
+html body #appShell #page-more#page-more .v1632-more *{box-sizing:border-box}
+html body #appShell #page-more#page-more .v1632-more button{font-family:inherit;cursor:pointer;box-shadow:none;text-transform:none;letter-spacing:0;margin:0;-webkit-tap-highlight-color:transparent}
+html body #appShell #page-more#page-more .v1632-more i[class^="icon-"],html body #appShell #page-more#page-more .v1632-more i[class*=" icon-"]{font-style:normal;line-height:1}
+html body #appShell #page-more#page-more .v1632-more .n{font-stretch:75%;font-variant-numeric:tabular-nums}
+html body #appShell #page-more#page-more .v1632-more .hd{display:flex;flex-direction:column;gap:6px}
+html body #appShell #page-more#page-more .v1632-more .back{align-self:flex-start;height:32px;margin-left:-8px;padding:0 8px;border:0;background:transparent;color:#8b9096;font-size:14px;font-weight:500;display:flex;align-items:center;gap:2px;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .back i{font-size:18px}
+html body #appShell #page-more#page-more .v1632-more .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8b9096;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #appShell #page-more#page-more .v1632-more h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.15;color:#f2f3f1;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #appShell #page-more#page-more .v1632-more .grp{display:flex;flex-direction:column}
+html body #appShell #page-more#page-more .v1632-more .lab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8b9096;margin-bottom:6px;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .lab.sp{display:flex;justify-content:space-between;gap:12px}
+html body #appShell #page-more#page-more .v1632-more .list{display:flex;flex-direction:column}
+html body #appShell #page-more#page-more .v1632-more .note{font-size:13px;color:#8b9096;line-height:1.5;margin-bottom:8px}
+html body #appShell #page-more#page-more .v1632-more .row{display:flex;align-items:center;gap:14px;min-height:56px;padding:8px 2px;border:0;border-top:1px solid #26292e;border-radius:0;background:transparent;color:#f2f3f1;text-align:left;width:100%;font-size:inherit}
+html body #appShell #page-more#page-more .v1632-more .row.big{min-height:60px}
+html body #appShell #page-more#page-more .v1632-more .row .ic{font-size:20px;color:#8b9096;width:24px;text-align:center;flex:none}
+html body #appShell #page-more#page-more .v1632-more .row.big .ic{font-size:22px;width:26px}
+html body #appShell #page-more#page-more .v1632-more .row .tx{flex:1;min-width:0}
+html body #appShell #page-more#page-more .v1632-more .row .tx b{display:block;font-size:15px;font-weight:600;color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .row.big .tx b{font-size:16px}
+html body #appShell #page-more#page-more .v1632-more .row .tx small{display:block;font-size:12px;color:#8b9096;margin-top:2px;line-height:1.4}
+html body #appShell #page-more#page-more .v1632-more .row .v{font-size:13px;font-weight:600;color:#8b9096;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .row .v.w{color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .row .v.on{color:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .row .ch,html body #appShell #page-more#page-more .v1632-more .li .ch,html body #appShell #page-more#page-more .v1632-more .wkh .ch{font-size:18px;color:#5a5f66;flex:none}
+html body #appShell #page-more#page-more .v1632-more .row.okic .ic{color:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .row.pkic .ic{color:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .row.warn .ic,html body #appShell #page-more#page-more .v1632-more .row.warn .tx b{color:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .ed{width:44px;height:44px;border-radius:10px;border:1px solid #26292e;display:flex;align-items:center;justify-content:center;flex:none;color:#f2f3f1;cursor:pointer}
+html body #appShell #page-more#page-more .v1632-more .ed i{font-size:18px}
+html body #appShell #page-more#page-more .v1632-more .sw{position:relative;flex:none;width:44px;height:26px;border-radius:13px;background:#26292e}
+html body #appShell #page-more#page-more .v1632-more .sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#8b9096;transition:left .15s}
+html body #appShell #page-more#page-more .v1632-more .sw.on{background:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .sw.on::after{left:21px;background:#0c0d0f}
+html body #appShell #page-more#page-more .v1632-more .pri{width:100%;height:50px;border-radius:12px;border:0;background:#c6ff3d;color:#0c0d0f;font-size:15px;font-weight:700;white-space:nowrap;padding:0 18px}
+html body #appShell #page-more#page-more .v1632-more .pri.mt{margin-top:10px;height:48px}
+html body #appShell #page-more#page-more .v1632-more .pri.auto{width:auto;height:46px;margin-top:6px}
+html body #appShell #page-more#page-more .v1632-more .pri:disabled{background:#1c1f23;color:#8b9096;cursor:not-allowed}
+html body #appShell #page-more#page-more .v1632-more .sec{width:100%;height:48px;border-radius:12px;border:1px solid #26292e;background:transparent;color:#f2f3f1;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+html body #appShell #page-more#page-more .v1632-more .sec.dl{color:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:3px;padding:3px;border:1px solid #26292e;border-radius:12px}
+html body #appShell #page-more#page-more .v1632-more .seg button{height:34px;border-radius:9px;border:0;background:transparent;color:#8b9096;font-size:13px;font-weight:600;white-space:nowrap;padding:0}
+html body #appShell #page-more#page-more .v1632-more .seg button.on{background:#1c1f23;color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .sum b{display:block;font-size:18px;font-weight:600;line-height:1.35}
+html body #appShell #page-more#page-more .v1632-more .sum span{display:block;font-size:14px;color:#8b9096;margin-top:4px}
+html body #appShell #page-more#page-more .v1632-more .sum span.pk{color:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .sum span.ok{color:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .pct{font-size:52px;font-weight:700;line-height:1}
+html body #appShell #page-more#page-more .v1632-more .pct small{font-size:22px;color:#8b9096;font-weight:500}
+html body #appShell #page-more#page-more .v1632-more .sent{font-size:16px;font-weight:600;margin-top:8px;line-height:1.4}
+html body #appShell #page-more#page-more .v1632-more .sub{font-size:13px;color:#8b9096;margin-top:2px}
+html body #appShell #page-more#page-more .v1632-more .kp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid #26292e;border-bottom:1px solid #26292e}
+html body #appShell #page-more#page-more .v1632-more .kp>div{padding:12px 0}
+html body #appShell #page-more#page-more .v1632-more .kp b{display:flex;align-items:center;gap:7px;font-size:22px;font-weight:700}
+html body #appShell #page-more#page-more .v1632-more .kp small{font-size:12px;color:#8b9096;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .dot{display:inline-block;width:10px;height:10px;border-radius:3px;flex:none}
+html body #appShell #page-more#page-more .v1632-more .dot.completed{background:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .dot.partial{background:#c9cdd2}
+html body #appShell #page-more#page-more .v1632-more .dot.missed{background:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .cw{display:flex;flex-direction:column}
+html body #appShell #page-more#page-more .v1632-more .wk{border-top:1px solid #26292e}
+html body #appShell #page-more#page-more .v1632-more .wkh{display:grid;grid-template-columns:minmax(0,1fr) auto 18px;align-items:center;column-gap:8px;row-gap:10px;width:100%;padding:14px 0;border:0;background:transparent;color:#f2f3f1;text-align:left}
+html body #appShell #page-more#page-more .v1632-more .wkh b{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #appShell #page-more#page-more .v1632-more .wkh b small{font-weight:400;color:#8b9096;margin-left:8px;font-size:12px}
+html body #appShell #page-more#page-more .v1632-more .wkh .v{font-size:14px;font-weight:600}
+html body #appShell #page-more#page-more .v1632-more .wkh .v.ok{color:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .cells{grid-column:1/4;display:grid;gap:5px}
+html body #appShell #page-more#page-more .v1632-more .cells span{height:22px;border-radius:6px;border:1.5px solid #26292e}
+html body #appShell #page-more#page-more .v1632-more .cells .completed{background:#c6ff3d;border-color:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .cells .partial{background:#c9cdd2;border-color:#c9cdd2}
+html body #appShell #page-more#page-more .v1632-more .cells .missed{background:#ff3d8b;border-color:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .cells .pending{border-color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .cells em{grid-column:1/-1;font-style:normal;font-size:12px;color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .sess{display:flex;flex-direction:column;padding:0 0 12px}
+html body #appShell #page-more#page-more .v1632-more .sess>div{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 0;font-size:13px}
+html body #appShell #page-more#page-more .v1632-more .sess>div>span:first-child{color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .sess>div>span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #appShell #page-more#page-more .v1632-more .st{font-weight:600;white-space:nowrap;color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .st.completed{color:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .st.partial{color:#c9cdd2}
+html body #appShell #page-more#page-more .v1632-more .st.missed{color:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .st.pending{color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .more-wk{height:48px;border:0;border-top:1px solid #26292e;background:transparent;color:#f2f3f1;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;width:100%}
+html body #appShell #page-more#page-more .v1632-more .bars{display:flex;flex-direction:column;gap:14px}
+html body #appShell #page-more#page-more .v1632-more .bars .note{margin:0}
+html body #appShell #page-more#page-more .v1632-more .lg{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .lg span{display:flex;align-items:center;gap:6px;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .lg i{width:10px;height:10px;border-radius:3px}
+html body #appShell #page-more#page-more .v1632-more .br{display:grid;grid-template-columns:76px minmax(0,1fr) 56px;align-items:center;gap:10px}
+html body #appShell #page-more#page-more .v1632-more .br>span:first-child{font-size:13px;color:#8b9096;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #appShell #page-more#page-more .v1632-more .br>span:last-child{font-size:13px;text-align:right;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .tr{position:relative;height:8px;border-radius:4px;background:#1c1f23}
+html body #appShell #page-more#page-more .v1632-more .tr i{position:absolute;top:0;bottom:0;border-radius:4px;background:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .tr i.s{background:#6b7178;border-radius:0 4px 4px 0}
+html body #appShell #page-more#page-more .v1632-more .tr u{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:#5a5f66;border-radius:1px}
+html body #appShell #page-more#page-more .v1632-more .br.ok .tr i{background:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .br.ok .tr i.s{background:#7f9f2a}
+html body #appShell #page-more#page-more .v1632-more .br.ok>span:last-child{color:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .br.low>span:last-child{color:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .li{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:10px 0;border:0;border-top:1px solid #26292e;border-radius:0;background:transparent;color:#f2f3f1;text-align:left;width:100%}
+html body #appShell #page-more#page-more .v1632-more .li .tx{flex:1;min-width:0}
+html body #appShell #page-more#page-more .v1632-more .li .tx b{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #appShell #page-more#page-more .v1632-more .li .tx small{display:block;font-size:12px;color:#8b9096;margin-top:3px;line-height:1.5;font-variant-numeric:tabular-nums}
+html body #appShell #page-more#page-more .v1632-more .li .c{font-size:13px;font-weight:600;color:#8b9096;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .li .c.w{color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .li .c.pt{color:#c9cdd2}
+html body #appShell #page-more#page-more .v1632-more .strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid #26292e;border-bottom:1px solid #26292e}
+html body #appShell #page-more#page-more .v1632-more .strip>div{padding:12px 0}
+html body #appShell #page-more#page-more .v1632-more .strip b{display:block;font-size:22px;font-weight:700;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .strip b small{font-size:12px;color:#8b9096;font-weight:500}
+html body #appShell #page-more#page-more .v1632-more .strip span{font-size:12px;color:#8b9096;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .prof{display:flex;align-items:center;gap:14px}
+html body #appShell #page-more#page-more .v1632-more .av{flex:none;width:56px;height:56px;border-radius:50%;background:#1c1f23;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
+html body #appShell #page-more#page-more .v1632-more .prof b{display:block;font-size:17px;font-weight:700}
+html body #appShell #page-more#page-more .v1632-more .prof small{display:block;font-size:12px;color:#8b9096;margin-top:2px}
+html body #appShell #page-more#page-more .v1632-more .fg{display:flex;flex-direction:column;gap:10px}
+html body #appShell #page-more#page-more .v1632-more .fg .lab{margin:0}
+html body #appShell #page-more#page-more .v1632-more .sl{font-size:14px;color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .fls{display:flex;flex-direction:column;border-bottom:1px solid #26292e}
+html body #appShell #page-more#page-more .v1632-more .fl{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;border-top:1px solid #26292e;margin:0}
+html body #appShell #page-more#page-more .v1632-more .fl>span:first-child{font-size:14px;color:#8b9096;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .fi{display:flex;align-items:center;gap:6px}
+html body #appShell #page-more#page-more .v1632-more .fi input{width:110px;height:40px;border:1px solid #26292e;border-radius:8px;background:#15171a;color:#f2f3f1;font:600 16px/1 Archivo,system-ui,sans-serif;text-align:right;padding:0 10px;outline:none;box-shadow:none;margin:0}
+html body #appShell #page-more#page-more .v1632-more .fi input.wide{width:200px}
+html body #appShell #page-more#page-more .v1632-more .fi input[readonly]{color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .fi em{font-style:normal;width:24px;font-size:12px;color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .chips{display:flex;flex-wrap:wrap;gap:6px}
+html body #appShell #page-more#page-more .v1632-more .chips button{height:36px;padding:0 14px;border-radius:9px;border:1px solid #26292e;background:transparent;color:#8b9096;font-size:13px;font-weight:600;white-space:nowrap}
+html body #appShell #page-more#page-more .v1632-more .chips button.on{background:#1c1f23;border-color:#5a5f66;color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .ta{width:100%;min-height:140px;border:1px solid #26292e;border-radius:8px;background:#15171a;color:#f2f3f1;font:400 16px/1.5 Archivo,system-ui,sans-serif;padding:12px;outline:none;resize:none;margin:0}
+html body #appShell #page-more#page-more .v1632-more .p{margin:0;font-size:14px;line-height:1.55;color:#8b9096;text-wrap:pretty}
+html body #appShell #page-more#page-more .v1632-more .p.w{color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .p.pk{color:#ff3d8b}
+html body #appShell #page-more#page-more .v1632-more .ps{display:flex;flex-direction:column;gap:10px}
+html body #appShell #page-more#page-more .v1632-more .empty{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:28px 0;border-top:1px solid #26292e;border-bottom:1px solid #26292e}
+html body #appShell #page-more#page-more .v1632-more .empty>i{font-size:28px;color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .empty b{font-size:18px;font-weight:700}
+html body #appShell #page-more#page-more .v1632-more .empty p{margin:0;font-size:14px;color:#8b9096;line-height:1.5}
+html body #appShell #page-more#page-more .v1632-more .foot{text-align:center;font-size:11px;color:#5a5f66;letter-spacing:.06em;white-space:nowrap;margin-top:6px}
+}
+</style>
+<script id="v1632-more-js">
+/* 16.32 · More mobile theo TRUE TRAIN More Mobile v5 (mặc định tiếng Việt, có English).
+   Màn gốc 2 nhóm Theo dõi / Công cụ; Tuân thủ 6/12 tuần (TRUE_TRAIN_PERSONAL_COMPLIANCE.compute), Khối lượng
+   (plannedVolume / completedVolumeThisWeek), Lịch sử tập + chi tiết buổi, Cài đặt (đồng bộ, bản sao, CSV, ngôn ngữ,
+   cài app, trợ giúp, đăng xuất), Hồ sơ dạng màn (TRUE_TRAIN_PROFILE.save). Tiến bộ + Thư viện mở màn cũ.
+   Không đổi dữ liệu, storage key, ID cũ. Thêm 1 key mới: trueTrainLangV1632 (vi/en). Desktop và Coach giữ nguyên. */
+(()=>{'use strict';
+const mq=matchMedia('(max-width:760px)');
+const g=(f,d)=>{try{const v=f();return v===undefined||v===null?d:v;}catch(e){return d;}};
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>{const x=Number(String(v==null?'':v).replace(',','.'));return Number.isFinite(x)?x:0;};
+const mark=el=>{el.setAttribute('data-tt-master-ui','');el.querySelectorAll('*').forEach(x=>x.setAttribute('data-tt-master-ui',''));return el;};
+const LANG_KEY='trueTrainLangV1632';
+let lang=g(()=>localStorage.getItem(LANG_KEY),'')==='en'?'en':'vi';
+const T=(vi,en)=>lang==='en'?en:vi;
+const nf=(v,d=1)=>{const p=Math.pow(10,d);return (Math.round(num(v)*p)/p).toLocaleString(lang==='en'?'en-US':'vi-VN',{maximumFractionDigits:d});};
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DM=d=>lang==='en'?d.getDate()+' '+MON[d.getMonth()]:d.getDate()+'/'+(d.getMonth()+1);
+const pd=s=>new Date(String(s).slice(0,10)+'T12:00:00');
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const KEYS=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+const dshort=d=>(lang==='en'?['Sun','Mon','Tue','Wed','Thu','Fri','Sat']:['CN','T2','T3','T4','T5','T6','T7'])[d.getDay()];
+const MUS_EN={'Ngực':'Chest','Xô/Lưng':'Lats/Back','Trap':'Traps','Vai trước':'Front delts','Vai giữa':'Side delts','Vai sau':'Rear delts','Tay trước':'Biceps','Tay sau':'Triceps','Cẳng tay':'Forearms','Đùi trước':'Quads','Đùi sau':'Hamstrings','Mông':'Glutes','Khép đùi':'Adductors','Bắp chân':'Calves','Core':'Core'};
+const mus=k=>lang==='en'?(MUS_EN[k]||k):k;
+const wstart=d=>{const x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x;};
+const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+const ver=()=>g(()=>APP_VERSION,'');
+const THEME_KEY='trueTrainThemeV1632';
+const theme=()=>document.documentElement.classList.contains('tt-light')?'light':'dark';
+function setTheme(v){const on=v==='light';document.documentElement.classList.toggle('tt-light',on);g(()=>localStorage.setItem(THEME_KEY,on?'light':'dark'));const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',on?'#f5f5f2':'#0c0d0f');}
+const logged=()=>!!g(()=>cloudLoggedIn(),false);
+let scr='root',cw=6,older=false,openWk='',vt='d',sess=-1,confirmOut=false,draft=null,msg='',dl={};
+const rep={txt:'',inc:true};
+const MORE=()=>T('Thêm','More'),SETT=()=>T('Cài đặt','Settings');
+/* ---------- khối dựng ---------- */
+const head=(k,t,back)=>`<div class="hd">${back?`<button type="button" class="back" data-v1632-back="${back[1]}"><i class="icon-chevron-left"></i>${esc(back[0])}</button>`:''}<div class="k">${esc(k)}</div><h1>${esc(t)}</h1></div>`;
+function row(o){const tag=o.act?'button':'div';return `<${tag}${o.act?` type="button" data-v1632="${o.act}"`:''} class="row${o.cls?' '+o.cls:''}"><i class="ic ${o.icon}"></i><span class="tx"><b>${esc(o.t)}</b>${o.s?`<small>${esc(o.s)}</small>`:''}</span>${o.v?`<span class="v${o.vc?' '+o.vc:''}">${esc(o.v)}</span>`:''}${o.ed?`<span class="ed" role="button" data-v1632="profile" aria-label="${esc(T('Sửa hồ sơ','Edit profile'))}"><i class="icon-pencil"></i></span>`:''}${o.sw!==undefined?`<span class="sw${o.sw?' on':''}"></span>`:''}${o.chev===false?'':'<i class="ch icon-chevron-right"></i>'}</${tag}>`;}
+const group=(label,rows,extra='',note='')=>`<section class="grp">${label?`<div class="lab">${esc(label)}</div>`:''}${note?`<div class="note">${esc(note)}</div>`:''}<div class="list">${rows}</div>${extra}</section>`;
+function li(a,b,c='',o={}){const btn=o.sess!=null;return `<${btn?'button type="button"':'div'}${btn?` data-v1632-sess="${o.sess}"`:''} class="li"><span class="tx"><b>${esc(a)}</b>${b?`<small>${esc(b)}</small>`:''}</span>${c?`<span class="c${o.cc?' '+o.cc:''}">${esc(c)}</span>`:''}${btn?'<i class="ch icon-chevron-right"></i>':''}</${btn?'button':'div'}>`;}
+const empty=(icon,t,s,btn,act)=>`<div class="empty"><i class="${icon}"></i><b>${esc(t)}</b><p>${esc(s)}</p>${btn?`<button type="button" class="pri auto" data-v1632="${act}">${esc(btn)}</button>`:''}</div>`;
+const seg=(items,cur,attr)=>`<div class="seg">${items.map(([k,l])=>`<button type="button" class="${String(cur)===String(k)?'on':''}" ${attr}="${k}">${esc(l)}</button>`).join('')}</div>`;
+/* ---------- More ---------- */
+function vRoot(){
+  const r=(act,icon,t,s)=>row({act,icon,t,s,cls:'big'});
+  return head(T('Chế độ cá nhân','Personal mode'),MORE())
+   +group(T('Theo dõi','Track'),r('go:compliance','icon-list-checks',T('Tuân thủ','Compliance'),T('Có tập đúng kế hoạch không?','Did you train as planned?'))+r('open:progress','icon-trending-up',T('Tiến bộ','Progress'),T('Sức mạnh, kỷ lục, cơ thể','Strength, records, body'))+r('go:history','icon-history',T('Lịch sử tập','Training History'),T('Mọi buổi đã lưu','Every saved session'))+r('go:volume','icon-chart-no-axes-column',T('Khối lượng','Volume'),T('Số set mỗi tuần theo nhóm cơ','Weekly sets per muscle')))
+   +group(T('Công cụ','Tools'),r('go:library','icon-book-open',T('Thư viện','Library'),T('Món ăn · Bài tập','Food · Exercises'))+r('go:settings','icon-settings',SETT(),T('Tài khoản · dữ liệu · app','Account · data · app')))
+   +`<div class="foot">TRUE TRAIN · ${esc(ver())} · ${esc(logged()?T('Đã đăng nhập','Signed in'):T('Chưa đăng nhập','Not signed in'))}</div>`;
+}
+function vLibrary(){
+  return head(T('Món ăn · Bài tập','Food · Exercises'),T('Thư viện','Library'),[MORE(),'root'])
+   +group('',row({act:'open:food',icon:'icon-utensils',t:T('Món ăn','Food'),s:T('Tìm món, thêm món riêng','Search foods, add your own'),cls:'big'})+row({act:'open:exercise',icon:'icon-dumbbell',t:T('Bài tập','Exercises'),s:T('Tìm bài, thêm vào lịch','Search exercises, add to your plan'),cls:'big'}));
+}
+/* ---------- Tuân thủ ---------- */
+function compData(){
+  const today=new Date();today.setHours(12,0,0,0);
+  const cur=wstart(today),start=addD(cur,-7*(cw-1)),days=Math.round((today-start)/864e5)+1;
+  const c=g(()=>window.TRUE_TRAIN_PERSONAL_COMPLIANCE.compute(days),null);if(!c)return null;
+  const fut=[];let d=addD(today,1);
+  while(d.getDay()!==1){const key=KEYS[d.getDay()],s=g(()=>state.schedule[key],null);if(s&&Array.isArray(s.exercises)&&s.exercises.length&&!/^rest$/i.test(String(s.name||'').trim()))fut.push({date:iso(d),day:key,name:String(s.name||key),plannedSets:0,actualSets:0,status:'future'});d=addD(d,1);}
+  const rows=[...(c.rows||[]),...fut],weeks=[];
+  for(let i=0;i<cw;i++){const s=addD(cur,-7*i),e=addD(s,6),a=iso(s),b=iso(e);weeks.push({i,s,e,key:a,rows:rows.filter(r=>r.date>=a&&r.date<=b)});}
+  return {c,weeks,any:rows.length>0};
+}
+function vCompliance(){
+  const x=compData(),cur=wstart(new Date()),st=addD(cur,-7*(cw-1));
+  let h=head((lang==='en'?cw+' weeks · ':cw+' tuần · ')+DM(st)+' – '+DM(addD(cur,6)),T('Tuân thủ','Compliance'),[MORE(),'root']);
+  if(!x||!x.any)return h+empty('icon-calendar-plus',T('Chưa có lịch tập','No plan yet'),T('Tạo lịch tuần ở Schedule. Tuân thủ so sánh lịch đó với các buổi bạn lưu.','Create a weekly plan in Schedule. Compliance compares that plan with the sessions you save.'),T('Mở Schedule','Open Schedule'),'open:schedule');
+  const c=x.c,due=c.plannedWorkouts||0,freq=(num(c.completed)+num(c.partial))/cw;
+  h+=seg([[6,T('6 tuần','6 weeks')],[12,T('12 tuần','12 weeks')]],cw,'data-v1632-cw');
+  h+=`<div><div class="pct n">${due?num(c.adherence):0}<small>%</small></div><div class="sent">${esc(due?(lang==='en'?`You completed ${c.completed} of ${due} planned sessions in full.`:`Bạn tập đủ ${c.completed}/${due} buổi theo kế hoạch.`):T('Chưa có buổi nào đến hạn.','No sessions due yet.'))}</div><div class="sub">${esc(lang==='en'?`About ${nf(freq)} sessions a week`:`Khoảng ${nf(freq)} buổi mỗi tuần`)}</div></div>`;
+  h+=`<div class="kp">${[['completed',c.completed,T('Đã tập','Done')],['partial',c.partial,T('Một phần','Partial')],['missed',c.missed,T('Bỏ lỡ','Missed')]].map(([s,v,l])=>`<div><b class="n"><i class="dot ${s}"></i>${num(v)}</b><small>${esc(l)}</small></div>`).join('')}</div>`;
+  const max=Math.max(1,...x.weeks.map(w=>w.rows.length)),list=cw===12&&!older?x.weeks.slice(0,6):x.weeks;
+  const lab=i=>i===0?T('Tuần này','This week'):i===1?T('Tuần trước','Last week'):(lang==='en'?i+' weeks ago':i+' tuần trước');
+  const stl=r=>r.status==='completed'?T('Đã tập','Done'):r.status==='partial'?T('Một phần · ','Partial · ')+num(r.actualSets)+'/'+num(r.plannedSets)+' set':r.status==='missed'?T('Bỏ lỡ','Missed'):r.status==='pending'?T('Hôm nay','Today'):T('Chưa tới','Upcoming');
+  h+=`<div class="cw"><div class="note">${esc(T('Mỗi ô là một buổi theo lịch. Ô viền = chưa tới, viền trắng = hôm nay. Bấm vào tuần để xem chi tiết.','Each box is one planned session. Outlined = upcoming, white outline = today. Tap a week for details.'))}</div>`
+   +list.map(w=>{const n=w.rows.length,done=w.rows.filter(r=>r.status==='completed').length,clean=n>0&&done===n,open=openWk===w.key;
+     return `<div class="wk"><button type="button" class="wkh" data-v1632-wk="${w.key}"><b>${esc(lab(w.i))}<small>${esc(DM(w.s)+'–'+DM(w.e))}</small></b><span class="v n${clean?' ok':''}">${n?done+'/'+n:'—'}</span><i class="ch ${open?'icon-chevron-up':'icon-chevron-down'}"></i><span class="cells" style="grid-template-columns:repeat(${max},minmax(0,1fr))">${n?w.rows.map(r=>`<span class="${esc(r.status)}"></span>`).join(''):`<em>${esc(T('Không có buổi theo lịch','No planned sessions'))}</em>`}</span></button>${open&&n?`<div class="sess">${w.rows.map(r=>`<div><span>${dshort(pd(r.date))}</span><span>${esc(r.name)}</span><span class="st ${esc(r.status)}">${esc(stl(r))}</span></div>`).join('')}</div>`:''}</div>`;}).join('')
+   +(cw===12&&!older?`<button type="button" class="more-wk" data-v1632="older">${esc(T('Xem thêm 6 tuần trước','Show 6 older weeks'))}<i class="icon-chevron-down"></i></button>`:'')+`</div>`;
+  return h;
+}
+/* ---------- Khối lượng ---------- */
+function vVolume(){
+  const cur=wstart(new Date());
+  let h=head(T('Tuần này · ','This week · ')+DM(cur)+'–'+DM(addD(cur,6)),T('Khối lượng','Volume'),[MORE(),'root']);
+  const P=g(()=>plannedVolume(),{}),D=g(()=>completedVolumeThisWeek(),{}),inc=vt==='a',fac=num(g(()=>state.settings.indirectFactor,0.5))||0.5;
+  const fv=v=>g(()=>fmtVolume(v),nf(v));
+  const rows=[...new Set([...Object.keys(P),...Object.keys(D)])].map(k=>{const p=P[k]||{},d=D[k]||{},plan=num(p.direct)+(inc?num(p.indirect):0),main=num(d.direct),sec=inc?num(d.indirect):0,tot=main+sec;return {k,plan,main,sec,tot,gap:plan-tot};}).filter(r=>r.plan>0||r.tot>0).sort((a,b)=>(b.plan?b.gap/b.plan:-9)-(a.plan?a.gap/a.plan:-9));
+  if(!rows.length)return h+empty('icon-chart-no-axes-column',T('Tuần này chưa có set nào','No sets planned this week'),T('Thêm bài vào lịch. Khối lượng cho biết mỗi nhóm cơ được bao nhiêu set.','Add exercises to your plan. Volume shows how many sets each muscle gets.'),T('Mở Schedule','Open Schedule'),'open:schedule');
+  const planned=rows.filter(r=>r.plan>0),on=planned.filter(r=>r.gap<=0).length,worst=planned.find(r=>r.gap>0);
+  h+=`<div class="sum"><b>${esc(lang==='en'?`${on} of ${planned.length} muscle groups on plan`:`${on}/${planned.length} nhóm cơ đủ kế hoạch`)}</b><span class="${worst?'pk':'ok'}">${esc(worst?(lang==='en'?`${mus(worst.k)} is ${fv(worst.gap)} sets short`:`${mus(worst.k)} còn thiếu ${fv(worst.gap)} set`):T('Tất cả đã đủ kế hoạch','Everything is on plan'))}</span></div>`;
+  h+=seg([['d',T('Bài chính','Main sets')],['a',T('Tính cả bài phụ','Incl. secondary')]],vt,'data-v1632-vt');
+  h+=`<div class="bars"><div class="note">${esc(inc?(lang==='en'?`Secondary muscles count as ${nf(fac)} set · line = plan`:`Nhóm cơ phụ tính ${nf(fac)} set · vạch = kế hoạch`):T('Set tác động trực tiếp · vạch = kế hoạch','Sets that target the muscle directly · line = plan'))}</div>`
+   +(inc?`<div class="lg"><span><i style="background:#f2f3f1"></i>${esc(T('Bài chính','Main'))}</span><span><i style="background:#6b7178"></i>${esc(T('Bài phụ ×','Secondary ×')+nf(fac))}</span><span><i style="background:#c6ff3d"></i>${esc(T('Đủ kế hoạch','On plan'))}</span></div>`:'')
+   +rows.map(r=>{const mx=Math.max(r.plan,r.tot,1)*1.15,ok=r.plan>0&&r.tot>=r.plan,low=r.plan>0&&r.gap/r.plan>.3,w1=r.main/mx*100,w2=r.sec/mx*100;
+     return `<div class="br${ok?' ok':low?' low':''}"><span>${esc(mus(r.k))}</span><div class="tr"><i style="left:0;width:${w1.toFixed(1)}%"></i>${w2>0?`<i class="s" style="left:${w1.toFixed(1)}%;width:${w2.toFixed(1)}%"></i>`:''}${r.plan>0?`<u style="left:${(r.plan/mx*100).toFixed(1)}%"></u>`:''}</div><span class="n">${esc(fv(r.tot))}/${esc(fv(r.plan))}</span></div>`;}).join('')+`</div>`;
+  return h;
+}
+/* ---------- Lịch sử ---------- */
+const doneOf=h=>Number.isFinite(Number(h.completedSets))?num(h.completedSets):(h.exercises||[]).reduce((n,e)=>n+(e.sets||[]).filter(s=>s.done).length,0);
+const totOf=h=>num(h.totalSets)||(h.exercises||[]).reduce((n,e)=>n+(e.sets||[]).length,0);
+const histList=()=>(g(()=>state.history,[])||[]).map((h,i)=>({h,i,d:String(h&&h.date||'').slice(0,10)})).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x.d)).sort((a,b)=>b.d.localeCompare(a.d));
+function vHistory(){
+  const H=histList();
+  let h=head(H.length?(lang==='en'?H.length+' sessions saved':H.length+' buổi đã lưu'):T('Chưa có buổi nào','No sessions yet'),T('Lịch sử tập','Training History'),[MORE(),'root']);
+  if(!H.length)return h+empty('icon-history',T('Chưa có buổi tập nào','No workouts saved yet'),T('Buổi tập hiện ở đây sau khi bạn bấm Lưu cuối buổi.','Sessions appear here after you tap Save at the end of a workout.'),T('Bắt đầu tập','Start a workout'),'open:workout');
+  const cur=wstart(new Date()),groups=new Map();
+  H.forEach(x=>{const w=Math.round((cur-wstart(pd(x.d)))/(7*864e5));if(!groups.has(w))groups.set(w,[]);groups.get(w).push(x);});
+  const lab=i=>i<=0?T('Tuần này','This week'):i===1?T('Tuần trước','Last week'):(lang==='en'?i+' weeks ago':i+' tuần trước');
+  return h+[...groups.entries()].map(([w,xs])=>`<section class="grp"><div class="lab sp"><span>${esc(lab(w))}</span><span>${xs.length} ${esc(T('buổi','sessions'))}</span></div><div class="list">${xs.map(x=>{const dn=doneOf(x.h),tt=totOf(x.h),d=pd(x.d);return li(x.h.title||x.h.day||'—',`${dshort(d)} ${DM(d)} · ${dn}/${tt} set${lang==='en'?'s':''}`,tt>0&&dn<tt?T('Một phần','Partial'):'',{sess:x.i,cc:'pt'});}).join('')}</div></section>`).join('');
+}
+function vSession(){
+  const h=g(()=>state.history[sess],null);if(!h){scr='history';return vHistory();}
+  const d=pd(h.date),dn=doneOf(h),tt=totOf(h);let load=0;
+  const ex=(h.exercises||[]).map(e=>{const sets=e.sets||[],done=sets.filter(s=>s.done).length;sets.forEach(s=>{if(s.done)load+=num(s.weight)*num(s.reps);});
+    const txt=sets.filter(s=>String(s.weight||'')!==''||String(s.reps||'')!=='').map(s=>`${nf(s.weight)}×${s.reps||'–'}${s.rir!==''&&s.rir!=null?' @'+s.rir:''}`).join(' · ');
+    return li(e.name||'—',txt||T('Chưa nhập set','No sets entered'),done+' set'+(lang==='en'&&done!==1?'s':''));}).join('');
+  return head(DM(d)+(lang==='en'?' ':'/')+d.getFullYear(),h.title||h.day||'—',[T('Lịch sử','History'),'history'])
+   +`<div class="strip"><div><b class="n">${dn}/${tt}</b><span>${esc(T('Set hoàn thành','Sets done'))}</span></div><div><b class="n">${nf(load,0)}<small> kg</small></b><span>${esc(T('Tổng khối lượng','Total load'))}</span></div><div><b class="n">${(h.exercises||[]).length}</b><span>${esc(T('Bài tập','Exercises'))}</span></div></div>`
+   +group(T('Bài tập · kg × rep @ RIR','Exercises · kg × reps @ RIR'),ex)
+   +`<button type="button" class="sec dl" data-v1632="del-sess"><i class="icon-trash-2"></i>${esc(T('Xóa buổi này','Delete this session'))}</button>`;
+}
+/* ---------- Cài đặt ---------- */
+function vSettings(){
+  const L=logged(),busy=!!g(()=>cloudBusy,false),name=g(()=>window.TRUE_TRAIN_PROFILE.name(),''),email=g(()=>cloud.email,''),last=g(()=>cloud.lastSyncAt,null),dirty=!!g(()=>cloud.dirty,false),conflict=!!g(()=>cloud.conflict,false),online=navigator.onLine,auto=!!g(()=>cloud.autoSync,false),st=g(()=>backupStats(state),{}),dev=!!g(()=>window.TRUE_TRAIN_ACCOUNT_V157.canDeveloper(),false);
+  const when=last?(()=>{const d=new Date(last);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+' '+DM(d);})():'';
+  const synced=L&&!busy&&!dirty&&!conflict&&!!last;
+  const sTitle=!L?T('Chỉ lưu trên máy này','This device only'):busy?T('Đang đồng bộ…','Syncing…'):conflict?T('Cần kiểm tra đồng bộ','Sync needs attention'):(dirty||!last)?T('Chờ đồng bộ','Waiting to sync'):T('Đã đồng bộ','Synced');
+  const sSub=!L?T('Đăng nhập để đồng bộ','Sign in to sync'):T('Đã lưu trên máy · ','Saved on device · ')+(last?T('lần gần nhất ','last sync ')+when:T('chưa đồng bộ','never synced'))+(online?'':T(' · đang offline',' · offline'));
+  const can=L&&!busy&&online,btn=!L?T('Đăng nhập để đồng bộ','Sign in to sync'):busy?T('Đang đồng bộ…','Syncing…'):!online?T('Đang offline','Offline'):T('Đồng bộ ngay','Sync now');
+  const dlv=k=>dl[k]?{v:T('Đã tải','Downloaded'),vc:'on'}:{v:T('Tải','Download'),vc:'w'};
+  let h=head(T('Tài khoản · Dữ liệu · App','Account · Data · App'),SETT(),[MORE(),'root']);
+  h+=group(T('Tài khoản','Account'),row({icon:'icon-circle-user',t:name||T('Chưa đặt tên','No name yet'),s:L?email:T('Chưa đăng nhập · dữ liệu chỉ ở trên máy','Not signed in · data stays on this device'),chev:false,ed:true})+(L?'':row({act:'signin',icon:'icon-log-in',t:T('Đăng nhập','Sign in'),s:T('Đồng bộ giữa các thiết bị','Sync across your devices')})));
+  h+=group(T('Đồng bộ','Sync'),row({icon:'icon-cloud',t:sTitle,s:sSub,chev:false,cls:synced?'okic':conflict?'pkic':''})+row({act:'auto',icon:'icon-refresh-cw',t:T('Tự động đồng bộ','Auto sync'),s:T('Khi có Internet','When you are online'),sw:auto&&L,chev:false}),`<button type="button" class="pri mt" data-v1632="${L?'sync':'signin'}"${L&&!can?' disabled':''}>${esc(btn)}</button>`);
+  h+=group(T('Bản sao & xuất','Backup & export'),row({act:'backup',icon:'icon-download',t:T('Tải bản sao','Download backup'),s:lang==='en'?`${num(st.historySessions)} sessions · ${num(st.plannedExercises)} planned exercises`:`${num(st.historySessions)} buổi tập · ${num(st.plannedExercises)} bài trong lịch`,chev:false,...dlv('b')})
+    +row({act:'restore',icon:'icon-upload',t:T('Khôi phục bản sao','Restore backup'),s:T('Thay dữ liệu trên máy bằng file bản sao','Replace data on this device with a backup file')})
+    +row({act:'csv-plan',icon:'icon-sheet',t:T('Xuất lịch tập','Export plan'),s:T('CSV · mở bằng Excel / Sheets','CSV · opens in Excel / Sheets'),chev:false,...dlv('p')})
+    +row({act:'csv-hist',icon:'icon-sheet',t:T('Xuất nhật ký','Export history'),s:T('CSV · mọi buổi đã lưu','CSV · every saved session'),chev:false,...dlv('h')}),'',T('Thỉnh thoảng tải bản sao để không mất dữ liệu.','Download a backup now and then so you never lose your data.'));
+  h+=group(T('Ứng dụng','App'),row({act:'lang',icon:'icon-languages',t:T('Ngôn ngữ','Language'),s:T('Tên bài tập giữ tiếng Anh, tên món giữ tiếng Việt','Exercise names stay in English, food names in Vietnamese'),v:lang==='en'?'English':'Tiếng Việt',vc:'w',chev:false})
+    +row({act:'theme',icon:theme()==='light'?'icon-sun':'icon-moon',t:T('Giao diện','Appearance'),s:T('Bấm để đổi tối / sáng','Tap to switch dark / light'),v:theme()==='light'?T('Sáng','Light'):T('Tối','Dark'),vc:'w',chev:false})
+    +row({act:'install',icon:'icon-smartphone',t:T('Cài TRUE TRAIN','Install TRUE TRAIN'),s:T('Thêm vào màn hình chính','Add to your home screen')}));
+  h+=group(T('Trợ giúp','Help'),row({act:'go:guide',icon:'icon-circle-help',t:T('Cách dùng app','How it works'),s:T('Schedule → Workout → Meal trong 4 bước','Schedule → Workout → Meal in 4 steps')})+row({act:'go:report',icon:'icon-message-square-warning',t:T('Báo lỗi','Report a problem'),s:T('Kèm thông tin hỗ trợ','Includes support info')}));
+  h+=group(T('Thông tin','About'),row({act:'go:about',icon:'icon-info',t:T('Phiên bản ','Version ')+ver(),s:T('Bản chạy thử · cách lưu dữ liệu','Beta · how your data is stored')})+(dev?row({act:'dev',icon:'icon-terminal',t:'Developer Tools',s:T('Chẩn đoán · kiểm tra dữ liệu','Diagnostics · data checks')}):''));
+  if(L)h+=group('',row({act:'logout',icon:'icon-log-out',t:confirmOut?T('Bấm lần nữa để đăng xuất','Tap again to sign out'):T('Đăng xuất','Sign out'),s:confirmOut?T('Thay đổi chưa đồng bộ sẽ chỉ còn trên máy này','Unsynced changes will stay on this device only'):T('Đăng xuất trên máy này','Sign out on this device'),chev:false,cls:confirmOut?'warn':''}));
+  return h;
+}
+/* ---------- Hồ sơ ---------- */
+function seed(){const p=g(()=>window.TRUE_TRAIN_PROFILE.read(),{})||{},t=g(()=>state.personalNutrition.tdee,{})||{},s={...t,...p},v=x=>x==null?'':String(x);
+  return {displayName:g(()=>window.TRUE_TRAIN_PROFILE.name(),'')||'',age:v(s.age),sex:s.sex||'',height:v(s.height),weight:v(s.weight),activity:s.activity!=null&&s.activity!==''?Number(s.activity):'',bodyFat:v(s.bodyFat),goal:s.goal||'maintain'};}
+function vProfile(){
+  if(!draft)draft=seed();const L=logged(),email=g(()=>cloud.email,'');
+  const f=(k,l,unit,mode,wide,ph='')=>`<label class="fl"><span>${esc(l)}</span><span class="fi"><input data-v1632-f="${k}" inputmode="${mode}" value="${esc(draft[k])}" placeholder="${esc(ph)}"${wide?' class="wide"':''}><em>${esc(unit)}</em></span></label>`;
+  const chips=(k,items)=>`<div class="chips">${items.map(([v,l])=>`<button type="button" class="${String(draft[k])===String(v)?'on':''}" data-v1632-c="${k}|${v}">${esc(l)}</button>`).join('')}</div>`;
+  const goals=[['cut',T('Giảm mỡ','Lose fat')],['maintain',T('Giữ cân','Maintain')],['gain',T('Tăng cơ','Build muscle')]];if(draft.goal==='custom')goals.push(['custom',T('Tùy chỉnh','Custom')]);
+  const nm=String(draft.displayName||'');
+  return head(SETT(),T('Hồ sơ','Profile'),[SETT(),'settings'])
+   +`<div class="prof"><span class="av">${esc((Array.from(nm.trim())[0]||'T').toLocaleUpperCase('vi-VN'))}</span><div><b>${esc(nm||T('Chưa đặt tên','No name yet'))}</b><small>${esc(T('Dùng chung với TDEE ở Meal','Also used for TDEE in Meal'))}</small></div></div>`
+   +`<section class="fg"><div class="lab">${esc(T('Tài khoản','Account'))}</div><div class="fls">${f('displayName',T('Tên hiển thị','Display name'),'','text',true,T('Tên của bạn','Your name'))}<label class="fl"><span>Email</span><span class="fi"><input class="wide" readonly value="${esc(email)}" placeholder="—"><em></em></span></label></div></section>`
+   +`<section class="fg"><div class="lab">${esc(T('Cơ thể','Body'))}</div><div class="sl">${esc(T('Giới tính','Sex'))}</div>${chips('sex',[['male',T('Nam','Male')],['female',T('Nữ','Female')]])}<div class="fls">${f('age',T('Tuổi','Age'),'','numeric')}${f('height',T('Chiều cao','Height'),'cm','decimal')}${f('weight',T('Cân nặng','Weight'),'kg','decimal')}${f('bodyFat',T('Mỡ cơ thể','Body fat'),'%','decimal',false,T('Tùy chọn','Optional'))}</div></section>`
+   +`<section class="fg"><div class="lab">${esc(T('Mức vận động','Activity'))}</div>${chips('activity',[[1.2,T('Ít vận động','Sedentary')],[1.375,T('Nhẹ','Light')],[1.55,T('Vừa','Moderate')],[1.725,T('Nhiều','Active')],[1.9,T('Rất nhiều','Very active')]])}</section>`
+   +`<section class="fg"><div class="lab">${esc(T('Mục tiêu','Goal'))}</div>${chips('goal',goals)}</section>`
+   +`<p class="p">${esc(L?T('Email gắn với tài khoản đăng nhập, không đổi ở đây.','Email is linked to your sign-in and can’t be changed here.'):T('Đăng nhập để lưu hồ sơ.','Sign in to save your profile.'))}</p>`
+   +(msg?`<p class="p pk">${esc(msg)}</p>`:'')
+   +`<button type="button" class="pri" data-v1632="save-profile"${L?'':' disabled'}>${esc(T('Lưu hồ sơ','Save profile'))}</button>`;
+}
+async function saveProfile(){
+  const d=draft;if(!d)return;const n=x=>x===''||x==null?'':String(x).replace(',','.');
+  try{await window.TRUE_TRAIN_PROFILE.save({displayName:d.displayName,age:n(d.age),sex:d.sex,height:n(d.height),weight:n(d.weight),activity:d.activity===''?'':Number(d.activity),bodyFat:n(d.bodyFat),goal:d.goal});g(()=>toast(T('Đã lưu hồ sơ','Profile saved')));draft=null;go('settings');}
+  catch(e){msg=String(e&&e.message||e);paint(true);}
+}
+/* ---------- Trợ giúp / Cài app / Thông tin / Báo lỗi ---------- */
+function vGuide(){
+  return head(T('Cài đặt · Trợ giúp','Settings · Help'),T('Cách dùng app','How it works'),[SETT(),'settings'])+group('',
+    li(T('1 · Lên lịch','1 · Plan'),T('Ở Schedule, tạo từng ngày: bài, set, rep, RIR và giây nghỉ.','In Schedule, set up each day: exercises, sets, reps, RIR and rest.'))
+   +li(T('2 · Tập','2 · Train'),T('Ở Workout, nhập Tạ + Rep + RIR. Đủ 3 ô thì set tự xong, đồng hồ nghỉ tự chạy. Kết thúc buổi để lưu vào Lịch sử.','In Workout, enter weight + reps + RIR. All three filled = set done, and the rest timer starts. Finish to save to History.'))
+   +li(T('3 · Ăn','3 · Eat'),T('Ở Meal, ghi bữa ăn, xem còn bao nhiêu kcal và P/C/F. TDEE đặt mục tiêu.','In Meal, log food and see calories and P/C/F left. TDEE sets your target.'))
+   +li(T('4 · Xem lại','4 · Review'),T('Ở More: Tuân thủ, Tiến bộ, Lịch sử tập và Khối lượng.','In More: Compliance, Progress, History and Volume.')));
+}
+function vInstall(){
+  const can=!!g(()=>deferredInstallPrompt,false);
+  return head(T('Cài đặt · App','Settings · App'),T('Cài TRUE TRAIN','Install TRUE TRAIN'),[SETT(),'settings'])
+   +`<div class="ps"><p class="p w">${esc(T('iPhone / iPad: mở bằng Safari → Chia sẻ → Thêm vào MH chính.','iPhone / iPad: open in Safari → Share → Add to Home Screen.'))}</p><p class="p w">${esc(T('Android: mở bằng Chrome → menu ⋮ → Cài ứng dụng.','Android: open in Chrome → menu ⋮ → Install app.'))}</p><p class="p w">${esc(T('Máy tính: bấm biểu tượng cài ở thanh địa chỉ Chrome / Edge.','Desktop: use the install icon in the Chrome / Edge address bar.'))}</p><p class="p">${esc(T('Sau khi cài, mở TRUE TRAIN từ biểu tượng và đăng nhập tài khoản đang dùng.','After installing, open TRUE TRAIN from its icon and sign in with the same account.'))}</p></div>`
+   +(can?`<button type="button" class="pri" data-v1632="install-now">${esc(T('Cài ngay','Install now'))}</button>`:'');
+}
+function vAbout(){
+  const L=logged();
+  return head(SETT(),T('Về TRUE TRAIN','About TRUE TRAIN'),[SETT(),'settings'])
+   +group('',li(T('Phiên bản','Version'),T('Bản chạy thử','Beta'),ver(),{cc:'w'})+li(T('Lưu trữ','Storage'),T('Trình duyệt trên máy này','Browser, this device'),T('Trên máy','Local'),{cc:'w'})+li(T('Đồng bộ','Sync'),L?g(()=>cloud.email,''):T('Chưa đăng nhập','Not signed in'),L?T('Bật','On'):T('Tắt','Off'),{cc:L?'w':''}))
+   +`<p class="p">${esc(T('Dữ liệu luôn lưu trên máy trước. Khi đăng nhập và đồng bộ thành công, dữ liệu được lưu trên tài khoản để dùng trên máy khác. Xóa dữ liệu trình duyệt có thể làm mất bản lưu trên máy, nên thỉnh thoảng hãy tải bản sao.','Your data is always saved on this device first. Once signed in and synced, it is stored on your account for other devices. Clearing browser data can remove the copy on this device, so download a backup now and then.'))}</p>`;
+}
+function vReport(){
+  return head(T('Cài đặt · Trợ giúp','Settings · Help'),T('Báo lỗi','Report a problem'),[SETT(),'settings'])
+   +`<textarea class="ta" data-v1632-f="report" maxlength="2000" placeholder="${esc(T('Bạn đang làm gì, và điều gì đã xảy ra?','What were you doing, and what happened?'))}">${esc(rep.txt)}</textarea>`
+   +group('',row({act:'rep-inc',icon:'icon-info',t:T('Gửi kèm thông tin hỗ trợ','Include support info'),s:T('Phiên bản app, thiết bị và trạng thái đồng bộ. Không gồm nhật ký tập.','App version, device and sync status. Never your training log.'),sw:rep.inc,chev:false}))
+   +`<p class="p">${esc(T('Bấm nút dưới để sao chép, rồi dán vào tin nhắn gửi TRUE TRAIN kèm ảnh lỗi.','Tap below to copy, then paste it into a message to TRUE TRAIN with a screenshot.'))}</p><button type="button" class="pri" data-v1632="rep-copy"${rep.txt.trim()?'':' disabled'}>${esc(T('Sao chép báo lỗi','Copy report'))}</button>`;
+}
+async function copyReport(){
+  const text=rep.inc?g(()=>window.TRUE_TRAIN_SETTINGS_V156.supportReport(rep.txt),rep.txt):rep.txt,ok=()=>g(()=>toast(T('Đã sao chép · dán vào tin nhắn gửi TRUE TRAIN','Copied · paste it into a message to TRUE TRAIN')));
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);ok();return;}}catch(_){}
+  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();let c=false;try{c=document.execCommand('copy');}catch(_){}ta.remove();if(c)ok();else g(()=>toast(T('Không sao chép được','Could not copy')));
+}
+/* ---------- điều hướng ---------- */
+function html(){switch(scr){case'settings':return vSettings();case'profile':return vProfile();case'compliance':return vCompliance();case'volume':return vVolume();case'history':return vHistory();case'session':return vSession();case'library':return vLibrary();case'guide':return vGuide();case'install':return vInstall();case'about':return vAbout();case'report':return vReport();default:return vRoot();}}
+function go(s){scr=s;confirmOut=false;if(s!=='profile')msg='';paint(true);g(()=>window.scrollTo(0,0));const p=document.getElementById('page-more');if(p)p.scrollTop=0;}
+function openExt(k){
+  const page=document.getElementById('page-more'),old={progress:'progress',food:'food-library',exercise:'exercise-library'}[k];
+  const b=old&&page&&page.querySelector(`[data-ttmore111="${old}"]`);if(b){b.click();return;}
+  const pg={progress:'progress',food:'nutrition',exercise:'exercise-library',schedule:'schedule',workout:'workout'}[k];if(pg)g(()=>showPage(pg));
+}
+async function doSync(){
+  if(!logged()||g(()=>cloudBusy,false)||!navigator.onLine)return;
+  try{const p=cloud.dirty?cloudPush(false):cloudPull(false);setTimeout(()=>paint(true),30);const ok=await p;if(ok)g(()=>toast(T('Đã đồng bộ','Synced')));}catch(e){console.error('v1632 sync',e);}
+  paint(true);
+}
+function act(a){
+  if(a.indexOf('go:')===0)return go(a.slice(3));
+  if(a.indexOf('open:')===0)return openExt(a.slice(5));
+  switch(a){
+    case'profile':draft=null;msg='';return go('profile');
+    case'older':older=true;return paint(true);
+    case'signin':return g(()=>{const A=window.TRUE_TRAIN_ACCOUNT_V157;if(A&&typeof A.lock==='function')A.lock();else showPage('data');});
+    case'auto':if(!logged())return;g(()=>{cloud.autoSync=!cloud.autoSync;saveCloudConfig();if(cloud.autoSync)scheduleCloudSync();});return paint(true);
+    case'sync':return doSync();
+    case'backup':g(()=>exportBackup());dl.b=1;return paint(true);
+    case'csv-plan':g(()=>exportScheduleCsv());dl.p=1;return paint(true);
+    case'csv-hist':g(()=>exportHistoryCsv());dl.h=1;return paint(true);
+    case'restore':{const i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=e=>g(()=>importBackup(e));i.click();return;}
+    case'theme':setTheme(theme()==='light'?'dark':'light');return paint(true);
+    case'lang':lang=lang==='en'?'vi':'en';g(()=>localStorage.setItem(LANG_KEY,lang));return paint(true);
+    case'install':if(g(()=>deferredInstallPrompt,false))return g(()=>installPwa());return go('install');
+    case'install-now':return g(()=>installPwa());
+    case'logout':if(!confirmOut){confirmOut=true;return paint(true);}confirmOut=false;return g(()=>cloudLogout());
+    case'dev':{const u=new URL(location.href);u.searchParams.set('dev','1');location.href=u.href;return;}
+    case'save-profile':return saveProfile();
+    case'rep-inc':rep.inc=!rep.inc;return paint(true);
+    case'rep-copy':return copyReport();
+    case'del-sess':{const h=g(()=>state.history[sess],null);if(!h)return;const run=()=>{state.history.splice(sess,1);g(()=>saveState());go('history');};
+      if(typeof confirmBox==='function')confirmBox(T('Xóa buổi tập','Delete session'),T('Xóa buổi này khỏi lịch sử? Không thể hoàn tác.','Delete this session from history? This can’t be undone.'),run);else if(window.confirm(T('Xóa buổi này?','Delete this session?')))run();return;}
+  }
+}
+function paint(force){
+  const page=document.getElementById('page-more');if(!page)return;
+  let root=page.querySelector(':scope > .v1632-more');
+  const coach=!!document.querySelector('#m116MobileHeader [data-m116-mode="coach"].active');
+  if(!mq.matches||coach){if(root)root.remove();page.classList.remove('v1632-on');return;}
+  if(typeof activePage!=='undefined'&&activePage!=='more')return;
+  if(!root){root=document.createElement('div');root.className='v1632-more';}
+  if(page.firstElementChild!==root)page.prepend(root);
+  page.classList.add('v1632-on');
+  if(!force&&root.contains(document.activeElement)&&/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName))return;
+  const out=html();if(force||root._sig!==out){root._sig=out;root.innerHTML=out;mark(root);}
+}
+document.addEventListener('click',e=>{
+  if(!mq.matches)return;
+  const root=document.querySelector('#page-more > .v1632-more'),t=e.target;if(!root||!root.contains(t))return;let el;
+  if((el=t.closest('[data-v1632-back]')))return go(el.dataset.v1632Back);
+  if((el=t.closest('[data-v1632-cw]'))){cw=Number(el.dataset.v1632Cw)||6;older=false;openWk='';return paint(true);}
+  if((el=t.closest('[data-v1632-vt]'))){vt=el.dataset.v1632Vt;return paint(true);}
+  if((el=t.closest('[data-v1632-wk]'))){openWk=openWk===el.dataset.v1632Wk?'':el.dataset.v1632Wk;return paint(true);}
+  if((el=t.closest('[data-v1632-sess]'))){sess=Number(el.dataset.v1632Sess);return go('session');}
+  if((el=t.closest('[data-v1632-c]'))){const p=el.dataset.v1632C.split('|');if(draft)draft[p[0]]=p[0]==='activity'?Number(p[1]):p[1];return paint(true);}
+  if((el=t.closest('[data-v1632]')))act(el.dataset.v1632);
+});
+document.addEventListener('input',e=>{
+  const el=e.target&&e.target.closest&&e.target.closest('.v1632-more [data-v1632-f]');if(!el)return;const k=el.dataset.v1632F;
+  if(k==='report'){rep.txt=el.value;const b=el.closest('.v1632-more').querySelector('[data-v1632="rep-copy"]');if(b)b.disabled=!el.value.trim();return;}
+  if(draft)draft[k]=el.value;
+});
+let queued=false;const queue=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;try{paint();}catch(e){console.error('v1632 more',e);}});};
+const page=document.getElementById('page-more');
+if(page)new MutationObserver(queue).observe(page,{childList:true});
+if(mq.addEventListener)mq.addEventListener('change',queue);else if(mq.addListener)mq.addListener(queue);
+document.addEventListener('visibilitychange',queue);
+window.addEventListener('online',()=>paint(true));window.addEventListener('offline',()=>paint(true));
+const base=showPage;showPage=function(id){if(id==='more'){scr='root';confirmOut=false;draft=null;msg='';}const out=base.apply(this,arguments);queue();return out;};
+window.TRUE_TRAIN_V1632_MORE={version:'16.32',paint,lang:()=>lang,theme,setTheme,open:s=>{scr=s||'root';paint(true);}};
+queue();
+})();
+</script>
+
 </body>
 </html>
 

@@ -1,7 +1,7 @@
 {
-  "latest": "16.31",
+  "latest": "16.32",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Home mobile mới: thẻ buổi hôm nay, dải tuần, biểu đồ Calo (bấm từng ngày xem P/C/F) · Cân nặng · Set theo nhóm cơ."
+  "notes": "More mobile mới (mặc định tiếng Việt, có English): Tuân thủ 6/12 tuần, Khối lượng, Lịch sử tập + chi tiết buổi, Cài đặt gọn, Hồ sơ dạng màn riêng."
 }
