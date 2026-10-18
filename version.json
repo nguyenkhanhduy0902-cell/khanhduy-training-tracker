@@ -1,7 +1,7 @@
 {
-  "latest": "16.36",
+  "latest": "16.37",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Tiến bộ theo kiểu mới, Volume gộp vào Tiến bộ, giao diện sáng/tối và ngôn ngữ, nút ‹ rõ hơn, thư viện việt hoá bộ lọc."
+  "notes": "Nút (i) hướng dẫn thống nhất ở mọi màn cần thao tác, nút + căn lại, thư viện thẳng hàng."
 }
