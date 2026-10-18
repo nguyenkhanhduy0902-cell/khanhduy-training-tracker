@@ -1,7 +1,7 @@
 {
-  "latest": "16.39",
+  "latest": "16.41",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Sửa dứt điểm nút + ở Thư viện bài tập và món ăn."
+  "notes": "Ảnh bài tập ở Lịch và Workout, chạm mở ảnh lớn."
 }
