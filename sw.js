@@ -10,8 +10,8 @@
    Giao thức với trang (phải giữ tương thích ở các bản sau, vì service worker mới có thể phục vụ trang cũ):
    - {type:'TT_STATUS'} -> {version, pinned}
    - {type:'TT_PIN'}    -> ghim bản của service worker này, xóa cache cũ -> {ok, version} */
-const VERSION = '16.34';
-const CACHE = 'true-train-v16-34';
+const VERSION = '16.35';
+const CACHE = 'true-train-v16-35';
 const META = 'true-train-meta';
 const PIN_KEY = './__tt_pinned__';
 const SCOPE = self.registration.scope;
