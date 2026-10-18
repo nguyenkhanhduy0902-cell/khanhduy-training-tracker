@@ -1,7 +1,7 @@
 {
-  "latest": "16.35",
+  "latest": "16.36",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Sửa icon góc trái nhấp nháy, icon màn hình chính không còn viền trắng, nút ‹ rõ hơn và đồng bộ, nút chế độ Personal/Coach gọn hơn."
+  "notes": "Tiến bộ theo kiểu mới, Volume gộp vào Tiến bộ, giao diện sáng/tối và ngôn ngữ, nút ‹ rõ hơn, thư viện việt hoá bộ lọc."
 }

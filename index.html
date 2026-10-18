@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-<script id="v1632-theme-boot">try{if(localStorage.getItem('trueTrainThemeV1632')==='light')document.documentElement.classList.add('tt-light');}catch(_){}</script>
+<script id="v1632-theme-boot">try{var v=localStorage.getItem('trueTrainThemeV1632');if(v==='light'||(v==='auto'&&matchMedia('(prefers-color-scheme: light)').matches))document.documentElement.classList.add('tt-light');}catch(_){}</script>
 <style id="v1632-theme">
 /* 16.32 · Giao diện sáng: đảo màu toàn app ở thẻ html (không phá position:fixed), đảo lại ảnh / video / canvas để giữ màu thật.
    Lime thành xanh lá đậm, hồng và hổ phách đậm hơn, đủ tương phản trên nền sáng. Bật/tắt ở More › Cài đặt › Giao diện (key trueTrainThemeV1632). */
@@ -21,7 +21,7 @@ html.tt-light body :is(img,video,canvas,iframe,embed,object),html.tt-light body 
   <meta name="application-name" content="TRUE TRAIN" />
   
   <link rel="icon" type="image/png" sizes="48x48" href="data:image/png;base64,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" />
-<title>TRUE TRAIN • MASTER TRAINING TRACKER V16.35</title>
+<title>TRUE TRAIN • MASTER TRAINING TRACKER V16.36</title>
   <script id="true-train-v157-account-storage">
 /* V15.7: storage boundary, installed before the existing engines initialize. */
 const ttAccountStorage = (() => {
@@ -4819,7 +4819,7 @@ body.auth-locked #appShell[data-tt-master-ui]{display:none}
   <div class="toast" id="toast"></div>
 
   <script>
-    const APP_VERSION = '16.35';
+    const APP_VERSION = '16.36';
     // V11.1.1 Desktop Stability: core scope is intentionally global so legacy patch layers can extend the same runtime.
     const STORAGE_KEY = 'gymTrackerV1';
     const CLOUD_KEY = 'gymTrackerCloudV1';
@@ -15760,7 +15760,7 @@ body :is(.auth-logo,.sidebar-logo,.m116-mark,.logo):not([data-tt-master-ui]){bac
       const filters=document.querySelector(selector);if(!filters||filters.querySelector('.tt153-filter-toggle'))continue;
       const food=selector.includes('nutrition'),controls=[...filters.children].filter(x=>food?!!x.querySelector('#v148Category'):x.tagName==='LABEL');if(!controls.length)continue;
       const details=document.createElement('div');details.className='tt153-filter-details';details.hidden=true;details.id=food?'tt153FoodFilters':'tt153ExerciseFilters';controls.forEach(x=>details.appendChild(x));
-      const button=document.createElement('button');button.type='button';button.className='tt153-filter-toggle';button.textContent=food?'Filters · Category':'Filters · Muscle / Equipment / Pattern';button.setAttribute('aria-expanded','false');button.setAttribute('aria-controls',details.id);button.onclick=()=>{details.hidden=!details.hidden;button.setAttribute('aria-expanded',String(!details.hidden));};filters.append(button,details);
+      const button=document.createElement('button');button.type='button';button.className='tt153-filter-toggle';{let en=false;try{en=(localStorage.getItem('trueTrainLangV1632')==='en');}catch(_){}button.textContent=food?(en?'Filters · Category':'Bộ lọc · Nhóm món'):(en?'Filters · Muscle / Equipment / Pattern':'Bộ lọc · Nhóm cơ / Dụng cụ / Kiểu');}button.setAttribute('aria-expanded','false');button.setAttribute('aria-controls',details.id);button.onclick=()=>{details.hidden=!details.hidden;button.setAttribute('aria-expanded',String(!details.hidden));};filters.append(button,details);
     }
   }
   function paintModules(){
@@ -16560,8 +16560,8 @@ html body #appShell #desktopSidebar:not(.tt-ds-flat) .sidebar-nav button[data-tt
   }
   function backWanted(id){
     if(BACK_TO[id])return BACK_TO[id];
-    if(id==='exercise-library'&&hubOrigin)return[(function(){try{return localStorage.getItem('trueTrainLangV1632')==='en'?'Library':'Thư viện';}catch(_){return 'Thư viện';}})(),'library'];
-    if(id==='nutrition'&&hubOrigin&&foodLibraryOpen())return[(function(){try{return localStorage.getItem('trueTrainLangV1632')==='en'?'Library':'Thư viện';}catch(_){return 'Thư viện';}})(),'library'];
+    if(id==='exercise-library')return hubOrigin?[(function(){try{return localStorage.getItem('trueTrainLangV1632')==='en'?'Library':'Thư viện';}catch(_){return 'Thư viện';}})(),'library']:['More','more'];
+    if(id==='nutrition'&&foodLibraryOpen())return hubOrigin?[(function(){try{return localStorage.getItem('trueTrainLangV1632')==='en'?'Library':'Thư viện';}catch(_){return 'Thư viện';}})(),'library']:['More','more'];
     return null;
   }
   function paintBack(){
@@ -18224,6 +18224,17 @@ html body #appShell #page-progress .tti .tti-big.set{font-size:15px;line-height:
     });
     return tot;
   }
+  function v1637MuscleBars(planned,done){
+    const mode=v108VolumeMode(),tot=mode==='total',en=(()=>{try{return localStorage.getItem('trueTrainLangV1632')==='en';}catch(_){return false;}})();
+    const val=(o,g)=>(Number(o[g]?.direct)||0)+(tot?(Number(o[g]?.indirect)||0):0);
+    const rows=V108_TRACKED_GROUPS.map(x=>x[0]).map(g=>({g,p:val(planned,g),d:val(done,g)})).filter(r=>r.p>0||r.d>0);
+    const on=rows.filter(r=>r.p>0&&r.d>=r.p).length,np=rows.filter(r=>r.p>0).length;
+    const btn=(m,l)=>'<button type="button" data-ttp-vmode="'+m+'" aria-pressed="'+(mode===m)+'" style="height:34px;border:0;border-radius:9px;background:'+(mode===m?'#22262b':'transparent')+';color:'+(mode===m?'#f2f3f1':'#8b9096')+';font:600 13px Archivo,system-ui,sans-serif;white-space:nowrap">'+l+'</button>';
+    return '<h2 class="tti-sec" style="margin-top:20px">'+(en?'By muscle · this week':'Theo nhóm cơ · tuần này')+'</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;border:1px solid #26292e;border-radius:12px;margin:10px 0">'+btn('direct',en?'Main sets':'Bài chính')+btn('total',en?'Incl. secondary':'Tính cả bài phụ')+'</div>'
+      +'<p class="tti-note">'+(en?on+' of '+np+' muscle groups on plan':on+'/'+np+' nhóm cơ đủ kế hoạch')+' · '+(en?'tick = plan':'vạch = kế hoạch')+'</p>'
+      +(rows.length?rows.map(r=>{const mx=Math.max(r.p,r.d,1)*1.15,ok=r.p>0&&r.d>=r.p,low=r.p>0&&(r.p-r.d)/r.p>.3;return '<div style="display:grid;grid-template-columns:84px 1fr 56px;align-items:center;gap:10px;padding:6px 0"><span style="font-size:13px;color:#8b9096;white-space:nowrap">'+esc(en?(V108_LABELS[r.g]||r.g):(V108_LABELS[r.g]||r.g))+'</span><div style="position:relative;height:8px;border-radius:4px;background:#1c1f23"><div style="position:absolute;left:0;top:0;bottom:0;width:'+(r.d/mx*100).toFixed(1)+'%;background:'+(ok?'#c6ff3d':'#f2f3f1')+';border-radius:4px"></div>'+(r.p>0?'<div style="position:absolute;top:-4px;bottom:-4px;left:'+(r.p/mx*100).toFixed(1)+'%;width:2px;background:#5a5f66"></div>':'')+'</div><span style="font-size:13px;text-align:right;font-weight:600;font-stretch:75%;font-variant-numeric:tabular-nums;color:'+(ok?'#c6ff3d':low?'#ff3d8b':'#f2f3f1')+'">'+fmt(r.d)+'/'+fmt(r.p)+'</span></div>';}).join(''):'<p class="tti-sub">'+(en?'No sets planned this week.':'Tuần này chưa có set nào.')+'</p>');
+  }
+  document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-ttp-vmode]');if(!b)return;state.settings.volumeMode=b.dataset.ttpVmode==='total'?'total':'direct';saveState({cloudDirty:false});try{window.TRUE_TRAIN_PROGRESS_UI.setTab('volume');}catch(_){}});
   function volumeHTML(){
     const cur=startOfWeek(),weeks=[];
     for(let i=7;i>=0;i--){const s=new Date(cur);s.setDate(s.getDate()-i*7);weeks.push(s);}
@@ -18233,7 +18244,7 @@ html body #appShell #page-progress .tti .tti-big.set{font-size:15px;line-height:
     const labels=weeks.map((_,i)=>String(i+1)),tips=weeks.map((s,i)=>{const e=new Date(s);e.setDate(e.getDate()+6);return `Tuần ${i+1} (${dmy(s)} đến ${dmy(e)})`;});
     const pd=sum(planned),dd=sum(done);
     return `<section class="tti-card"><h2 class="tti-ch">Volume hiệu dụng mỗi tuần</h2>${barsHTML(vals,labels,'set','Volume hiệu dụng mỗi tuần',tips)}<p class="tti-cap">Trục ngang là số tuần (tuần 8 là tuần này, đang tập dở). Set trực tiếp cộng set gián tiếp nhân hệ số.</p>${tblHTML(['Tuần','Set hiệu dụng'],weeks.map((s,i)=>[`Tuần ${i+1} (từ ${dmy(s)})`,fmt(vals[i])]))}</section>
-      <p class="tti-note tti-gap">Tuần này: ${fmt(dd)} / ${fmt(pd)} set hiệu dụng theo kế hoạch${pd>0?` (${Math.min(100,Math.round(dd/pd*100))}%)`:''}. Chi tiết từng nhóm cơ ở trang Volume.</p>`;
+      <p class="tti-note tti-gap">Tuần này: ${fmt(dd)} / ${fmt(pd)} set hiệu dụng theo kế hoạch${pd>0?` (${Math.min(100,Math.round(dd/pd*100))}%)`:''}.</p>`+v1637MuscleBars(planned,done);
   }
   /* ---------- PR ---------- */
   function prHTML(){
@@ -19711,7 +19722,7 @@ const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
 const ver=()=>g(()=>APP_VERSION,'');
 const THEME_KEY='trueTrainThemeV1632';
 const theme=()=>document.documentElement.classList.contains('tt-light')?'light':'dark';
-function setTheme(v){const on=v==='light';document.documentElement.classList.toggle('tt-light',on);g(()=>localStorage.setItem(THEME_KEY,on?'light':'dark'));const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',on?'#f5f5f2':'#0c0d0f');}
+function setTheme(v){v=v==='light'||v==='auto'?v:'dark';g(()=>localStorage.setItem(THEME_KEY,v));applyTheme();}
 const logged=()=>!!g(()=>cloudLoggedIn(),false);
 let scr='root',cw=6,older=false,openWk='',vt='d',sess=-1,confirmOut=false,draft=null,msg='',dl={};
 const rep={txt:'',inc:true};
@@ -19727,7 +19738,7 @@ const seg=(items,cur,attr)=>`<div class="seg">${items.map(([k,l])=>`<button type
 function vRoot(){
   const r=(act,icon,t,s)=>row({act,icon,t,s,cls:'big'});
   return head(T('Chế độ cá nhân','Personal mode'),MORE())
-   +group(T('Theo dõi','Track'),r('go:compliance','icon-list-checks',T('Tuân thủ','Compliance'),T('Có tập đúng kế hoạch không?','Did you train as planned?'))+r('open:progress','icon-trending-up',T('Tiến bộ','Progress'),T('Sức mạnh, kỷ lục, cơ thể','Strength, records, body'))+r('go:history','icon-history',T('Lịch sử tập','Training History'),T('Mọi buổi đã lưu','Every saved session'))+r('go:volume','icon-chart-no-axes-column',T('Khối lượng','Volume'),T('Số set mỗi tuần theo nhóm cơ','Weekly sets per muscle')))
+   +group(T('Theo dõi','Track'),r('go:compliance','icon-list-checks',T('Tuân thủ','Compliance'),T('Có tập đúng kế hoạch không?','Did you train as planned?'))+r('open:progress','icon-trending-up',T('Tiến bộ','Progress'),T('Sức mạnh, kỷ lục, cơ thể','Strength, records, body'))+r('go:history','icon-history',T('Lịch sử tập','Training History'),T('Mọi buổi đã lưu','Every saved session')))
    +group(T('Công cụ','Tools'),r('go:library','icon-book-open',T('Thư viện','Library'),T('Món ăn · Bài tập','Food · Exercises'))+r('go:settings','icon-settings',SETT(),T('Tài khoản · dữ liệu · app','Account · data · app')))
    +`<div class="foot">TRUE TRAIN · ${esc(ver())} · ${esc(logged()?T('Đã đăng nhập','Signed in'):T('Chưa đăng nhập','Not signed in'))}</div>`;
 }
@@ -19820,8 +19831,7 @@ function vSettings(){
     +row({act:'restore',icon:'icon-upload',t:T('Khôi phục bản sao','Restore backup'),s:T('Thay dữ liệu trên máy bằng file bản sao','Replace data on this device with a backup file')})
     +row({act:'csv-plan',icon:'icon-sheet',t:T('Xuất lịch tập','Export plan'),s:T('CSV · mở bằng Excel / Sheets','CSV · opens in Excel / Sheets'),chev:false,...dlv('p')})
     +row({act:'csv-hist',icon:'icon-sheet',t:T('Xuất nhật ký','Export history'),s:T('CSV · mọi buổi đã lưu','CSV · every saved session'),chev:false,...dlv('h')}),'',T('Thỉnh thoảng tải bản sao để không mất dữ liệu.','Download a backup now and then so you never lose your data.'));
-  h+=group(T('Ứng dụng','App'),row({act:'lang',icon:'icon-languages',t:T('Ngôn ngữ','Language'),s:T('Tên bài tập giữ tiếng Anh, tên món giữ tiếng Việt','Exercise names stay in English, food names in Vietnamese'),v:lang==='en'?'English':'Tiếng Việt',vc:'w',chev:false})
-    +row({act:'theme',icon:theme()==='light'?'icon-sun':'icon-moon',t:T('Giao diện','Appearance'),s:T('Bấm để đổi tối / sáng','Tap to switch dark / light'),v:theme()==='light'?T('Sáng','Light'):T('Tối','Dark'),vc:'w',chev:false})
+  h+=group(T('Ứng dụng','App'),row({act:'go:appearance',icon:'icon-sun-moon',t:T('Giao diện & ngôn ngữ','Appearance & language'),s:({dark:T('Tối','Dark'),light:T('Sáng','Light'),auto:T('Theo máy','System')})[prefTheme()]+' · '+(lang==='en'?'English':'Tiếng Việt')})
     +row({act:'install',icon:'icon-smartphone',t:T('Cài TRUE TRAIN','Install TRUE TRAIN'),s:T('Thêm vào màn hình chính','Add to your home screen')}));
   h+=group(T('Trợ giúp','Help'),row({act:'go:guide',icon:'icon-circle-help',t:T('Cách dùng app','How it works'),s:T('Schedule → Workout → Meal trong 4 bước','Schedule → Workout → Meal in 4 steps')})+row({act:'go:report',icon:'icon-message-square-warning',t:T('Báo lỗi','Report a problem'),s:T('Kèm thông tin hỗ trợ','Includes support info')}));
   h+=group(T('Thông tin','About'),row({act:'go:about',icon:'icon-info',t:T('Phiên bản ','Version ')+ver(),s:T('Bản chạy thử · cách lưu dữ liệu','Beta · how your data is stored')})+(dev?row({act:'dev',icon:'icon-terminal',t:'Developer Tools',s:T('Chẩn đoán · kiểm tra dữ liệu','Diagnostics · data checks')}):''));
@@ -19884,7 +19894,17 @@ async function copyReport(){
   const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();let c=false;try{c=document.execCommand('copy');}catch(_){}ta.remove();if(c)ok();else g(()=>toast(T('Không sao chép được','Could not copy')));
 }
 /* ---------- điều hướng ---------- */
-function html(){switch(scr){case'settings':return vSettings();case'profile':return vProfile();case'compliance':return vCompliance();case'volume':return vVolume();case'history':return vHistory();case'session':return vSession();case'library':return vLibrary();case'guide':return vGuide();case'install':return vInstall();case'about':return vAbout();case'report':return vReport();default:return vRoot();}}
+function prefTheme(){const v=g(()=>localStorage.getItem(THEME_KEY),'');return v==='light'||v==='auto'?v:'dark';}
+function applyTheme(){const v=prefTheme(),on=v==='light'||(v==='auto'&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.classList.toggle('tt-light',on);const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',on?'#f5f5f2':'#0c0d0f');}
+g(()=>matchMedia('(prefers-color-scheme: light)').addEventListener('change',()=>{if(prefTheme()==='auto')applyTheme();}));
+function vAppear(){
+  const p=prefTheme(),TH=[['dark',T('Tối','Dark')],['light',T('Sáng','Light')],['auto',T('Theo máy','System')]];
+  let h=head(T('Cài đặt','Settings'),T('Giao diện','Appearance'),[SETT(),'settings']);
+  h+='<div class="ap-cards">'+TH.map(([k,l])=>'<button type="button" data-v1632="th:'+k+'" class="ap-card'+(p===k?' on':'')+'"><span class="ap-pv ap-'+k+'"><i></i><i></i><i></i><i></i><b></b></span><span>'+esc(l)+'</span></button>').join('')+'</div>';
+  h+='<section class="grp"><div class="lab">'+esc(T('Ngôn ngữ','Language'))+'</div><div class="ap-langs">'+[['vi','Tiếng Việt','VI'],['en','English','EN']].map(([k,l,c])=>'<button type="button" data-v1632="lg:'+k+'" class="ap-lg"><span class="c">'+c+'</span><span class="n">'+l+'</span>'+(lang===k?'<i class="icon-check"></i>':'')+'</button>').join('')+'</div><div class="ap-note">'+esc(T('Tên bài tập luôn giữ tiếng Anh, tên món luôn giữ tiếng Việt.','Exercise names stay in English, food names stay in Vietnamese.'))+'</div></section>';
+  return h;
+}
+function html(){switch(scr){case'settings':return vSettings();case'profile':return vProfile();case'compliance':return vCompliance();case'volume':return vVolume();case'history':return vHistory();case'session':return vSession();case'library':return vLibrary();case'guide':return vGuide();case'install':return vInstall();case'appearance':return vAppear();case'about':return vAbout();case'report':return vReport();default:return vRoot();}}
 function go(s){scr=s;confirmOut=false;if(s!=='profile')msg='';paint(true);g(()=>window.scrollTo(0,0));const p=document.getElementById('page-more');if(p)p.scrollTop=0;}
 function openExt(k){
   const page=document.getElementById('page-more'),old={progress:'progress',food:'food-library',exercise:'exercise-library'}[k];
@@ -19900,6 +19920,8 @@ async function doSync(){
 function act(a){
   if(a.indexOf('go:')===0)return go(a.slice(3));
   if(a.indexOf('open:')===0)return openExt(a.slice(5));
+  if(a.indexOf('th:')===0){setTheme(a.slice(3));return paint(true);}
+  if(a.indexOf('lg:')===0){lang=a.slice(3)==='en'?'en':'vi';g(()=>localStorage.setItem(LANG_KEY,lang));return paint(true);}
   switch(a){
     case'profile':draft=null;msg='';return go('profile');
     case'older':older=true;return paint(true);
@@ -20123,6 +20145,52 @@ function start(){new MutationObserver(queue).observe(document.body,{childList:tr
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
+<style id="v1636-progress">
+@media(max-width:760px){
+html body #appShell #page-progress#page-progress .tti,html body #appShell #page-progress#page-progress .tti *{font-family:Archivo,system-ui,sans-serif!important}
+html body #appShell #page-progress#page-progress .tti{display:flex!important;flex-direction:column!important;gap:20px!important;padding:0 4px 24px!important;background:none!important}
+html body #appShell #page-progress#page-progress .tti-ph h1{font-size:26px!important;font-weight:700!important;letter-spacing:-.02em!important;margin:0!important;color:#f2f3f1!important}
+html body #appShell #page-progress#page-progress .tti-sub{font-size:13px!important;color:#8b9096!important;margin:4px 0 0!important}
+html body #appShell #page-progress#page-progress .tti-seg{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:3px!important;padding:3px!important;border:1px solid #26292e!important;border-radius:12px!important;background:none!important;box-shadow:none!important}
+html body #appShell #page-progress#page-progress .tti-seg button{height:34px!important;min-height:34px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:#8b9096!important;font-size:13px!important;font-weight:600!important;padding:0!important;box-shadow:none!important;white-space:nowrap!important}
+html body #appShell #page-progress#page-progress .tti-seg button[aria-pressed="true"]{background:#22262b!important;color:#f2f3f1!important}
+html body #appShell #page-progress#page-progress .tti-fld>span{font-size:11px!important;color:#8b9096!important;letter-spacing:0!important;text-transform:none!important}
+html body #appShell #page-progress#page-progress .tti-inp{height:48px!important;min-height:48px!important;border:1px solid #26292e!important;border-radius:8px!important;background:#15171a!important;color:#f2f3f1!important;font-size:15px!important;font-weight:600!important;box-shadow:none!important}
+html body #appShell #page-progress#page-progress .tti-btn{height:46px!important;border-radius:12px!important;border:1px solid #3a3e44!important;background:transparent!important;color:#f2f3f1!important;font-size:14px!important;font-weight:600!important;box-shadow:none!important}
+html body #appShell #page-progress#page-progress .tti-btn.pri{background:#c6ff3d!important;border:0!important;color:#0c0d0f!important;font-weight:700!important}
+html body #appShell #page-progress#page-progress .tti-card,html body #appShell #page-progress#page-progress .tti-grid>*{background:none!important;border:0!important;border-top:1px solid #26292e!important;border-radius:0!important;box-shadow:none!important;padding:14px 0!important}
+html body #appShell #page-progress#page-progress .tti-card.tti-empty{border-bottom:1px solid #26292e!important}
+html body #appShell #page-progress#page-progress .tti-ch,html body #appShell #page-progress#page-progress .tti-sec{font-size:11px!important;font-weight:500!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#8b9096!important}
+html body #appShell #page-progress#page-progress .tti-big,html body #appShell #page-progress#page-progress .mono{font-stretch:75%!important;font-variant-numeric:tabular-nums!important;font-weight:700!important;letter-spacing:0!important;color:#f2f3f1!important}
+html body #appShell #page-progress#page-progress .tti-ml{border:0!important;background:none!important;box-shadow:none!important;border-radius:0!important}
+html body #appShell #page-progress#page-progress .tti-mr{background:none!important;border:0!important;border-top:1px solid #26292e!important;border-radius:0!important;box-shadow:none!important;color:#f2f3f1!important}
+html body #appShell #page-progress#page-progress .tti-cap,html body #appShell #page-progress#page-progress .tti-note,html body #appShell #page-progress#page-progress .tti-vsub{color:#8b9096!important;font-size:12px!important}
+html body #appShell #page-progress#page-progress .tti-tv,html body #appShell #page-progress#page-progress .tti-tv *{font-size:12px!important;color:#8b9096!important}
+}
+</style>
+<style id="v1636-appearance">
+@media(max-width:760px){
+html body #appShell #page-more#page-more .v1632-more .ap-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+html body #appShell #page-more#page-more .v1632-more .ap-card{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:8px;color:#8b9096;font:600 13px Archivo,system-ui,sans-serif;cursor:pointer}
+html body #appShell #page-more#page-more .v1632-more .ap-card.on{color:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .ap-pv{width:100%;aspect-ratio:.62;border-radius:12px;padding:10px 8px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;border:1px solid #26292e}
+html body #appShell #page-more#page-more .v1632-more .ap-card.on .ap-pv{outline:2px solid #c6ff3d;outline-offset:3px}
+html body #appShell #page-more#page-more .v1632-more .ap-pv i{display:block;height:4px;width:75%;border-radius:2px;background:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .ap-pv i:first-child{height:6px;width:60%;background:#f2f3f1}
+html body #appShell #page-more#page-more .v1632-more .ap-pv b{display:block;margin-top:auto;height:14px;border-radius:4px;background:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .ap-dark{background:#0c0d0f}
+html body #appShell #page-more#page-more .v1632-more .ap-light{background:#f4f4f1}
+html body #appShell #page-more#page-more .v1632-more .ap-light i{background:#6b7076}html body #appShell #page-more#page-more .v1632-more .ap-light i:first-child{background:#0c0d0f}
+html body #appShell #page-more#page-more .v1632-more .ap-auto{background:linear-gradient(90deg,#0c0d0f 50%,#f4f4f1 50%)}
+html body #appShell #page-more#page-more .v1632-more .ap-langs{display:flex;flex-direction:column}
+html body #appShell #page-more#page-more .v1632-more .ap-lg{display:flex;align-items:center;gap:12px;height:56px;border:0;border-top:1px solid #26292e;background:none;color:#f2f3f1;text-align:left;padding:0;cursor:pointer;font-family:Archivo,system-ui,sans-serif}
+html body #appShell #page-more#page-more .v1632-more .ap-lg .c{width:30px;font-size:12px;font-weight:700;color:#8b9096}
+html body #appShell #page-more#page-more .v1632-more .ap-lg .n{flex:1;font-size:15px;font-weight:600}
+html body #appShell #page-more#page-more .v1632-more .ap-lg i{font-size:20px;color:#c6ff3d}
+html body #appShell #page-more#page-more .v1632-more .ap-note{font-size:12px;color:#8b9096;line-height:1.45;padding-top:10px;border-top:1px solid #26292e}
+html.tt-light html body #appShell #page-more#page-more .v1632-more .ap-pv{filter:invert(1) hue-rotate(180deg)}
+}
+</style>
 <script id="v1633-lib-js">
 /* 16.33 · Đổi nhãn Thư viện sang tiếng Việt. Chỉ đổi chữ, không đổi ID/logic. */
 (function(){'use strict';var mq=matchMedia('(max-width:760px)'),q=0;
