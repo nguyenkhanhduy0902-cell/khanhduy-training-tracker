@@ -1,7 +1,7 @@
 {
-  "latest": "16.44",
+  "latest": "16.45",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Lịch sử tập kiểu mới: số tuần rõ hơn, dải 7 ngày, PR và thời lượng mỗi buổi. Sửa nút chi tiết ⌄ ở Workout."
+  "notes": "Coach mobile mới: Clients · Today · Programs · More. Chi tiết client 5 tab, ghi buổi hộ client, log bữa và TDEE/macro riêng từng client."
 }
