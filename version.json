@@ -1,7 +1,7 @@
 {
-  "latest": "16.42",
+  "latest": "16.43",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Workout gọn hơn (chip Mục tiêu · Nghỉ · Lần trước · PR), sheet Rest và Lịch sử tập kiểu mới, sửa ảnh Wide-Grip Lat Pulldown."
+  "notes": "Lịch sử tập mới: mốc theo số tuần (Tuần 42, Tuần 41…), cột 6 tuần để lọc, bấm buổi xem nhanh bài. Sửa nút chi tiết ⌄ ở Workout."
 }
