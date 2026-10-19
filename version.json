@@ -1,7 +1,7 @@
 {
-  "latest": "16.43",
+  "latest": "16.44",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Lịch sử tập mới: mốc theo số tuần (Tuần 42, Tuần 41…), cột 6 tuần để lọc, bấm buổi xem nhanh bài. Sửa nút chi tiết ⌄ ở Workout."
+  "notes": "Lịch sử tập kiểu mới: số tuần rõ hơn, dải 7 ngày, PR và thời lượng mỗi buổi. Sửa nút chi tiết ⌄ ở Workout."
 }
