@@ -1,7 +1,7 @@
 {
-  "latest": "16.41",
+  "latest": "16.42",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Ảnh bài tập ở Lịch và Workout, chạm mở ảnh lớn."
+  "notes": "Workout gọn hơn (chip Mục tiêu · Nghỉ · Lần trước · PR), sheet Rest và Lịch sử tập kiểu mới, sửa ảnh Wide-Grip Lat Pulldown."
 }
