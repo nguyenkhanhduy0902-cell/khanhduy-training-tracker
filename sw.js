@@ -10,7 +10,7 @@
    Giao thức với trang (phải giữ tương thích ở các bản sau, vì service worker mới có thể phục vụ trang cũ):
    - {type:'TT_STATUS'} -> {version, pinned}
    - {type:'TT_PIN'}    -> ghim bản của service worker này, xóa cache cũ -> {ok, version} */
-const VERSION = '16.54';
+const VERSION = '16.55';
 const CACHE = 'true-train-v16-45';
 const META = 'true-train-meta';
 const PIN_KEY = './__tt_pinned__';
@@ -98,7 +98,7 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  /* 16.53 · Model 3D Muscle Map (body.glb, three.js, draco) từ CDN: lưu cache riêng, lần sau mở nhanh. */
+  /* 16.53 · Model 3D (body.glb, three.js, draco) từ CDN: lưu cache riêng. Từ 16.55 chỉ còn Muscle Map Coach desktop dùng; mobile dùng 2.5D ./mm/body.jpg. */
   if (/^(cdn\.jsdelivr\.net|esm\.sh|www\.gstatic\.com)$/.test(url.hostname) && /body\.glb|three@0\.160|draco|\/v\d+\/three/.test(url.href)) {
     event.respondWith(caches.open('tt-3d-v1').then(c => c.match(req).then(hit => hit || fetch(req).then(res => { if (res && res.ok) c.put(req, res.clone()).catch(() => {}); return res; }))));
     return;
