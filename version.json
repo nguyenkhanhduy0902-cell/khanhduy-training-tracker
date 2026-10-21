@@ -1,7 +1,7 @@
 {
-  "latest": "16.52",
+  "latest": "16.54",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Coach › More mới: Bài tập, Muscle Map, Cài đặt (dùng chung màn Personal)."
+  "notes": "Muscle Map 3D: sửa Coach Exercise Library trống sau khi mở Thư viện Personal; đổi nhóm cơ thì xóa ô tìm."
 }
