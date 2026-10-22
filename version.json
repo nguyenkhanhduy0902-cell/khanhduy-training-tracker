@@ -1,7 +1,7 @@
 {
-  "latest": "16.58",
+  "latest": "16.59",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Coach ghi buổi: sửa nút thanh Nghỉ (44px), cột Trước rộng hơn, dòng Kế hoạch không tràn."
+  "notes": "Chi tiết client Coach: Cần chú ý, Check-in cơ thể, Kế hoạch dạng dòng + sheet sửa, Meal Thêm món ở đầu, buổi bỏ lỡ trong Lịch sử."
 }
