@@ -1,7 +1,7 @@
 {
-  "latest": "16.55",
+  "latest": "16.58",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Muscle Map 3D: sửa Coach Exercise Library trống sau khi mở Thư viện Personal; đổi nhóm cơ thì xóa ô tìm."
+  "notes": "Coach ghi buổi: sửa nút thanh Nghỉ (44px), cột Trước rộng hơn, dòng Kế hoạch không tràn."
 }
