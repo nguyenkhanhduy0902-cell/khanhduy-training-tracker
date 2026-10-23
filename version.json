@@ -1,7 +1,7 @@
 {
-  "latest": "16.64",
+  "latest": "16.65",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Sửa hàng set Workout mobile thành 1 dòng."
+  "notes": "Sửa ô ghi chú set trong cột Lần trước."
 }
