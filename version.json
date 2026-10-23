@@ -1,7 +1,7 @@
 {
-  "latest": "16.63",
+  "latest": "16.64",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Workout: cột Lần trước, Rest đường mảnh, bỏ Chép set, nút Kỹ thuật."
+  "notes": "Sửa hàng set Workout mobile thành 1 dòng."
 }
