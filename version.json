@@ -1,7 +1,7 @@
 {
-  "latest": "16.68",
+  "latest": "16.69",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Schedule: ghi tập bù đúng ngày thực tập."
+  "notes": "More: dòng Hồ sơ ở đầu, đổi nhãn rõ hơn, PR trong chi tiết buổi."
 }
