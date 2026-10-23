@@ -1,7 +1,7 @@
 {
-  "latest": "16.61",
+  "latest": "16.63",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Coach: ô tìm bài gõ chữ hiện danh sách lọc."
+  "notes": "Workout: cột Lần trước, Rest đường mảnh, bỏ Chép set, nút Kỹ thuật."
 }
