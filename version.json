@@ -1,7 +1,7 @@
 {
-  "latest": "16.77",
+  "latest": "16.78",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Rest ngoài app: thoát app khi đang nghỉ sẽ hiện đồng hồ tròn nổi (Picture-in-Picture), 10 giây cuối chuyển hồng."
+  "notes": "Workout: hàng Set · Reps · RIR · Nghỉ · PR thu gọn 1 dòng, mũi tên mở chi tiết kèm cơ chính / phụ."
 }
