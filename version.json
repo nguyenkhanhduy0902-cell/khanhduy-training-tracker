@@ -1,7 +1,7 @@
 {
-  "latest": "16.80",
+  "latest": "17.0",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Workout: hàng Set · Reps · RIR · Nghỉ · PR thu gọn 1 dòng, mũi tên mở chi tiết kèm cơ chính / phụ."
+  "notes": "17.0: Đổi bài thay thế ở Workout; nhóm cơ đồng bộ theo Thư viện; Thư viện mặc định Tất cả, menu ⋯ Thêm / Sửa / Xóa / Ẩn."
 }
