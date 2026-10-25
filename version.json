@@ -1,7 +1,7 @@
 {
-  "latest": "17.2",
+  "latest": "17.4",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "17.2: Workout mobile — chip có số set đã tập/tổng, tên bài tự co chữ, nút Thiết lập gọn góc phải, nút Bài trước/Bài tiếp có nhãn."
+  "notes": "17.4: Workout mobile — chip hiện số bài + set đã tập/tổng, cuộn ngang không cắt viền; tên bài tự co 21→14px; Thiết lập nhỏ cạnh RIR; hàng Trước · Bài sau (tên bài) thẳng mép card set."
 }
