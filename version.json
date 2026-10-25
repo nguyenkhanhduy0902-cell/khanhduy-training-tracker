@@ -1,7 +1,7 @@
 {
-  "latest": "16.76",
+  "latest": "16.77",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "Workout: gợi ý tăng tiến dưới set đang tập, PR bài, Thiết lập bước tạ. Thêm ảnh + hướng dẫn Bayesian Cable Curl."
+  "notes": "Rest ngoài app: thoát app khi đang nghỉ sẽ hiện đồng hồ tròn nổi (Picture-in-Picture), 10 giây cuối chuyển hồng."
 }
