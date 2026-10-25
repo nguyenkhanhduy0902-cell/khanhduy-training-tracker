@@ -1,7 +1,7 @@
 {
-  "latest": "17.0",
+  "latest": "17.1",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "17.0: Đổi bài thay thế ở Workout; nhóm cơ đồng bộ theo Thư viện; Thư viện mặc định Tất cả, menu ⋯ Thêm / Sửa / Xóa / Ẩn."
+  "notes": "17.1: Workout mobile gọn hơn — card set nổi, gợi ý ẩn sau icon, chip chỉ số, Thiết lập có Set ±, bỏ nút Thêm set, ghim đầu màn."
 }
