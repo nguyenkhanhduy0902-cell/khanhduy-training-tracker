@@ -1,7 +1,7 @@
 {
-  "latest": "17.4",
+  "latest": "17.5",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "17.4: Workout mobile — chip hiện số bài + set đã tập/tổng, cuộn ngang không cắt viền; tên bài tự co 21→14px; Thiết lập nhỏ cạnh RIR; hàng Trước · Bài sau (tên bài) thẳng mép card set."
+  "notes": "17.5: Workout mobile — card bài gộp (ảnh + tên + Set×Rep · RIR · Nghỉ · PR) đầu bảng set; nút ⋯ mở menu: số liệu, cơ tham gia, Thiết lập · Kỹ thuật · Đổi bài; cột Previous · Weight; nút về bài trước chỉ còn mũi tên; hiện lại x / y sets trên thanh tiến độ."
 }
