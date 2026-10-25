@@ -1,7 +1,7 @@
 {
-  "latest": "17.1",
+  "latest": "17.2",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "17.1: Workout mobile gọn hơn — card set nổi, gợi ý ẩn sau icon, chip chỉ số, Thiết lập có Set ±, bỏ nút Thêm set, ghim đầu màn."
+  "notes": "17.2: Workout mobile — chip có số set đã tập/tổng, tên bài tự co chữ, nút Thiết lập gọn góc phải, nút Bài trước/Bài tiếp có nhãn."
 }
