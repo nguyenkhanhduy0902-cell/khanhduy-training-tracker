@@ -1,7 +1,7 @@
 {
-  "latest": "17.8",
+  "latest": "17.10",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "17.8: Thư viện bài tập — thêm số thứ tự theo danh sách đang lọc (mỗi nhóm cơ đánh số riêng). 17.7: 17.7: Workout mobile — set đã xong thu thành 1 dòng (80 × 10 @2), bấm để sửa, bấm ✓ để thu lại."
+  "notes": "17.10: Meal mobile — dock không bị tab dưới che, menu nút + bấm được. 17.9: Meal mobile theo v7 — thẻ kcal + vòng nước, 3 thẻ macro gợi ý, lưới bữa 2 cột, Hay ăn + tìm món + nút +, sheet chọn số lượng và meal. 17.8: Thư viện bài tập — thêm số thứ tự theo danh sách đang lọc (mỗi nhóm cơ đánh số riêng). 17.7: 17.7: Workout mobile — set đã xong thu thành 1 dòng (80 × 10 @2), bấm để sửa, bấm ✓ để thu lại."
 }
