@@ -1,7 +1,7 @@
 {
-  "latest": "17.5",
+  "latest": "17.7",
   "minRequired": "",
   "maintenance": false,
   "maintenanceMessage": "",
-  "notes": "17.5: Workout mobile — card bài gộp (ảnh + tên + Set×Rep · RIR · Nghỉ · PR) đầu bảng set; nút ⋯ mở menu: số liệu, cơ tham gia, Thiết lập · Kỹ thuật · Đổi bài; cột Previous · Weight; nút về bài trước chỉ còn mũi tên; hiện lại x / y sets trên thanh tiến độ."
+  "notes": "17.7: Workout mobile — set đã xong thu thành 1 dòng (80 × 10 @2), bấm để sửa, bấm ✓ để thu lại."
 }
