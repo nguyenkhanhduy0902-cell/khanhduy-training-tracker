@@ -5059,9 +5059,10 @@ body.auth-locked #appShell[data-tt-master-ui]{display:none}
       return {
         activeTab:'today',
         date:isoDate(),
-        tdee:{mode:'normal',sex:'male',age:30,height:175,weight:70,bodyFat:15,activity:1.55,cutAdjust:-15,gainAdjust:8,goalAdjust:0,goal:'maintain'},
+        tdee:{mode:'normal',sex:'male',age:30,height:175,weight:70,bodyFat:15,activity:1.35,activityModel:'v2',cutAdjust:-15,gainAdjust:8,goalAdjust:0,goal:'maintain'}, /* 18.14 · người mới dùng luôn cách tính mới (v2) */
         macro:{calories:2400,weight:70,plan:'custom',auto:'fat',protein:{mode:'gkg',value:2},carb:{mode:'percent',value:45},fat:{mode:'auto',value:0}},
-        currentTarget:{calories:2400,protein:140,carb:300,fat:67},
+        currentTarget:{calories:0,protein:0,carb:0,fat:0}, /* 18.14 · người mới chưa đặt mục tiêu = 0 */
+        goalSet:false,
         dailyLogs:{},
         customFoods:[],
         foodSearch:'',
@@ -5128,8 +5129,12 @@ body.auth-locked #appShell[data-tt-master-ui]{display:none}
       if(x.currentWorkout?.exercises){x.currentWorkout.exercises.forEach(ex=>(ex.sets||[]).forEach(set=>{if(set.note==null)set.note='';set.done=isWorkoutSetComplete(set);}));}
       (x.history||[]).forEach(h=>(h.exercises||[]).forEach(ex=>(ex.sets||[]).forEach(set=>{if(set.note==null)set.note='';if(set.done==null)set.done=isWorkoutSetComplete(set);})));
       const dpn=defaultPersonalNutritionState();
+      const legacyPN=!!(x.personalNutrition&&typeof x.personalNutrition==='object'&&x.personalNutrition.goalSet===undefined);
       x.personalNutrition=Object.assign(dpn,x.personalNutrition||{});
+      if(legacyPN)x.personalNutrition.goalSet=true; /* dữ liệu cũ: coi như đã có mục tiêu */
+      const legacyTdee=!!(x.personalNutrition.tdee&&typeof x.personalNutrition.tdee==='object'&&x.personalNutrition.tdee.activityModel===undefined);
       x.personalNutrition.tdee=Object.assign(dpn.tdee,x.personalNutrition.tdee||{});
+      if(legacyTdee){delete x.personalNutrition.tdee.activityModel;} /* dữ liệu cũ giữ nguyên cách tính đang dùng */
       x.personalNutrition.macro=Object.assign(dpn.macro,x.personalNutrition.macro||{});
       x.personalNutrition.macro.protein=Object.assign(dpn.macro.protein,x.personalNutrition.macro.protein||{});
       x.personalNutrition.macro.carb=Object.assign(dpn.macro.carb,x.personalNutrition.macro.carb||{});
@@ -14071,8 +14076,7 @@ SOFTWARE.
   function targetFor(x){try{const api=window.TRUE_TRAIN_WORKOUT_INTELLIGENCE,ref={exerciseId:x.exerciseId,canonicalName:x.canonicalName,name:x.displayName,group:x.group,detail:x.region,indirect:x.secondary,targetReps:x.reps,targetRir:'2'},prev=api?.previousExercise?.(ref);return api?.targetFor?.(ref,prev)||null;}catch(_){return null;}}
   function detailHtml(x){const st=statsFor(x.exerciseId),target=targetFor(x),last=st.last?`${fmt(st.last.set.w)}kg \u00d7 ${Math.round(st.last.set.r)}${Number.isFinite(st.last.set.rir)?` @ RIR ${fmt(st.last.set.rir)}`:''}`:'No previous data';return `<div><div class="v150x-detail-top"><div><small>EXERCISE DETAIL • ${esc(x.exerciseId)}</small><h3>${esc(x.displayName)}</h3><p>Canonical: ${esc(x.canonicalName)}</p></div><span class="v150x-badge">${x.custom?'CUSTOM':'LIBRARY'}</span></div><div class="v150x-actions"><button class="primary" data-v150x-add>+ TH\u00caM V\u00c0O L\u1ecaCH</button><button data-v150x-edit>EDIT</button><button class="danger" data-v150x-delete>DELETE</button></div><div class="v150x-info"><div><span>Primary</span><b>${esc(x.group||'\u2014')}</b></div><div><span>Secondary</span><b>${esc(x.secondary||'\u2014')}</b></div><div><span>Equipment</span><b>${esc(x.equipment||'\u2014')}</b></div><div><span>Pattern</span><b>${esc(x.pattern||'\u2014')}</b></div><div><span>Default Reps</span><b>${esc(x.reps||'\u2014')}</b></div><div><span>Exercise ID</span><b>${esc(x.exerciseId)}</b></div></div>${x.notes||x.region?`<div class="v150x-note"><b>DETAIL / NOTES</b><br>${esc(x.notes||x.region)}</div>`:''}<div class="v150x-performance"><div><small>LAST PERFORMANCE</small><b>${esc(last)}</b></div><div><small>HISTORY SESSIONS</small><b>${Number(st.sessions)||0}</b></div><div><small>BEST WEIGHT</small><b>${st.bestW?fmt(st.bestW)+' kg':'\u2014'}</b></div><div><small>BEST e1RM</small><b>${st.bestE?fmt(st.bestE)+' kg':'\u2014'}</b></div></div><div class="v150x-target"><small>NEXT TARGET</small><b>${esc(target?.title||'NO PREVIOUS DATA')}</b><span>${esc(target?.detail||'Complete a saved workout to establish a baseline.')}</span></div><div class="v150x-delete-note">DELETE ch\u1ec9 x\u00f3a b\u00e0i kh\u1ecfi Exercise Library. Schedule, Workout History v\u00e0 d\u1eef li\u1ec7u \u0111\u00e3 log kh\u00f4ng b\u1ecb x\u00f3a.</div></div>`;}
   function readEditorData(){const primary=document.getElementById('v150xPrimary').value,secondary=[...document.querySelectorAll('[data-v150x-secondary]:checked')].map(x=>x.value).filter(x=>x&&x!==primary);return {displayName:String(document.getElementById('v150xName').value||'').trim(),group:primary,secondary:[...new Set(secondary)].join(', '),equipment:String(document.getElementById('v150xEquipment').value||'').trim()||'Custom',pattern:String(document.getElementById('v150xPattern').value||'').trim()||'Custom',reps:String(document.getElementById('v150xReps').value||'').trim()||'8\u201312',region:String(document.getElementById('v150xNotes').value||'').trim(),notes:String(document.getElementById('v150xNotes').value||'').trim()};}
-  function v190Desk(MG,sec){const VR=/^Vai (trước|giữa|sau)$/,vp=MG.filter(g=>VR.test(g)),op=vp.some(g=>sec.has(g));let vi=false;const cb=g=>`<label><input type="checkbox" data-v150x-secondary value="${esc(g)}" ${sec.has(g)?'checked':''}>${esc(g==='Trap'?'Cơ thang':g)}</label>`;return MG.map(g=>{if(!VR.test(g))return cb(g);if(vi)return '';vi=true;return `<label class="v190-vt"><input type="checkbox" data-v190-vai ${op?'checked':''}>Vai</label><div class="v190-vsub"${op?'':' hidden'}><span>Vai: chọn phần vai tham gia</span>${vp.map(cb).join('')}</div>`;}).join('');}
-  function openEditor(x){const m=ensureModal(),isNew=!x,secondary=new Set(parseSecondary(x?.secondary)),equip=equipmentOptions(),patterns=patternOptions();document.getElementById('v150xModalTitle').textContent=isNew?'Add Exercise':'Edit Exercise';document.getElementById('v150xModalBody').innerHTML=`<form id="v150xEditorForm"><div class="v150x-form"><label class="wide">T\u00ean b\u00e0i *<input id="v150xName" required maxlength="100" value="${esc(x?.displayName||'')}"></label><label>Primary Muscle *<select id="v150xPrimary">${MUSCLE_GROUPS.map(g=>`<option value="${esc(g)}" ${g===(x?.group||MUSCLE_GROUPS[0])?'selected':''}>${esc(g)}</option>`).join('')}</select></label><label>Default Reps<input id="v150xReps" value="${esc(x?.reps||'8\u201312')}" placeholder="8\u201312"></label><div class="v150x-secondary"><span>Secondary Muscles</span><div class="v150x-secondary-grid">${v190Desk(MUSCLE_GROUPS,secondary)}</div></div><label>Equipment<input id="v150xEquipment" list="v150xEquipmentList" value="${esc(x?.equipment||'')}"><datalist id="v150xEquipmentList">${equip.map(v=>`<option value="${esc(v)}"></option>`).join('')}</datalist></label><label>Movement Pattern<input id="v150xPattern" list="v150xPatternList" value="${esc(x?.pattern||'')}"><datalist id="v150xPatternList">${patterns.map(v=>`<option value="${esc(v)}"></option>`).join('')}</datalist></label><label class="wide">Detail / Notes<textarea id="v150xNotes" placeholder="Optional">${esc(x?.notes||x?.region||'')}</textarea></label></div><div class="v150x-actions"><button type="button" id="v150xCancel">CANCEL</button><button type="submit" class="primary">${isNew?'SAVE EXERCISE':'SAVE CHANGES'}</button></div></form>`;document.getElementById('v150xCancel').onclick=()=>m.classList.remove('open');document.getElementById('v150xPrimary').onchange=e=>{document.querySelectorAll('[data-v150x-secondary]').forEach(cb=>{if(cb.value===e.target.value)cb.checked=false;});};const v190t=m.querySelector('[data-v190-vai]');if(v190t)v190t.onchange=e=>{const sb=m.querySelector('.v190-vsub');if(sb)sb.hidden=!e.target.checked;if(!e.target.checked)m.querySelectorAll('.v190-vsub [data-v150x-secondary]').forEach(c=>{c.checked=false;});};document.getElementById('v150xEditorForm').onsubmit=e=>{e.preventDefault();const data=readEditorData();if(!data.displayName){toast('T\u00ean b\u00e0i kh\u00f4ng \u0111\u01b0\u1ee3c \u0111\u1ec3 tr\u1ed1ng');return;}const saved=saveEditor(x,data);m.classList.remove('open');renderLibrary();toast(isNew?'\u0110\u00e3 l\u01b0u exercise v\u00e0o Library':'\u0110\u00e3 c\u1eadp nh\u1eadt exercise');if(saved)ui.search='';};m.classList.add('open');setTimeout(()=>document.getElementById('v150xName')?.focus(),30);}
+  function openEditor(x){const m=ensureModal(),isNew=!x,secondary=new Set(parseSecondary(x?.secondary)),equip=equipmentOptions(),patterns=patternOptions();document.getElementById('v150xModalTitle').textContent=isNew?'Add Exercise':'Edit Exercise';document.getElementById('v150xModalBody').innerHTML=`<form id="v150xEditorForm"><div class="v150x-form"><label class="wide">T\u00ean b\u00e0i *<input id="v150xName" required maxlength="100" value="${esc(x?.displayName||'')}"></label><label>Primary Muscle *<select id="v150xPrimary">${MUSCLE_GROUPS.map(g=>`<option value="${esc(g)}" ${g===(x?.group||MUSCLE_GROUPS[0])?'selected':''}>${esc(g)}</option>`).join('')}</select></label><label>Default Reps<input id="v150xReps" value="${esc(x?.reps||'8\u201312')}" placeholder="8\u201312"></label><div class="v150x-secondary"><span>Secondary Muscles</span><div class="v150x-secondary-grid">${MUSCLE_GROUPS.map(g=>`<label><input type="checkbox" data-v150x-secondary value="${esc(g)}" ${secondary.has(g)?'checked':''}>${esc(g)}</label>`).join('')}</div></div><label>Equipment<input id="v150xEquipment" list="v150xEquipmentList" value="${esc(x?.equipment||'')}"><datalist id="v150xEquipmentList">${equip.map(v=>`<option value="${esc(v)}"></option>`).join('')}</datalist></label><label>Movement Pattern<input id="v150xPattern" list="v150xPatternList" value="${esc(x?.pattern||'')}"><datalist id="v150xPatternList">${patterns.map(v=>`<option value="${esc(v)}"></option>`).join('')}</datalist></label><label class="wide">Detail / Notes<textarea id="v150xNotes" placeholder="Optional">${esc(x?.notes||x?.region||'')}</textarea></label></div><div class="v150x-actions"><button type="button" id="v150xCancel">CANCEL</button><button type="submit" class="primary">${isNew?'SAVE EXERCISE':'SAVE CHANGES'}</button></div></form>`;document.getElementById('v150xCancel').onclick=()=>m.classList.remove('open');document.getElementById('v150xPrimary').onchange=e=>{document.querySelectorAll('[data-v150x-secondary]').forEach(cb=>{if(cb.value===e.target.value)cb.checked=false;});};document.getElementById('v150xEditorForm').onsubmit=e=>{e.preventDefault();const data=readEditorData();if(!data.displayName){toast('T\u00ean b\u00e0i kh\u00f4ng \u0111\u01b0\u1ee3c \u0111\u1ec3 tr\u1ed1ng');return;}const saved=saveEditor(x,data);m.classList.remove('open');renderLibrary();toast(isNew?'\u0110\u00e3 l\u01b0u exercise v\u00e0o Library':'\u0110\u00e3 c\u1eadp nh\u1eadt exercise');if(saved)ui.search='';};m.classList.add('open');setTimeout(()=>document.getElementById('v150xName')?.focus(),30);}
   function openAddSchedule(x){const m=ensureModal(),day=state.scheduleEditorDay&&state.schedule[state.scheduleEditorDay]?state.scheduleEditorDay:DAYS[0];document.getElementById('v150xModalTitle').textContent=`Th\u00eam ${x.displayName}`;document.getElementById('v150xModalBody').innerHTML=`<form id="v150xAddScheduleForm"><div class="v150x-form"><label class="wide">Bu\u1ed5i trong l\u1ecbch<select id="v150xDay">${DAYS.map(d=>`<option value="${esc(d)}" ${d===day?'selected':''}>${esc(d)} \u2014 ${esc(state.schedule[d]?.name||'REST')}</option>`).join('')}</select></label><label>Sets<input id="v150xSets" type="number" min="1" max="30" step="1" required value="3"></label><label>Reps<input id="v150xAddReps" required value="${esc(x.reps||'8\u201312')}"></label><label>RIR<input id="v150xRir" type="number" min="0" max="10" step="0.5" required value="2"></label><label>Rest (gi\u00e2y)<input id="v150xRest" type="number" min="10" max="3600" step="1" required value="${Number(state.settings?.restSeconds)||90}"></label></div><div class="v150x-actions"><button type="button" id="v150xAddCancel">CANCEL</button><button type="submit" class="primary">TH\u00caM V\u00c0O L\u1ecaCH</button></div></form>`;document.getElementById('v150xAddCancel').onclick=()=>m.classList.remove('open');document.getElementById('v150xAddScheduleForm').onsubmit=e=>{e.preventDefault();const sets=Number(document.getElementById('v150xSets').value),reps=document.getElementById('v150xAddReps').value.trim(),rir=document.getElementById('v150xRir').value,rest=Number(document.getElementById('v150xRest').value),selectedDay=document.getElementById('v150xDay').value;if(!Number.isInteger(sets)||sets<1||sets>30||!reps||rir.trim()===''||!Number.isFinite(Number(rir))||Number(rir)<0||Number(rir)>10||!Number.isFinite(rest)||rest<10||rest>3600)return;const ref={exerciseId:x.exerciseId,canonicalName:x.canonicalName,name:x.displayName,detail:x.region||x.group||'',group:x.group||'Kh\u00e1c',indirect:x.secondary||'',equipment:x.equipment||'',pattern:x.pattern||'',libraryNote:x.notes||'',sets,reps,rir,restSeconds:rest};const session=state.schedule[selectedDay];if(!session)return;session.exercises=session.exercises||[];if(!session.exercises.length&&/^rest/i.test(session.name||''))session.name='CUSTOM';session.exercises.push(ref);saveState();m.classList.remove('open');renderLibrary();toast('\u0110\u00e3 th\u00eam v\u00e0o l\u1ecbch v\u00e0 l\u01b0u ngay');};m.classList.add('open');}
   function openDetail(x){const m=ensureModal();document.getElementById('v150xModalTitle').textContent=x.displayName;document.getElementById('v150xModalBody').innerHTML=detailHtml(x);const root=document.getElementById('v150xModalBody');root.querySelector('[data-v150x-add]').onclick=()=>openAddSchedule(x);root.querySelector('[data-v150x-edit]').onclick=()=>openEditor(x);root.querySelector('[data-v150x-delete]').onclick=()=>{m.classList.remove('open');confirmBox('X\u00f3a exercise?',`X\u00f3a \u201c${x.displayName}\u201d kh\u1ecfi Exercise Library? Schedule v\u00e0 History c\u0169 v\u1eabn \u0111\u01b0\u1ee3c gi\u1eef.`,()=>{removeFromLibrary(x.exerciseId);renderLibrary();toast('\u0110\u00e3 x\u00f3a exercise kh\u1ecfi Library');});};m.classList.add('open');}
   function matches(x){const q=ui.search.trim().toLowerCase(),hay=[x.displayName,x.canonicalName,x.group,x.region,x.secondary,x.equipment,x.pattern,x.aliases,x.exerciseId].join(' ').toLowerCase();return(!q||hay.includes(q))&&(ui.group==='all'||x.group===ui.group)&&(ui.equipment==='all'||x.equipment===ui.equipment)&&(ui.pattern==='all'||x.pattern===ui.pattern);}
@@ -16929,7 +16933,9 @@ html body .ttn19-sheet:not([data-tt-master-ui]){background:rgba(1,7,12,.72)!impo
   const mobile=()=>{try{return isMobileUI();}catch(_){return false;}};
   const pn=()=>{try{return state.personalNutrition||{};}catch(_){return {};}};
   const vn=v=>Math.round(Number(v)||0).toLocaleString('vi-VN');
-  const TABS=[['today','Log'],['tdee','TDEE'],['macro','Macro'],['history','Lịch sử']];
+  const TABS4=[['today','Log'],['tdee','TDEE'],['macro','Macro'],['history','Lịch sử']],TABS3=[['today','Ghi món'],['goal','Mục tiêu'],['history','Lịch sử']];
+  /* 18.13 · Mobile: TDEE + Macro gộp thành tab Mục tiêu (activeTab vẫn là 'macro', khối TDEE nằm trong tab này). Desktop giữ 4 tab. */
+  const tabsNow=()=>mobile()?TABS3:TABS4;
   const mark=el=>{el.setAttribute('data-tt-master-ui','');el.querySelectorAll('*').forEach(x=>x.setAttribute('data-tt-master-ui',''));return el;};
   function rootOf(page){return page.querySelector(':scope > .v148-page, :scope > main');}
   function legacyTab(page,id){
@@ -16950,13 +16956,13 @@ html body .ttn19-sheet:not([data-tt-master-ui]){background:rgba(1,7,12,.72)!impo
     let head=root.querySelector(':scope > .ttds-mealhead');
     if(!head){
       head=document.createElement('header');head.className='ttds-mealhead';
-      head.innerHTML='<h1>Ăn uống</h1><p class="sub"></p><div class="ttds-seg" role="group" aria-label="Meal">'+TABS.map(([id,l])=>`<button type="button" data-ttds-tab="${id}">${l}</button>`).join('')+'</div>';
+      head.innerHTML='<h1>Ăn uống</h1><p class="sub"></p><div class="ttds-seg" role="group" aria-label="Meal">'+tabsNow().map(([id,l])=>`<button type="button" data-ttds-tab="${id}">${l}</button>`).join('')+'</div>';
       mark(head);
-      head.querySelectorAll('[data-ttds-tab]').forEach(b=>b.addEventListener('click',()=>goTab(b.dataset.ttdsTab)));
+      head.querySelectorAll('[data-ttds-tab]').forEach(b=>b.addEventListener('click',()=>goTab(b.dataset.ttdsTab==='goal'?'macro':b.dataset.ttdsTab)));
     }
     if(root.firstElementChild!==head)root.insertBefore(head,root.firstChild);
     const sub=head.querySelector('.sub'),txt=subText();if(sub.textContent!==txt)sub.textContent=txt;
-    head.querySelectorAll('[data-ttds-tab]').forEach(b=>{const on=b.dataset.ttdsTab===tab;if(b.classList.contains('on')!==on)b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on));});
+    head.querySelectorAll('[data-ttds-tab]').forEach(b=>{const on=b.dataset.ttdsTab==='goal'?(tab==='tdee'||tab==='macro'):b.dataset.ttdsTab===tab;if(b.classList.contains('on')!==on)b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on));});
   }
   function fmtKpis(root){
     root.querySelectorAll('.v148-kpis .v148-kpi').forEach(card=>{
@@ -19168,7 +19174,7 @@ html body #appShell #page-nutrition#page-nutrition :is(b,strong,em,time,.ttn19-g
 html body #appShell #page-nutrition#page-nutrition .ttds-mealhead{display:flex!important;flex-direction:column;gap:4px;margin:0 0 4px}
 html body #appShell #page-nutrition#page-nutrition .ttds-mealhead .sub{display:block!important;order:-1;margin:0!important;color:#8b9096!important;font-size:11px!important;font-weight:600!important;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 html body #appShell #page-nutrition#page-nutrition .ttds-mealhead h1{margin:0!important;font-size:30px!important;font-weight:800!important;line-height:1.1!important;color:#f2f3f1!important;white-space:nowrap}
-html body #appShell #page-nutrition#page-nutrition .ttds-seg{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px!important;margin:12px 0 4px!important;padding:3px!important;border:1px solid #26292e!important;border-radius:10px!important;background:transparent!important;max-width:560px}
+html body #appShell #page-nutrition#page-nutrition .ttds-seg{display:grid!important;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:3px!important;margin:12px 0 4px!important;padding:3px!important;border:1px solid #26292e!important;border-radius:10px!important;background:transparent!important;max-width:560px}
 html body #appShell #page-nutrition#page-nutrition .ttds-seg button{min-height:40px!important;padding:0 4px!important;border-radius:8px!important;background:transparent!important;color:#8b9096!important;font-size:13px!important;font-weight:600!important;white-space:nowrap;box-shadow:none!important}
 html body #appShell #page-nutrition#page-nutrition .ttds-seg button.on{background:#c6ff3d!important;color:#0c0d0f!important;font-weight:700!important}
 html body #appShell #page-nutrition#page-nutrition :is(.ttn19-card,.ttn19-hero,.ttn19-macros,.ttn19-macro,.ttn19-meal-group,.v148-card,.v148-kpis,.v148-kpi,.v148-food-card,.ttn111-history-card,.ttn111-summary>div,.ttn111-detail-section,.tt-mau-chart-card){background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}
@@ -19429,8 +19435,15 @@ const DOTS='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="
 const KC={protein:4,carb:4,fat:9};
 const pn=()=>g(()=>state.personalNutrition,null);
 const today=()=>g(()=>isoDate(),ymd(new Date()));
-let openSug=null,pendingSave=0,rt=0;
-function goalInfo(){const n=pn();if(!n||!n.tdee)return null;return g(()=>{const t=n.tdee,r=calcTDEEValues(t),k=t.goal==='cut'?'cut':t.goal==='gain'?'gain':'maintain';return {key:k,kcal:Math.round(r[k]),cut:Math.round(Number(r.cutAdjust)||-15),gain:Math.round(Number(r.gainAdjust)||8)};},null);}
+let openSug=null,pendingSave=0,rt=0,tdeeOpen=false;
+/* 18.14 · Người mới = chưa Áp dụng/Lưu mục tiêu lần nào (goalSet===false) và chưa có targetMeta. Ghi món trước vẫn được, vẫn là người mới tới khi đặt mục tiêu. */
+const isNew=()=>{const n=pn();return !!n&&n.goalSet===false&&!n.targetMeta;};
+let calTouched=false;const touched={};const PHK={v148Age:'VD: 28',v148Height:'VD: 170',v148Weight:'VD: 65'};
+const newFilled=card=>Object.keys(PHK).every(id=>{const i=card.querySelector('#'+id);return i&&Number(i.value)>0;});
+const ARW='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+function markSet(){try{const n=pn();if(n&&n.goalSet!==true){n.goalSet=true;saveState({cloudDirty:false});}}catch(e){console.error('tt1634 markSet',e);}}
+const CHV30='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+function goalInfo(){const n=pn();if(!n||!n.tdee)return null;return g(()=>{const t=n.tdee,r=calcTDEEValues(window.TT_ACT&&t.activityModel!=='v2'?Object.assign({},t,{activityModel:'v2'}):t),k=t.goal==='cut'?'cut':t.goal==='gain'?'gain':'maintain';return {key:k,kcal:Math.round(r[k]),cut:Math.round(Number(r.cutAdjust)||-15),gain:Math.round(Number(r.gainAdjust)||8)};},null);}
 function dayStatus(date,d){const n=pn()||{},t=(d&&d.targetSnapshot)||n.currentTarget||{},tc=+t.calories||0,tp=+t.protein||0,e=(d&&d.entries)||[];if(date===today())return 'live';if(!tc||!e.length)return '';const s=e.reduce((a,x)=>({c:a.c+(+x.calories||0),p:a.p+(+x.protein||0)}),{c:0,p:0});if(s.c<tc*.3)return 'partial';if(s.c>tc*1.1||s.c<tc*.9)return 'off';if(tp&&s.p<tp*.9)return 'off';return 'ok';}
 /* ---------- Log ---------- */
 function foods(){const lib=g(()=>FOOD_LIBRARY,[]),cu=g(()=>pn().customFoods,[])||[];return [...lib,...cu].filter(f=>f&&f.name&&Number(f.kcal)>0);}
@@ -19456,13 +19469,17 @@ function bindSug(S,key,left,kLeft){const add=r=>r.querySelectorAll('.tt1629-add'
 function openAdd(name,gr){const b=document.getElementById('ttn19AddMeal');if(!b)return;b.click();setTimeout(()=>{const s=document.getElementById('ttn19Food'),q=document.getElementById('ttn19Grams');if(!s)return;s.value=name;s.dispatchEvent(new Event('input',{bubbles:true}));if(q)q.value=String(gr);},120);}
 function decoLog(p){const m=p.querySelector('.ttn19-meal');if(!m)return;
   const row=m.querySelector('.ttn19-cal-row'),main=row&&row.querySelector('.ttn19-cal-main');let kLeft=0;
-  if(main){const eaten=num(main.querySelector('b')&&main.querySelector('b').textContent),tgt=num(main.querySelector('span')&&main.querySelector('span').textContent);let el=row.querySelector('.tt1629-left');
+  const NWL=isNew();m.classList.toggle('tt1634-newm',NWL);
+  let nd=m.querySelector('.tt1634-nudge');if(NWL&&nd){const kc=m.querySelector('.v179-k');if(kc&&nd.previousElementSibling!==kc)kc.after(nd);}
+  if(NWL&&!nd){nd=document.createElement('div');nd.className='tt1634-nudge';nd.innerHTML='<div><b>Đặt mục tiêu để biết còn bao nhiêu kcal</b><small>Mất khoảng 1 phút. Ghi món trước vẫn được.</small></div><button type="button">Đặt mục tiêu'+ARW+'</button>';nd.querySelector('button').onclick=()=>{try{tdeeOpen=true;pn().activeTab='macro';saveState({cloudDirty:false});window.TRUE_TRAIN_PERSONAL_NUTRITION.render();}catch(e){console.error('tt1634 nudge',e);}};const kc=m.querySelector('.v179-k')||m.querySelector('.ttn19-hero');if(kc)kc.after(nd);else m.prepend(nd);}
+  else if(!NWL&&nd)nd.remove();
+  if(main){const eaten=num(main.querySelector('b')&&main.querySelector('b').textContent),tgt=NWL?0:num(main.querySelector('span')&&main.querySelector('span').textContent);let el=row.querySelector('.tt1629-left');
     if(tgt>0){kLeft=tgt-eaten;const h='<span>'+(kLeft>=0?'CÒN':'VƯỢT')+'</span><b>'+Math.abs(Math.round(kLeft))+'</b>';if(!el){el=document.createElement('div');el.className='tt1629-left';row.appendChild(el);}if(el.dataset.h!==h){el.dataset.h=h;el.innerHTML=h;}el.classList.toggle('over',kLeft<0);}else if(el)el.remove();}
   const box=m.querySelector('.ttn19-macros');
   if(box){if(!box.querySelector('.tt1629-mhead')){const h=document.createElement('div');h.className='tt1629-mhead';h.innerHTML='<span></span><span></span><span>ĐÃ ĂN</span><span>CÒN</span><span>GỢI Ý</span>';box.prepend(h);}
     box.querySelectorAll(':scope>.ttn19-macro').forEach(r=>{const key=['protein','carb','fat'].find(k=>r.classList.contains(k));if(!key)return;
       const lab=r.querySelector('.ttn19-macro-top span');if(lab&&key==='fat'&&lab.textContent!=='Fat')lab.textContent='Fat';
-      const b=r.querySelector(':scope>b'),sp=b&&b.querySelector('span'),v=num(b&&b.firstChild&&b.firstChild.textContent),tg=num(sp&&sp.textContent),left=Math.max(0,Math.round(tg-v));
+      const b=r.querySelector(':scope>b'),sp=b&&b.querySelector('span'),v=num(b&&b.firstChild&&b.firstChild.textContent),tg=NWL?0:num(sp&&sp.textContent),left=Math.max(0,Math.round(tg-v));
       let L=r.querySelector('.tt1629-mleft');if(!L){L=document.createElement('span');L.className='tt1629-mleft';r.appendChild(L);}const lt=tg?left+'g':'—';if(L.textContent!==lt)L.textContent=lt;
       let B=r.querySelector('.tt1629-bulb');const want=tg>0&&left>=5;
       if(want&&!B){B=document.createElement('button');B.type='button';B.className='tt1629-bulb';B.setAttribute('aria-label','Gợi ý món cho '+(lab?lab.textContent:key));B.innerHTML=BULB;B.onclick=e=>{e.stopPropagation();openSug=openSug===key?null:key;decoLog(p);};r.appendChild(B);}
@@ -19474,40 +19491,74 @@ function decoLog(p){const m=p.querySelector('.ttn19-meal');if(!m)return;
   m.querySelectorAll('[data-water-custom]').forEach(b=>{if(b.textContent.trim()!=='Khác')b.textContent='Khác';});
   m.querySelectorAll('.ttn19-group-copy b').forEach(b=>{const t=b.textContent.trim();if(/^meal/i.test(t)){const nt=t.replace(/^meal\s*/i,'Bữa ');if(nt!==t)b.textContent=nt;}});}
 /* ---------- TDEE ---------- */
-function decoTdee(p){const pg=p.querySelector('.v148-page'),sex=p.querySelector('#v148Sex');if(!pg||!sex||g(()=>pn().activeTab)!=='tdee')return;pg.classList.add('tt1629-tdee');
-  const card=sex.closest('.v148-card');if(!card)return;card.classList.add('tt1629-tcard');const grid=card.querySelector('.v148-form-grid'),seg=card.querySelector('.tt1627-seg'),gi=goalInfo();
+function decoTdee(p){const pg=p.querySelector('.v148-page'),sex=p.querySelector('#v148Sex'),tb=g(()=>pn().activeTab);if(!pg||!sex||(tb!=='tdee'&&tb!=='macro'))return;
+  const card=sex.closest('.v148-card');if(!card)return;if(tb==='macro'&&!card.closest('.tt1630-body'))return;if(tb==='tdee')pg.classList.add('tt1629-tdee');card.classList.add('tt1629-tcard');const NW=isNew();
+  if(NW)Object.keys(PHK).forEach(id=>{const i=card.querySelector('#'+id);if(i&&!touched[id]&&!i.dataset.ttNew){i.dataset.ttNew='1';i.value='';i.placeholder=PHK[id];}});
+  const grid=card.querySelector('.v148-form-grid'),seg=card.querySelector('.tt1627-seg'),gi=goalInfo();
   if(seg&&grid&&seg.parentElement===grid)card.insertBefore(seg,grid);
   if(seg&&gi)seg.querySelectorAll('button').forEach(b=>{const t=b.textContent,k=/Giữ/.test(t)?'m':/Giảm/.test(t)?'c':/Tăng/.test(t)?'g':'',sig=k+gi.cut+'/'+gi.gain;if(!k||b.dataset.tt1629===sig)return;b.dataset.tt1629=sig;
     b.innerHTML=k==='m'?'<span>Giữ cân</span><small>±0%</small>':k==='c'?'<span>Giảm mỡ</span><small>−'+Math.abs(gi.cut)+'%</small>':'<span>Tăng cơ</span><small>+'+Math.abs(gi.gain)+'%</small>';});
   card.querySelectorAll('.v148-field>label').forEach(l=>{const r={'Mode':'Công thức','Body Fat %':'Mỡ cơ thể %'}[l.textContent.trim()];if(r)l.textContent=r;});
   card.querySelectorAll('.v148-result span').forEach(s=>{if(/^goal$/i.test(s.textContent.trim()))s.textContent='Mục tiêu';});
-  if(!card.dataset.tt1629){card.dataset.tt1629='1';card.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('input,select'))return;clearTimeout(rt);rt=setTimeout(()=>{const u=document.getElementById('v148CalcEnergy');if(u)u.click();},300);});}
+  if(!card.dataset.tt1629){card.dataset.tt1629='1';card.addEventListener('input',e=>{const t=e.target;if(t&&t.id&&PHK[t.id])touched[t.id]=true;});card.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('input,select'))return;if(isNew()&&!newFilled(card))return;clearTimeout(rt);rt=setTimeout(()=>{const u=document.getElementById('v148CalcEnergy');if(u)u.click();},300);});}
   const act=card.querySelector('.v148-actions'),go=card.querySelector('#v148EnergyToMacro');
-  if(act&&go){act.classList.add('tt1629-sticky');const n=pn(),cur=Math.round(Number(n&&n.currentTarget&&n.currentTarget.calories)||0),res=[...card.querySelectorAll('.v148-result b')].pop(),sumB=card.querySelector('.tta-sum b'),base=sumB?num(sumB.textContent):0,shown=(sumB&&gi&&base)?(gi.key==='cut'?Math.round(base*(1+gi.cut/100)):gi.key==='gain'?Math.round(base*(1+gi.gain/100)):base):(res?num(res.textContent):(gi?gi.kcal:0)),same=Math.abs(cur-shown)<=1;
+  if(act&&go){act.classList.add('tt1629-sticky');const n=pn(),cur=Math.round(Number(n&&n.currentTarget&&n.currentTarget.calories)||0),res=[...card.querySelectorAll('.v148-result b')].pop(),sumB=card.querySelector('.tta-sum b'),base=sumB?num(sumB.textContent):0,FILL=NW?newFilled(card):true,shown=(sumB&&gi&&base)?(gi.key==='cut'?Math.round(base*(1+gi.cut/100)):gi.key==='gain'?Math.round(base*(1+gi.gain/100)):base):(res?num(res.textContent):(gi?gi.kcal:0)),same=!NW&&Math.abs(cur-shown)<=1;
     let d=act.querySelector('.tt1629-diff');if(!d){d=document.createElement('div');d.className='tt1629-diff';act.prepend(d);}
-    const h='<span>Mục tiêu hiện tại</span><span><i>'+cur+'</i> → <b>'+shown+' kcal</b></span>';if(d.dataset.h!==h){d.dataset.h=h;d.innerHTML=h;}d.hidden=same;
+    const h=NW?'<span>Mục tiêu hiện tại</span><span><i>Chưa có</i></span>':'<span>Mục tiêu hiện tại</span><span><i>'+cur+'</i> → <b>'+shown+' kcal</b></span>';if(d.dataset.h!==h){d.dataset.h=h;d.innerHTML=h;}d.hidden=same;
     if(sumB&&base){const bs=[...card.querySelectorAll('.v148-result b')],set=(el,v)=>{if(el&&el.textContent!==String(v))el.textContent=String(v);};if(bs.length>=3){set(bs[1],base);set(bs[2],shown);}}
-    const txt=same?'Đang là mục tiêu hiện tại':'Áp dụng làm mục tiêu';if(go.textContent!==txt)go.textContent=txt;go.classList.toggle('tt1629-same',same);}}
+    const txt=same?'Đang là mục tiêu hiện tại':(NW&&!FILL)?'Nhập đủ chỉ số để tiếp tục':'Áp dụng làm mục tiêu';if(go.textContent!==txt)go.textContent=txt;go.classList.toggle('tt1629-same',same);go.disabled=NW&&!FILL;go.classList.toggle('tt1634-off',NW&&!FILL);
+    if(NW&&!FILL)card.querySelectorAll('.v148-result b').forEach(b=>{if(b.textContent!=='—')b.textContent='—';});}
+  if(NW&&!act)card.classList.add('tt1634-nw');}
+/* ---------- Mục tiêu = Macro (xem) + khối Nhu cầu TDEE thu gọn bên dưới ---------- */
+function goalTdee(p,tiles){
+  const sex=p.querySelector('#v148Sex'),card=sex&&sex.closest('.v148-card');if(!card)return;
+  let w=tiles.querySelector(':scope > .tt1630-tdee');
+  if(!w){w=document.createElement('section');w.className='tt1630-tdee';
+    w.innerHTML='<button type="button" class="tt1630-th" aria-expanded="false"><span class="tt1630-tl"><em class="tt1634-k">NHU CẦU MỖI NGÀY · TDEE</em><em class="tt1634-nt">Nhu cầu (TDEE)</em><span class="tt1634-big"><b></b><small>kcal</small></span><span class="tt1634-chip"></span><span class="tt1634-sub">Nhập đủ chỉ số để xem kết quả</span></span><span class="tt1630-tg"><em>Tính lại</em>'+CHV30+'</span></button><div class="tt1630-body"></div>';
+    w.setAttribute('data-tt-master-ui','');w.querySelectorAll('*').forEach(x=>x.setAttribute('data-tt-master-ui',''));
+    w.querySelector('.tt1630-th').addEventListener('click',()=>{tdeeOpen=!tdeeOpen;goalTdeeSync(w);if(tdeeOpen)requestAnimationFrame(()=>{try{w.scrollIntoView({behavior:'smooth',block:'start'});}catch(_){}});});
+    tiles.append(w);}
+  const body=w.querySelector('.tt1630-body');
+  if(card.parentElement!==body){card.hidden=false;body.append(card);}
+  goalTdeeSync(w);
+  const bs=card.querySelectorAll('.v148-result b'),tv=bs.length>1?bs[1].textContent.trim():'',big=w.querySelector('.tt1634-big b'),chip=w.querySelector('.tt1634-chip'),NW=isNew(),empty=NW&&!newFilled(card);
+  w.classList.toggle('tt1634-n',empty);
+  if(big&&big.textContent!==(tv||'—'))big.textContent=tv||'—';
+  const cur=Math.round(Number(g(()=>pn().currentTarget.calories))||0),tn=num(tv);let ct='';
+  if(!NW&&tn&&cur){const d=tn-cur;ct=Math.abs(d)<=1?'Mục tiêu bằng TDEE':d>0?'Mục tiêu thấp hơn '+d+' kcal':'Mục tiêu cao hơn '+(-d)+' kcal';}
+  if(chip&&chip.textContent!==ct){chip.textContent=ct;chip.hidden=!ct;}}
+function goalTdeeSync(w){const b=w.querySelector('.tt1630-th'),em=w.querySelector('.tt1630-tg em');w.classList.toggle('open',tdeeOpen);if(b)b.setAttribute('aria-expanded',String(tdeeOpen));if(em){const x=tdeeOpen?'Thu gọn':(isNew()?'Nhập chỉ số':'Tính lại');if(em.textContent!==x)em.textContent=x;}}
 /* ---------- Macro ---------- */
-function mviewHtml(){const n=pn()||{},t=n.currentTarget||{},gi=goalInfo(),kc=Math.round(+t.calories||0),manual=g(()=>window.TRUE_TRAIN_V166_MANUAL_TARGET.isManual('personal'),false);
-  const GN={maintain:'GIỮ CÂN',cut:'GIẢM MỠ',gain:'TĂNG CƠ'},follow=!manual&&gi&&Math.abs(gi.kcal-kc)<=1,lab=manual?'NHẬP GRAM':follow?GN[gi.key]:'TỰ CHỈNH';
+function newViewHtml(){const dim=['Protein','Carb','Fat'].map(x=>'<div class="tt1634-dr"><b>'+x+'</b><span>—</span><span>— kcal</span><strong>—g</strong></div>').join('');
+  return '<div class="tt1634-empty"><span class="tt1634-k">MỤC TIÊU</span><h3>Chưa có mục tiêu</h3><p>Nhập vài chỉ số cơ thể, app tính ra số kcal mỗi ngày và chia sẵn Protein, Carb, Fat.</p>'
+   +'<div class="tt1634-steps"><div><b>1</b>Nhập chỉ số cơ thể</div><div><b>2</b>Chọn giữ cân, giảm mỡ hay tăng cơ</div><div><b>3</b>Áp dụng làm mục tiêu</div></div>'
+   +'<button type="button" class="tt1634-cta" data-a="calc">Tính nhu cầu (TDEE)'+ARW+'</button><button type="button" class="tt1634-cta2" data-a="edit">'+PEN+'Đã biết số kcal, chỉnh tay</button></div>'
+   +'<div class="tt1634-dim"><span class="tt1634-k">MACRO</span>'+dim+'<p>Macro hiện ra sau khi có mục tiêu.</p></div>';}
+function mviewHtml(){if(isNew())return newViewHtml();const n=pn()||{},t=n.currentTarget||{},gi=goalInfo(),kc=Math.round(+t.calories||0),manual=g(()=>window.TRUE_TRAIN_V166_MANUAL_TARGET.isManual('personal'),false);
+  const GN={maintain:'GIỮ CÂN',cut:'GIẢM MỠ',gain:'TĂNG CƠ'},follow=!manual&&gi&&Math.abs(gi.kcal-kc)<=1,lab=manual?'NHẬP GRAM':follow?GN[gi.key]:'CHỈNH TAY';
   const row=(nm,gr,f)=>{const k=Math.round(gr*f);return '<div class="tt1629-mr"><b>'+nm+'</b><span>'+(kc?Math.round(k/kc*100):0)+'%</span><span>'+k+' kcal</span><strong>'+Math.round(gr)+'g</strong></div>';};
-  return '<div class="tt1629-mh"><div><span>MỤC TIÊU · '+lab+'</span><div><b>'+kc+'</b><small>kcal</small></div></div><button type="button" data-a="edit">'+PEN+'Tự chỉnh</button></div><div class="tt1629-ml">'+row('Protein',+t.protein||0,4)+row('Carb',+t.carb||0,4)+row('Fat',+t.fat||0,9)+'</div><p class="tt1629-note">'+(follow?'Tính theo mục tiêu ở tab TDEE.':'Đang dùng số tự chỉnh, không theo TDEE'+(gi?' (TDEE đề xuất '+gi.kcal+' kcal)':'')+'.')+'</p><button type="button" class="tt1629-link" data-a="gram">Nhập thẳng gram</button>';}
+  return '<div class="tt1629-mh"><div><span>MỤC TIÊU · '+lab+'</span><div><b>'+kc+'</b><small>kcal</small></div></div><button type="button" data-a="edit">'+PEN+'Chỉnh tay</button></div><div class="tt1629-ml">'+row('Protein',+t.protein||0,4)+row('Carb',+t.carb||0,4)+row('Fat',+t.fat||0,9)+'</div><p class="tt1629-note">'+(follow?'Tính theo nhu cầu (TDEE) bên dưới.':'Đang dùng số chỉnh tay, không theo TDEE'+(gi?' (TDEE đề xuất '+gi.kcal+' kcal)':'')+'.')+'</p>';}
 function decoMacro(p){const pg=p.querySelector('.v148-page'),save=p.querySelector('#v148SaveTarget');if(!pg||!save||g(()=>pn().activeTab)!=='macro')return;
-  if(pendingSave&&Date.now()-pendingSave<1500){pendingSave=0;save.click();const api=window.TRUE_TRAIN_V167_MACRO_UI;if(api){api.view.personal='home';api.apply('personal');}return;}
+  if(pendingSave&&Date.now()-pendingSave<1500){pendingSave=0;save.click();markSet();const api=window.TRUE_TRAIN_V167_MACRO_UI;if(api){api.view.personal='home';api.apply('personal');}return;}
   const tiles=p.querySelector('.tt167-tiles[data-scope="personal"]');
+  if(tiles)goalTdee(p,tiles);
   if(tiles&&!tiles.classList.contains('tt167-off')){pg.classList.add('tt1629-mac');let v=tiles.querySelector('.tt1629-mview');const h=mviewHtml();if(!v){v=document.createElement('div');v.className='tt1629-mview';tiles.prepend(v);}
-    if(v.dataset.h!==h){v.dataset.h=h;v.innerHTML=h;v.querySelector('[data-a=edit]').onclick=()=>{const b=tiles.querySelector('[data-tt167-open=calc]');if(b)b.click();};v.querySelector('[data-a=gram]').onclick=()=>{const b=tiles.querySelector('[data-tt167-open=manual]');if(b)b.click();};}}
+    if(v.dataset.h!==h){v.dataset.h=h;v.innerHTML=h;const ed=v.querySelector('[data-a=edit]'),cl=v.querySelector('[data-a=calc]');
+      if(ed)ed.onclick=()=>{const b=tiles.querySelector('[data-tt167-open=calc]');if(b)b.click();};
+      if(cl)cl.onclick=()=>{tdeeOpen=true;const w=tiles.querySelector(':scope > .tt1630-tdee');if(w){goalTdeeSync(w);requestAnimationFrame(()=>{try{w.scrollIntoView({behavior:'smooth',block:'start'});}catch(_){}});}};}}
   else pg.classList.remove('tt1629-mac');
   const kin=p.querySelector('#v148MacroCalories'),two=p.querySelector('.v148-two');
   if(!(kin&&two&&!two.classList.contains('tt167-off'))){pg.classList.remove('tt1629-calc');return;}
   pg.classList.add('tt1629-calc');const card=kin.closest('.v148-card')||two;card.classList.add('tt1629-ccard');
   const back=p.querySelector('.tt167-back[data-scope="personal"]');if(back&&back.textContent!=='← Mục tiêu')back.textContent='← Mục tiêu';
   let h=card.querySelector('.tt1629-ch');
-  if(!h){h=document.createElement('div');h.className='tt1629-ch';h.innerHTML='<div><span>MỤC TIÊU · TỰ CHỈNH</span><div class="k"></div><small class="s"></small></div><button type="button" data-a="tdee">Theo TDEE</button>';card.prepend(h);
+  if(!h){h=document.createElement('div');h.className='tt1629-ch';h.innerHTML='<div><span>MỤC TIÊU · CHỈNH TAY</span><div class="k"></div><small class="s"></small></div><button type="button" data-a="tdee">Theo TDEE</button>';card.prepend(h);
     const kf=kin.closest('.v148-field');h.querySelector('.k').append(kin);const u=document.createElement('em');u.textContent='kcal';h.querySelector('.k').append(u);if(kf)kf.classList.add('tt1629-gone');
     h.querySelector('[data-a=tdee]').onclick=()=>{const gi=goalInfo();if(!gi)return;kin.value=gi.kcal;const r=document.getElementById('v148RecalcMacro');if(r)r.click();};}
-  const gi=goalInfo(),s=h.querySelector('.s'),st=gi?(Math.abs(num(kin.value)-gi.kcal)<=1?'Đang theo TDEE':'Không theo TDEE · TDEE đề xuất '+gi.kcal):'';if(s&&s.textContent!==st)s.textContent=st;
+  const NWC=isNew();if(NWC&&!calTouched&&!kin.dataset.ttNew){kin.dataset.ttNew='1';kin.value='';kin.placeholder='0';}
+  const tb2=h.querySelector('[data-a=tdee]');if(tb2){if(NWC&&tb2.style.display!=='none')tb2.style.setProperty('display','none','important');else if(!NWC&&tb2.style.display)tb2.style.removeProperty('display');}
+  const gi=goalInfo(),s=h.querySelector('.s'),st=NWC?(String(kin.value).trim()?'':'Nhập số kcal mỗi ngày'):gi?(Math.abs(num(kin.value)-gi.kcal)<=1?'Đang theo TDEE':'Không theo TDEE · TDEE đề xuất '+gi.kcal):'';if(s&&s.textContent!==st)s.textContent=st;
+  if(NWC&&!String(kin.value).trim())liveMacro(p);
   card.querySelectorAll('.v148-form-grid>.v148-field>label').forEach(l=>{if(/^weight/i.test(l.textContent.trim()))l.textContent='Cân nặng (kg)';});
   const ml=card.querySelector('.tt167-mode-label');if(ml&&ml.textContent!=='Nhập theo')ml.textContent='Nhập theo';
   card.querySelectorAll('.v148-macro-row').forEach(r=>{if(r.dataset.tt1629)return;r.dataset.tt1629='1';const stg=r.querySelector('strong');if(stg&&stg.textContent.trim()==='Carbs')stg.textContent='Carb';
@@ -19536,18 +19587,165 @@ function decoHist(p){const h=p.querySelector('.ttn111-history'),list=h&&h.queryS
 function decoBar(){const bar=document.getElementById('ttReleaseUpdateBar');if(bar&&!bar.dataset.tt1629){bar.dataset.tt1629='1';const pp=bar.querySelector('p'),v=g(()=>APP_VERSION,'');if(pp){let s=pp.querySelector('small');if(!s){s=document.createElement('small');pp.append(s);}s.textContent='Đang chạy '+v;}const go=document.getElementById('ttReleaseUpdateBtn');if(go)go.textContent='Tải lại';}
   const m=document.querySelector('#page-more main');if(m&&!m.querySelector('.tt1629-ver')){const v=document.createElement('div');v.className='tt1629-ver';v.innerHTML='<span>Phiên bản</span><b>'+esc(g(()=>APP_VERSION,''))+'</b>';m.append(v);}}
 let q=0;
-function run(){q=0;const p=document.getElementById('page-nutrition');if(!p||!mq.matches)return;[decoLog,decoTdee,decoMacro,decoHist].forEach(f=>{try{f(p);}catch(e){console.error('tt1629',f.name,e);}});}
+/* 18.13 · Màn Chỉnh tay: gõ số là gram P/C/F cập nhật ngay, không cần Enter hay rời ô.
+   Tính tại chỗ bằng computeMacros (không gọi render) nên ô đang gõ giữ nguyên con trỏ. Lưu vào dữ liệu vẫn như cũ: khi rời ô hoặc bấm Lưu mục tiêu. */
+const MIN='#v148MacroCalories,#v148MacroWeight,input[data-v148-macro-value]';
+function macroModel(p){const n=pn(),m0=n&&n.macro,cal=p.querySelector('#v148MacroCalories'),wt=p.querySelector('#v148MacroWeight');if(!m0||!cal||!wt)return null;
+  const m={calories:Number(cal.value)||m0.calories,weight:Number(wt.value)||m0.weight};
+  ['protein','carb','fat'].forEach(k=>{const i=p.querySelector('input[data-v148-macro-value="'+k+'"]');m[k]={mode:m0[k].mode,value:(i&&!i.disabled)?(Number(i.value)||0):m0[k].value};});return m;}
+function liveMacro(p){try{const cal0=p.querySelector('#v148MacroCalories');
+  if(cal0&&isNew()&&!String(cal0.value).trim()){p.querySelectorAll('.v148-macro-row > b').forEach(b=>{if(b.textContent!=='—')b.textContent='—';});const sv0=p.querySelector('#v148SaveTarget');if(sv0)sv0.disabled=true;const er0=p.querySelector('.v148-over');if(er0)er0.remove();return;}
+  const m=macroModel(p);if(!m||typeof computeMacros!=='function')return;const res=computeMacros(m),rows=p.querySelectorAll('.v148-macro-row');
+  rows.forEach(r=>{const i=r.querySelector('input[data-v148-macro-value]'),b=r.querySelector(':scope > b'),o=i&&res.out[i.dataset.v148MacroValue];if(b&&o){const x=Math.round(o.grams)+'g';if(b.textContent!==x)b.textContent=x;}});
+  const sv=p.querySelector('#v148SaveTarget');if(sv)sv.disabled=!!res.error;
+  const box=rows.length?rows[rows.length-1].parentElement:null;let er=p.querySelector('.v148-over');
+  if(res.error){if(!er&&box){er=document.createElement('div');er.className='v148-note v148-over';box.after(er);}if(er)er.textContent=res.error;}else if(er)er.remove();
+}catch(e){console.error('tt1629 live',e);}}
+function syncMacro(p){try{const m=macroModel(p),n=pn();if(!m||!n||!n.macro)return;n.macro.calories=m.calories;n.macro.weight=m.weight;['protein','carb','fat'].forEach(k=>{if(n.macro[k]&&m[k]&&n.macro[k].mode!=='auto')n.macro[k].value=m[k].value;});saveState();}catch(e){console.error('tt1629 sync',e);}}
+function run(){q=0;const p=document.getElementById('page-nutrition');if(!p||!mq.matches)return;
+  if(g(()=>pn().activeTab)==='tdee'){try{pn().activeTab='macro';saveState({cloudDirty:false});window.TRUE_TRAIN_PERSONAL_NUTRITION.render();}catch(e){console.error('tt1629 tdee->goal',e);}return;}
+  [decoLog,decoTdee,decoMacro,decoHist].forEach(f=>{try{f(p);}catch(e){console.error('tt1629',f.name,e);}});}
 function queue(){if(!q)q=requestAnimationFrame(run);}
 function start(){const p=document.getElementById('page-nutrition');
   if(p){new MutationObserver(queue).observe(p,{childList:true,subtree:true});
     p.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.tt167-back,[data-tt167-open]'))setTimeout(queue,0);});
-    p.addEventListener('click',e=>{const go=e.target.closest&&e.target.closest('#v148EnergyToMacro');if(!go||!mq.matches)return;if(go.classList.contains('tt1629-same')){e.stopImmediatePropagation();e.preventDefault();return;}pendingSave=Date.now();},true);
-    p.addEventListener('change',e=>{if(!mq.matches)return;const t=e.target;if(!t||!t.matches||!t.matches('#v148MacroCalories,#v148MacroWeight,input[data-v148-macro-value]'))return;clearTimeout(rt);rt=setTimeout(()=>{const r=document.getElementById('v148RecalcMacro');if(r)r.click();},300);});}
+    p.addEventListener('click',e=>{const go=e.target.closest&&e.target.closest('#v148EnergyToMacro');if(!go||!mq.matches)return;if(go.classList.contains('tt1629-same')){e.stopImmediatePropagation();e.preventDefault();return;}pendingSave=Date.now();tdeeOpen=false;},true);
+    p.addEventListener('click',e=>{const sv=e.target.closest&&e.target.closest('#v148SaveTarget');if(sv&&!sv.disabled)setTimeout(markSet,0);},true);
+    p.addEventListener('input',e=>{const t=e.target;if(t&&t.id==='v148MacroCalories')calTouched=true;if(!mq.matches)return;if(!t||!t.matches||!t.matches(MIN))return;liveMacro(p);});
+    p.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#v148EnergyToMacro'))calTouched=true;},true); /* số kcal lấy từ TDEE thì giữ, không để trống */
+    p.addEventListener('click',e=>{const r=e.target.closest&&e.target.closest('#v148RecalcMacro'),c=p.querySelector('#v148MacroCalories');if(r&&c&&isNew()&&!String(c.value).trim()){e.stopImmediatePropagation();e.preventDefault();liveMacro(p);}},true);
+    p.addEventListener('change',e=>{if(!mq.matches)return;const t=e.target;if(!t||!t.matches||!t.matches(MIN))return;liveMacro(p);{const c=p.querySelector('#v148MacroCalories');if(c&&isNew()&&!String(c.value).trim())return;}clearTimeout(rt);rt=setTimeout(()=>{const a=document.activeElement;if(a&&a.matches&&a.matches(MIN)){syncMacro(p);return;}const r=document.getElementById('v148RecalcMacro');if(r)r.click();},300);});}
   mq.addEventListener&&mq.addEventListener('change',queue);setInterval(decoBar,1000);decoBar();queue();}
-window.TRUE_TRAIN_V1629_MEAL={version:'16.29',run,dayStatus};
+window.TRUE_TRAIN_V1629_MEAL={version:'16.29',run,dayStatus,live:liveMacro,touchCal:()=>{calTouched=true;},calTouched:()=>calTouched};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
 </script>
+<style id="v1634-desk-css">
+/* 18.14 · Desktop: trạng thái người mới (chưa đặt mục tiêu). */
+@media(min-width:761px){
+html body #appShell #page-nutrition#page-nutrition .tt1634-dk{order:0!important;grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 16px;padding:18px 20px;border-radius:16px;border:1px solid rgba(198,255,61,.38);background:linear-gradient(135deg,rgba(198,255,61,.14),rgba(198,255,61,.04) 70%);color:#f2f3f1}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dk span{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;color:#c6ff3d}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dk b{display:block;margin-top:4px;font-size:20px;font-weight:800;line-height:1.2}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dk small{display:block;margin-top:4px;font-size:13px;color:#b7bbc0;line-height:1.45}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dk button{flex:none;height:44px;padding:0 18px;border:0;border-radius:12px;background:#c6ff3d;color:#0c0d0f;font:inherit;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 6px 18px rgba(198,255,61,.2)}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dk button svg{width:16px;height:16px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dnew #ttaNote{display:none!important}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dnew #v148EnergyToMacro:disabled{background:#1c1f23!important;color:#6b7076!important;border-color:#26292e!important;box-shadow:none!important;cursor:not-allowed;opacity:1!important}
+}
+</style>
+<script id="v1634-desk-js">
+/* 18.14 · Desktop: người mới chưa đặt mục tiêu. Log và Macro có thẻ mời đặt mục tiêu; TDEE để trống tuổi, chiều cao, cân nặng, khóa nút tới khi nhập đủ. Chỉ trình bày, không đổi công thức hay key lưu trữ. */
+(()=>{'use strict';
+const mq=matchMedia('(max-width:760px)');
+const pn=()=>{try{return state.personalNutrition;}catch(_){return null;}};
+const isNew=()=>{const n=pn();return !!n&&n.goalSet===false&&!n.targetMeta;};
+const PH={v148Age:'VD: 28',v148Height:'VD: 170',v148Weight:'VD: 65'},touched={};
+const filled=c=>Object.keys(PH).every(id=>{const i=c.querySelector('#'+id);return i&&Number(i.value)>0;});
+const ARW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const TX={today:['Đặt mục tiêu để biết còn bao nhiêu kcal','Nhập vài chỉ số cơ thể, app tính ra số kcal mỗi ngày và chia sẵn Protein, Carb, Fat. Ghi món trước vẫn được.','Đặt mục tiêu'],
+  macro:['Chưa có mục tiêu','Tính nhu cầu (TDEE) để app đề xuất số kcal, hoặc chọn Chỉnh tay nếu đã biết số kcal.','Tính nhu cầu (TDEE)'],
+  history:['Chưa có mục tiêu','Đặt mục tiêu để biết ngày nào ăn đủ.','Đặt mục tiêu']};
+let q=0;
+function run(){q=0;const p=document.getElementById('page-nutrition');if(!p)return;
+  const pg=p.querySelector('.v148-page'),NW=isNew()&&!mq.matches,tb=(pn()||{}).activeTab;
+  p.querySelectorAll('.tt1634-dk').forEach(x=>{if(!NW||!TX[tb]||x.dataset.tab!==tb||x.parentElement!==pg)x.remove();});
+  if(pg)pg.classList.toggle('tt1634-dnew',NW&&tb==='tdee');
+  if(!NW||!pg)return;
+  if(TX[tb]&&!pg.querySelector(':scope > .tt1634-dk')){const hd=pg.querySelector(':scope > .v148-tabs')||pg.querySelector(':scope > header');const c=TX[tb],d=document.createElement('div');d.className='tt1634-dk';d.dataset.tab=tb;
+    d.innerHTML='<div><span>MỤC TIÊU</span><b>'+c[0]+'</b><small>'+c[1]+'</small></div><button type="button">'+c[2]+ARW+'</button>';
+    d.querySelector('button').onclick=()=>{const b=p.querySelector('[data-ttds-tab="tdee"]')||[...p.querySelectorAll('.v148-tabs button')].find(x=>/TDEE/.test(x.textContent));if(b)b.click();};
+    if(hd)hd.after(d);else pg.prepend(d);}
+  if(tb==='macro'){const kin=p.querySelector('#v148MacroCalories'),M=window.TRUE_TRAIN_V1629_MEAL;if(kin&&M&&M.live){
+      if(!M.calTouched()&&!kin.dataset.ttNew){kin.dataset.ttNew='1';kin.value='';kin.placeholder='0';}
+      if(!kin.dataset.tt1634){kin.dataset.tt1634='1';kin.addEventListener('input',()=>{M.touchCal();M.live(p);});}
+      if(!String(kin.value).trim())M.live(p);}}
+  if(tb!=='tdee')return;
+  const sex=p.querySelector('#v148Sex'),card=sex&&sex.closest('.v148-card');if(!card)return;
+  Object.keys(PH).forEach(id=>{const i=card.querySelector('#'+id);if(i&&!touched[id]&&!i.dataset.ttNew){i.dataset.ttNew='1';i.value='';i.placeholder=PH[id];}});
+  if(!card.dataset.tt1634){card.dataset.tt1634='1';card.addEventListener('input',e=>{const x=e.target;if(x&&x.id&&PH[x.id])touched[x.id]=true;queue();});}
+  const ok=filled(card),go=card.querySelector('#v148EnergyToMacro');
+  if(go){if(go.disabled!==!ok)go.disabled=!ok;const tx=ok?'USE GOAL IN MACRO':'Nhập đủ chỉ số để tiếp tục';if(go.textContent!==tx)go.textContent=tx;}
+  if(!ok)card.querySelectorAll('.v148-result b').forEach(b=>{if(b.textContent!=='—')b.textContent='—';});}
+function queue(){if(!q)q=requestAnimationFrame(run);}
+function start(){const p=document.getElementById('page-nutrition');if(p)new MutationObserver(queue).observe(p,{childList:true,subtree:true,characterData:true});
+  mq.addEventListener&&mq.addEventListener('change',queue);queue();}
+window.TRUE_TRAIN_V1634_DESK={run};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
+<style id="v1633-goal-css">
+/* 18.13 · Tab Mục tiêu (mobile): khối Nhu cầu (TDEE) thu gọn dưới thẻ Macro. */
+@media(max-width:760px){
+html body #appShell #page-nutrition#page-nutrition .tt1630-tdee{margin-top:12px;background:#15171a;border:1px solid #26292e;border-radius:20px;padding:4px 16px;box-sizing:border-box}
+html body #appShell #page-nutrition#page-nutrition .tt1630-th{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:64px;margin:0;padding:8px 0;border:0;background:transparent;color:#f2f3f1;font-family:inherit;text-align:left;cursor:pointer;box-shadow:none;-webkit-tap-highlight-color:transparent}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tl{display:flex;flex-direction:column;gap:2px;min-width:0}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tl b{font-size:16px;font-weight:800;font-stretch:90%}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tl small{font-size:13px;color:#8b9096;font-variant-numeric:tabular-nums}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tl small i{font-style:normal;color:#f2f3f1;font-weight:700}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tg{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#c6ff3d;white-space:nowrap}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tg em{font-style:normal}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tg svg{transition:transform .2s}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tdee.open .tt1630-tg svg{transform:rotate(180deg)}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tdee:not(.open) .tt1630-body{display:none!important}
+html body #appShell #page-nutrition#page-nutrition .tt1630-body{border-top:1px solid #26292e;padding:0 0 12px}
+}
+</style>
+
+<style id="v1634-goal-css">
+/* 18.14 · Dòng TDEE kiểu B + trạng thái người mới (mobile). */
+@media(max-width:760px){
+html body #appShell #page-nutrition#page-nutrition .tt1630-tdee{border:1px solid rgba(198,255,61,.38);background:linear-gradient(135deg,rgba(198,255,61,.14),rgba(198,255,61,.04) 70%);padding:4px 16px}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tdee.tt1634-n{border-color:#26292e;background:#15171a}
+html body #appShell #page-nutrition#page-nutrition .tt1630-th{min-height:88px;padding:12px 0}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tdee.open .tt1630-th{min-height:80px}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tl{gap:3px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-k{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.08em;color:#c6ff3d}
+html body #appShell #page-nutrition#page-nutrition .tt1634-nt{display:none;font-style:normal;font-size:16px;font-weight:800;font-stretch:90%;color:#f2f3f1}
+html body #appShell #page-nutrition#page-nutrition .tt1634-n .tt1634-k{display:none}
+html body #appShell #page-nutrition#page-nutrition .tt1634-n .tt1634-nt{display:block}
+html body #appShell #page-nutrition#page-nutrition .tt1634-big{display:flex;align-items:baseline;gap:6px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-big b{font-size:40px;font-weight:800;font-stretch:75%;line-height:1;color:#f2f3f1;font-variant-numeric:tabular-nums}
+html body #appShell #page-nutrition#page-nutrition .tt1634-big small{font-size:14px;font-weight:600;color:#b7bbc0}
+html body #appShell #page-nutrition#page-nutrition .tt1634-chip{align-self:flex-start;margin-top:4px;font-size:12px;font-weight:700;color:#d9dcdf;background:rgba(12,13,15,.55);border-radius:999px;padding:4px 10px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-chip[hidden]{display:none}
+html body #appShell #page-nutrition#page-nutrition .tt1634-sub{display:none;font-size:13px;color:#8b9096}
+html body #appShell #page-nutrition#page-nutrition .tt1634-n .tt1634-sub{display:block}
+html body #appShell #page-nutrition#page-nutrition .tt1634-n .tt1634-big,html body #appShell #page-nutrition#page-nutrition .tt1634-n .tt1634-chip{display:none}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tg{height:44px;padding:0 14px 0 16px;border-radius:12px;background:#c6ff3d;color:#0c0d0f;font-size:14px;font-weight:800;box-shadow:0 6px 18px rgba(198,255,61,.2)}
+html body #appShell #page-nutrition#page-nutrition .tt1634-n .tt1630-tg{background:transparent;color:#c6ff3d;box-shadow:none;padding:0;height:auto}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tdee.open .tt1630-tg{background:transparent;color:#c6ff3d;box-shadow:none;padding:0;height:auto}
+html body #appShell #page-nutrition#page-nutrition .tt1630-tdee.open .tt1630-body{border-top-color:rgba(198,255,61,.25)}
+/* Người mới */
+html body #appShell #page-nutrition#page-nutrition .tt1634-empty{background:#15171a;border:1px solid #26292e;border-radius:20px;padding:20px 16px 18px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-empty h3{margin:6px 0 0;font-size:26px;font-weight:800;font-stretch:80%;line-height:1.1;color:#f2f3f1}
+html body #appShell #page-nutrition#page-nutrition .tt1634-empty p{margin:8px 0 0;font-size:14px;line-height:1.5;color:#b7bbc0}
+html body #appShell #page-nutrition#page-nutrition .tt1634-steps{display:flex;gap:8px;margin-top:14px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-steps div{flex:1;border:1px dashed #2c3036;border-radius:12px;padding:10px 8px;font-size:12px;line-height:1.35;color:#8b9096;text-align:center}
+html body #appShell #page-nutrition#page-nutrition .tt1634-steps b{display:block;font-size:15px;color:#c6ff3d;margin-bottom:2px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-cta{margin-top:16px;width:100%;height:54px;border:0;border-radius:14px;background:#c6ff3d;color:#0c0d0f;display:flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:16px;font-weight:800;box-shadow:0 8px 24px rgba(198,255,61,.22);cursor:pointer}
+html body #appShell #page-nutrition#page-nutrition .tt1634-cta2{margin-top:10px;width:100%;height:44px;border:1px solid #3a3e44;border-radius:12px;background:transparent;color:#d9dcdf;display:flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+html body #appShell #page-nutrition#page-nutrition .tt1634-cta2 svg{width:14px;height:14px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dim{margin-top:12px;background:#15171a;border:1px solid #26292e;border-radius:20px;padding:16px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dim .tt1634-k{color:#8b9096}
+html body #appShell #page-nutrition#page-nutrition .tt1634-empty .tt1634-k{color:#8b9096}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dr{display:grid;grid-template-columns:1fr 44px 76px 54px;gap:8px;align-items:baseline;padding:11px 0;border-top:1px solid #26292e;margin-top:0;color:#3a3e44;font-variant-numeric:tabular-nums}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dr:first-of-type{margin-top:12px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dr b{font-size:15px;font-weight:700}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dr span{font-size:13px;text-align:right;color:#2c3036}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dr strong{font-size:17px;font-weight:800;text-align:right}
+html body #appShell #page-nutrition#page-nutrition .tt1634-dim p{margin:10px 0 0;font-size:12px;color:#8b9096}
+html body #appShell #page-nutrition#page-nutrition .tt1629-sticky #v148EnergyToMacro.tt1634-off,html body #appShell #page-nutrition#page-nutrition #v148EnergyToMacro.tt1634-off{background:#1c1f23!important;color:#6b7076!important;box-shadow:none!important;opacity:1!important}
+/* Ghi món cho người mới */
+html body #appShell #page-nutrition#page-nutrition .tt1634-newm .ttn19-cal-main span{display:none!important}
+html body #appShell #page-nutrition#page-nutrition .tt1634-newm .ttn19-macro-top span:not(:first-child),html body #appShell #page-nutrition#page-nutrition .tt1634-newm .ttn19-macro>b>span{display:none!important}
+html body #appShell #page-nutrition#page-nutrition .tt1634-nudge{margin:12px 0;border-radius:20px;padding:14px 16px;border:1px solid rgba(198,255,61,.38);background:linear-gradient(135deg,rgba(198,255,61,.14),rgba(198,255,61,.04) 70%);display:flex;align-items:center;justify-content:space-between;gap:12px}
+html body #appShell #page-nutrition#page-nutrition .tt1634-nudge b{display:block;font-size:15px;font-weight:800;line-height:1.25;color:#f2f3f1}
+html body #appShell #page-nutrition#page-nutrition .tt1634-nudge small{display:block;margin-top:3px;font-size:12px;color:#b7bbc0;line-height:1.35}
+html body #appShell #page-nutrition#page-nutrition .tt1634-nudge button{flex:none;height:40px;padding:0 14px;border:0;border-radius:12px;background:#c6ff3d;color:#0c0d0f;display:flex;align-items:center;gap:6px;font:inherit;font-size:14px;font-weight:800;white-space:nowrap;cursor:pointer}
+html body #appShell #page-nutrition#page-nutrition .tt1634-nudge button svg{width:16px;height:16px}
+}
+</style>
+
 <style id="v1632-more">
 /* 16.32 · More mobile theo TRUE TRAIN More Mobile v5. Chỉ mobile + chế độ Personal. Desktop và Coach giữ nguyên. */
 @media(max-width:760px){
@@ -22342,7 +22540,7 @@ function qh(){if(!q)q=setTimeout(paintHead,60);}
 /* ---------- Schedule: dòng Bài thay thế ---------- */
 function sday(){var ks=Object.keys(g(function(){return state.schedule;},{})||{}),d=g(function(){return state.scheduleEditorDay;},'');if(ks.indexOf(d)<0)d=g(function(){return dayFromDate(new Date());},ks[0]);if(ks.indexOf(d)<0)d=ks[0];return d;}
 function sx(){var box=document.getElementById('v1630Sheet'),sh=box&&box.querySelector('.v1630-sh');if(!sh||!sh.querySelector('#v1630Sets'))return null;var k=sh.querySelector('.v1630-k'),m=k&&k.textContent.match(/(\d+)/);if(!m)return null;var x=g(function(){return state.schedule[sday()].exercises[Number(m[1])-1];},null);return x?{sh:sh,x:x}:null;}
-function schedRow(){var o=sx();if(!o)return;var x=o.x,al=(x.alternates||[]).map(String),s=al.join(','),r=o.sh.querySelector('.v170-alt');if(r&&r.dataset.s===s)return;
+function schedRow(){return;var o=sx();if(!o)return;var x=o.x,al=(x.alternates||[]).map(String),s=al.join(','),r=o.sh.querySelector('.v170-alt');if(r&&r.dataset.s===s)return;
  var h='<div class="lb">Bài thay thế</div><div class="cs">'+al.map(function(id){var it=find({exerciseId:id});return '<span class="c"><span>'+E(it?it.displayName:id)+'</span><button type="button" data-v170="altdel" data-id="'+E(id)+'" aria-label="Bỏ">×</button></span>';}).join('')+'<button type="button" class="ad" data-v170="altadd">+ Thêm</button></div>';
  if(!r){r=document.createElement('div');r.className='v170-alt';var g4=o.sh.querySelector('.v1630-g4');if(g4)g4.after(r);else return;}r.dataset.s=s;r.innerHTML=h;mark(r);}
 function paintAlt(){var o=sx();if(!o){close();return;}var x=o.x,skip=[String(x.exerciseId||'')].concat((x.alternates||[]).map(String)),grp=(find(x)||{}).group||x.group||'';ST={t:'alt',grp:grp,q:ST&&ST.t==='alt'?ST.q:''};
@@ -22355,27 +22553,21 @@ function paintMenu(){var it=ST.it,cu=!!it.custom,nm=it.displayName||it.name;
   +(ST.id?'<button type="button" class="mi" data-v170="libedit">'+IC.pen+'<span>Sửa bài</span><small>Tên · nhóm cơ · dụng cụ</small></button>'
   +'<button type="button" class="mi dn" data-v170="libdel">'+(cu?IC.trash:IC.eye)+'<span>'+(ST.arm?'Bấm lần nữa để '+(cu?'xóa':'ẩn'):(cu?'Xóa bài':'Ẩn khỏi thư viện'))+'</span></button>':'')
   +'</div><div class="nt">'+(cu?'Xóa: bấm 2 lần. Lịch sử tập giữ nguyên; bài trong lịch vẫn còn.':'Bài có sẵn không xóa, chỉ ẩn. Hiện lại ở dòng "Bài đã ẩn" cuối danh sách Tất cả.')+'</div>');}
-function openEdit(){var it=ST.it,o={t:'ed',id:ST.id,it:it,refresh:ST.refresh,name:it.displayName||it.name||'',grp:it.group||'',sec:split(it.secondary).filter(function(v){return v!==it.group;}),eq:it.equipment&&it.equipment!=='Custom'?it.equipment:''};o.vai=o.sec.some(function(v){return /^Vai (trước|giữa|sau)$/.test(v);});ST=o;paintEdit();}
-function v190Sec(MG){var VR=/^Vai (trước|giữa|sau)$/,lb=function(m){return m==='Trap'?'Cơ thang':m;},n=ST.sec.filter(function(v){return VR.test(v);}).length,vi=false,h='';
- MG.forEach(function(m){if(VR.test(m)){if(vi)return;vi=true;h+='<button type="button" class="'+(ST.vai?'on':'')+'" data-v170="vai" aria-expanded="'+(ST.vai?'true':'false')+'">Vai'+(n?' · '+n:'')+'</button>';return;}if(m===ST.grp)return;var on=ST.sec.indexOf(m)>=0;h+='<button type="button" class="'+(on?'on':'')+'" data-v170="sec" data-v="'+E(m)+'">'+E(lb(m))+'</button>';});
- var sub=ST.vai?'<div class="v190-vr"><span>Vai: chọn phần vai tham gia</span><div class="cs">'+MG.filter(function(m){return VR.test(m);}).map(function(m){var d=m===ST.grp,on=!d&&ST.sec.indexOf(m)>=0;return '<button type="button" class="'+(on?'on':'')+'" data-v170="sec" data-v="'+E(m)+'"'+(d?' disabled':'')+'>'+E(m)+'</button>';}).join('')+'</div></div>':'';
- return '<div class="lb">Cơ phụ · chọn nhiều</div><div class="cs">'+h+'</div>'+sub;}
-function newEx(refresh){ST={t:'ed',isNew:true,id:'',it:{},refresh:refresh||function(){},name:'',grp:'',sec:[],eq:'',vai:false};paintEdit();}
-function paintEdit(){var MG=g(function(){return MUSCLE_GROUPS;},[]),img=!ST.isNew&&!!thumb(ST.it.displayName||ST.it.name);
- sheet((ST.isNew?head('Thư viện','Bài mới'):head('Thư viện · sửa bài',ST.it.displayName||ST.it.name))
-  +'<label class="fl"><span>Tên bài</span><input data-v170i="name" value="'+E(ST.name)+'" maxlength="100"'+(ST.isNew?' placeholder="Ví dụ: Landmine Press"':'')+'></label>'
-  +'<div class="lb">Cơ chính · 1</div><div class="cs">'+MG.map(function(m){return '<button type="button" class="pm'+(m===ST.grp?' on':'')+'" data-v170="grp" data-v="'+E(m)+'">'+E(m==='Trap'?'Cơ thang':m)+'</button>';}).join('')+'</div>'
-  +v190Sec(MG)
+function openEdit(){var it=ST.it,o={t:'ed',id:ST.id,it:it,refresh:ST.refresh,name:it.displayName||it.name||'',grp:it.group||'',sec:split(it.secondary).filter(function(v){return v!==it.group;}),eq:it.equipment&&it.equipment!=='Custom'?it.equipment:''};ST=o;paintEdit();}
+function paintEdit(){var MG=g(function(){return MUSCLE_GROUPS;},[]),img=!!thumb(ST.it.displayName||ST.it.name);
+ sheet(head('Thư viện · sửa bài',ST.it.displayName||ST.it.name)
+  +'<label class="fl"><span>Tên bài</span><input data-v170i="name" value="'+E(ST.name)+'" maxlength="100"></label>'
+  +'<div class="lb">Cơ chính · 1</div><div class="cs">'+MG.map(function(m){return '<button type="button" class="pm'+(m===ST.grp?' on':'')+'" data-v170="grp" data-v="'+E(m)+'">'+E(m)+'</button>';}).join('')+'</div>'
+  +'<div class="lb">Cơ phụ · tối đa 3</div><div class="cs">'+MG.filter(function(m){return m!==ST.grp;}).map(function(m){var on=ST.sec.indexOf(m)>=0;return '<button type="button" class="'+(on?'on':'')+'" data-v170="sec" data-v="'+E(m)+'"'+(!on&&ST.sec.length>=3?' disabled':'')+'>'+E(m)+'</button>';}).join('')+'</div>'
   +'<label class="fl"><span>Dụng cụ</span><input data-v170i="eq" value="'+E(ST.eq)+'" placeholder="Cable, Barbell…"></label>'
-  +'<div class="mu"><div class="lb" style="margin:0 0 2px">Hiện ở Workout · Schedule · Coach</div><div class="r p"><span class="n">'+E(ST.grp==='Trap'?'Cơ thang':(ST.grp||'—'))+'</span><span class="b"><i></i></span><span class="l">CHÍNH</span></div>'+ST.sec.map(function(m){return '<div class="r"><span class="n">'+E(m==='Trap'?'Cơ thang':m)+'</span><span class="b"><i></i></span><span class="l">PHỤ</span></div>';}).join('')+'</div>'
+  +'<div class="mu"><div class="lb" style="margin:0 0 2px">Hiện ở Workout · Schedule · Coach</div><div class="r p"><span class="n">'+E(ST.grp||'—')+'</span><span class="b"><i></i></span><span class="l">CHÍNH</span></div>'+ST.sec.map(function(m){return '<div class="r"><span class="n">'+E(m)+'</span><span class="b"><i></i></span><span class="l">PHỤ</span></div>';}).join('')+'</div>'
   +(img?'<div class="nt">Ảnh bài vẽ sẵn cơ lime. Đổi nhóm cơ thì ảnh được đánh dấu "ảnh cũ" để làm lại.</div>':'')
-  +'<button type="button" class="sv" data-v170="edsave">'+(ST.isNew?'Lưu bài':'Lưu')+'</button>');}
+  +'<button type="button" class="sv" data-v170="edsave">Lưu</button>');}
 function propagate(id,old,d){var touch=function(ex){if(!ex||String(ex.exerciseId||'')!==id)return;ex.group=d.group;ex.indirect=d.secondary;if(!ex.detail||ex.detail===old)ex.detail=d.region||d.group;};
  Object.values(g(function(){return state.schedule;},{})||{}).forEach(function(day){(day&&day.exercises||[]).forEach(touch);});
  (g(function(){return state.currentWorkout.exercises;},[])||[]).forEach(function(ex){touch(ex);if(ex&&ex.v170Swap&&String(ex.v170Swap.exerciseId)===id){ex.v170Swap.group=d.group;ex.v170Swap.indirect=d.secondary;}});
  (g(function(){return state.coach.clients;},[])||[]).forEach(function(c){Object.values(c&&c.schedule||{}).forEach(function(day){(day&&day.exercises||[]).forEach(touch);});(c&&c.currentWorkout&&c.currentWorkout.exercises||[]).forEach(touch);});}
 function saveEdit(){var it=ST.it,nm=String(ST.name||'').trim();if(!nm){g(function(){toast('Tên bài không được để trống');});return;}if(!ST.grp){g(function(){toast('Chọn cơ chính');});return;}
- if(ST.isNew){var sc=ST.sec.filter(function(v){return v!==ST.grp;}).join(', '),mk=g(function(){return window.TRUE_TRAIN_PERSONAL_LIBRARY.createExercise({displayName:nm,group:ST.grp,region:'',secondary:sc,equipment:String(ST.eq||'').trim()||'Custom',pattern:'Custom',reps:'8–12',notes:''});},null);if(!mk){g(function(){toast('Không lưu được bài này');});return;}bust();g(function(){saveState();});var rf0=ST.refresh;close();g(function(){rf0();});g(function(){toast('Đã thêm vào thư viện');});return;}
  var sec=ST.sec.filter(function(v){return v!==ST.grp;}).join(', '),chg=ST.grp!==(it.group||'')||sec!==split(it.secondary).filter(function(v){return v!==it.group;}).join(', ');
  var d={displayName:nm,group:ST.grp,region:ST.grp===it.group?(it.region||''):'',secondary:sec,equipment:String(ST.eq||'').trim()||it.equipment||'Custom',pattern:it.pattern||'Custom',reps:it.reps||'8–12',notes:it.notes||''};
  if(chg&&thumb(it.displayName||it.name))d.v170ImgStale=1;
@@ -22391,14 +22583,14 @@ document.addEventListener('click',function(e){if(!e.target.closest)return;var b=
  if(ST.t==='sw'){if(a==='pick'){ST.sel=id;if(id===ST.m.exerciseId)ST.main=false;paintSwap();}else if(a==='pickx'){if(ST.extra.indexOf(id)<0)ST.extra.push(id);ST.sel=id;ST.q='';paintSwap();}else if(a==='main'){ST.main=!ST.main;paintSwap();}else if(a==='swap')doSwap();return;}
  if(ST.t==='alt'&&a==='altpick'){var o2=sx();if(o2){var al=(o2.x.alternates||[]).map(String);if(al.indexOf(id)<0&&id!==String(o2.x.exerciseId||''))al.push(id);o2.x.alternates=al;g(function(){saveState();});}close();schedRow();return;}
  if(ST.t==='menu'){if(a==='libadd'){var x=ST.x;close();g(function(){openAddExerciseModal(x);});}else if(a==='libedit')openEdit();else if(a==='libdel'){if(!ST.arm){ST.arm=1;paintMenu();return;}var cu=!!ST.it.custom,rf=ST.refresh;g(function(){window.TRUE_TRAIN_PERSONAL_LIBRARY.deleteExercise(ST.id);});bust();close();g(function(){rf();});g(function(){toast(cu?'Đã xóa bài':'Đã ẩn bài');});}return;}
- if(ST.t==='ed'){if(a==='grp'){ST.grp=b.getAttribute('data-v');ST.sec=ST.sec.filter(function(v){return v!==ST.grp;});paintEdit();}else if(a==='sec'){var v=b.getAttribute('data-v'),i=ST.sec.indexOf(v);if(i>=0)ST.sec.splice(i,1);else ST.sec.push(v);paintEdit();}else if(a==='vai'){ST.vai=!ST.vai;if(!ST.vai)ST.sec=ST.sec.filter(function(v){return !/^Vai (trước|giữa|sau)$/.test(v);});paintEdit();}else if(a==='edsave')saveEdit();return;}
+ if(ST.t==='ed'){if(a==='grp'){ST.grp=b.getAttribute('data-v');ST.sec=ST.sec.filter(function(v){return v!==ST.grp;});paintEdit();}else if(a==='sec'){var v=b.getAttribute('data-v'),i=ST.sec.indexOf(v);if(i>=0)ST.sec.splice(i,1);else if(ST.sec.length<3)ST.sec.push(v);paintEdit();}else if(a==='edsave')saveEdit();return;}
 },true);
 document.addEventListener('input',function(e){var i=e.target;if(!i||!i.getAttribute||!ST)return;var k=i.getAttribute('data-v170i');if(!k)return;ST[k]=i.value;if(k==='q'){var box=document.getElementById('v170Res');if(!box)return;
  if(ST.t==='sw')box.innerHTML=resRows(search(ST.q,ST.grp,swOpts().map(function(o){return o.id;})),'pickx');else if(ST.t==='alt'){var o=sx();if(o)box.innerHTML=resRows(search(ST.q,ST.grp,[String(o.x.exerciseId||'')].concat((o.x.alternates||[]).map(String))),'altpick');}mark(box);}},true);
 document.addEventListener('click',function(){setTimeout(schedRow,40);setTimeout(schedRow,200);});
 function boot(){var p=document.getElementById('page-workout');if(p&&!p.__v170){p.__v170=1;new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var n=ms[i].target;if(n.closest&&n.closest('.v170-sw'))continue;qh();return;}}).observe(p,{childList:true,subtree:true,characterData:true});}qh();}
 boot();addEventListener('load',boot);setTimeout(boot,1500);setInterval(qh,1500);if(mq.addEventListener)mq.addEventListener('change',qh);
-window.TRUE_TRAIN_V170={version:'17.0',find:find,muscles:muscles,stale:stale,hidden:hidden,unhide:unhide,libMenu:libMenu,newEx:newEx,openSwap:openSwap,bust:bust};
+window.TRUE_TRAIN_V170={version:'17.0',find:find,muscles:muscles,stale:stale,hidden:hidden,unhide:unhide,libMenu:libMenu,openSwap:openSwap,bust:bust};
 })();
 </script>
 <style id="v1702-focus">
@@ -22841,7 +23033,8 @@ const foods=()=>[...(g(()=>pn().customFoods,[])||[]),...g(()=>FOOD_LIBRARY,[])].
 let TMP=null;const byId=id=>(TMP&&TMP.id===id?TMP:null)||foods().find(f=>f.id===id);
 const short=n=>String(n||'').split(',')[0].trim();
 const nz=s=>String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'d').toLowerCase();
-const tgt=()=>g(()=>window.TRUE_TRAIN_PERSONAL_NUTRITION.effectiveTarget(day()),null)||pn().currentTarget||{};
+const tgt=()=>{const n=pn();if(n&&n.goalSet===false&&!n.targetMeta)return {calories:0,protein:0,carb:0,fat:0}; /* 18.14 người mới: chưa có mục tiêu thì không hiện số mặc định */
+  return g(()=>window.TRUE_TRAIN_PERSONAL_NUTRITION.effectiveTarget(day()),null)||pn().currentTarget||{};};
 const wGoal=()=>Math.max(0,+g(()=>pn().currentTarget.waterMl,0)||+pn().waterTargetMl||0)||2500;
 const L=v=>(v/1000).toFixed(2).replace(/0$/,'').replace('.',',');
 const num=v=>parseFloat(String(v==null?'':v).replace(',','.'))||0;
@@ -23519,30 +23712,6 @@ window.TRUE_TRAIN_V185_HIST={paint:()=>paint(true)};})();
 #page-schedule .v189-ps b{color:#c6ff3d}
 }</style>
 <script id="v189-mb-js">(function(){document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#page-schedule .v189-gb');if(!b)return;var box=b.closest('.v189-mb');if(!box)return;var k=b.getAttribute('data-v189-k'),was=b.classList.contains('on');box.querySelectorAll('.v189-gb').forEach(function(x){var on=x===b&&!was;x.classList.toggle('on',on);x.setAttribute('aria-expanded',on?'true':'false');});box.querySelectorAll('.v189-pn').forEach(function(p){p.hidden=was||p.getAttribute('data-v189-k')!==k;});var pick=!was;box.querySelectorAll('.v189-bar i').forEach(function(s){s.style.opacity=pick?(s.getAttribute('data-v189-k')===k?'1':'.3'):'';});});})();</script>
-
-<style id="v191-css">
-@media(max-width:760px){
-html body #appShell #page-exercise-library#page-exercise-library .v146-head #ttCustomExercise#ttCustomExercise#ttCustomExercise{width:auto!important;max-width:none!important;min-width:0!important;padding:0 16px!important;font-size:14px!important;font-weight:800!important;line-height:40px!important;color:#0c0d0f!important;text-indent:0!important;background:#c6ff3d!important;background-image:none!important;white-space:nowrap!important;overflow:visible!important}
-html body #appShell #page-exercise-library#page-exercise-library .v146-head #ttCustomExercise svg{display:none!important}
-html body #v150xExerciseModal .v191-p{grid-column:1/-1!important;display:flex!important;flex-wrap:wrap!important;gap:6px!important;margin-top:-4px}
-html body #v150xExerciseModal .v191-p button{height:32px;padding:0 13px;border:1px solid #26292e;border-radius:16px;background:transparent;color:#c9cdd2;font:600 13px Archivo,system-ui,sans-serif;white-space:nowrap}
-html body #v150xExerciseModal .v191-p button.on{background:rgba(198,255,61,.14);border-color:#c6ff3d;color:#c6ff3d}
-html body #v150xExerciseModal label:has(>#v150xPrimary){grid-column:1/-1!important}
-html body #v150xExerciseModal label:has(>#v150xPrimary)>select{display:none!important}
-}
-</style>
-<script id="v191-js">
-(function(){'use strict';var mq=matchMedia('(max-width:760px)'),q=0;
-function run(){q=0;if(!mq.matches)return;
-var b=document.getElementById('ttCustomExercise');if(b&&b.textContent.trim()!=='+ Bài mới')b.textContent='+ Bài mới';
-var sel=document.getElementById('v150xPrimary');if(!sel)return;var lab=sel.parentNode,box=lab.nextElementSibling;
-if(!box||!box.classList.contains('v191-p')){box=document.createElement('div');box.className='v191-p';lab.after(box);}
-var sig=[].map.call(sel.options,function(o){return o.value;}).join('|')+'#'+sel.value;if(box.dataset.sig===sig)return;box.dataset.sig=sig;box.innerHTML='';
-[].forEach.call(sel.options,function(o){var c=document.createElement('button');c.type='button';c.textContent=o.value==='Trap'?'Cơ thang':o.value;if(o.value===sel.value)c.className='on';c.onclick=function(){sel.value=o.value;sel.dispatchEvent(new Event('change',{bubbles:true}));q=q||requestAnimationFrame(run);};box.appendChild(c);});}
-function start(){new MutationObserver(function(){if(!q)q=requestAnimationFrame(run);}).observe(document.body,{childList:true,subtree:true});run();}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-})();
-</script>
 </body>
 </html>
 
@@ -24286,6 +24455,13 @@ html body #v1630Sheet#v1630Sheet .v1630-chips [data-v1630-sec].on{border-color:#
 html body #v1630Sheet#v1630Sheet .v1630-chips button.dis{opacity:.3;cursor:default}
 html body #v1630Sheet#v1630Sheet .v1630-note{font-size:12px;line-height:1.5;color:#8b9096}
 html body #v1630Sheet#v1630Sheet .v1630-sh>.v1630-btn{flex:none;height:50px;font-size:15px}
+html body #v1630Sheet#v1630Sheet .v1630-r2{display:grid;grid-template-columns:7fr 3fr;gap:8px}
+html body #v1630Sheet#v1630Sheet .v1630-r2 .v1630-btn{height:50px;font-size:15px;font-weight:700;padding:0 8px}
+html body #v1630Sheet#v1630Sheet .v1630-r2 .v1630-sw{border-color:#3a3e44;gap:8px}
+html body #appShell #page-schedule#page-schedule .v1630-hint{margin-top:10px;font-size:12px;color:#8b9096;text-align:center}
+html body #appShell #page-schedule#page-schedule .v1630-ex{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+html body #appShell #page-schedule#page-schedule .v1630-ex.v1630-dragging{position:relative;z-index:8;background:#1c1f23;border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.55),0 0 0 1px #3a3e44;transition:none!important}
+html.v1630-drag-on,html.v1630-drag-on body{overscroll-behavior:none}
 }
 @media(min-width:761px){#v1630Sheet{display:none!important}}
 </style>
@@ -24352,24 +24528,15 @@ const mbd=a=>{const P=new Map(),S=new Map();const put=(M,n,e,c)=>{if(!M.has(n))M
 a.forEach(x=>{const c=Number(x&&x.sets)||0;if(!c)return;const d=String(x.group||'').trim()||'Khác';const nm=x.name||'Bài tập';put(P,d,nm,c);
 const ind=(x.indirect!=null)?x.indirect:g(()=>defaultIndirectFor(x),'');g(()=>splitIndirectGroups(ind),[]).forEach(n=>{if(n!==d)put(S,n,nm,c);});});
 const tot=r=>r.reduce((n,y)=>n+y[1],0);const srt=M=>[...M].sort((x,y)=>tot(y[1])-tot(x[1]));return {P:srt(P),S:srt(S),tot};};
-const mbHTML=a=>{const f=fac(),{P,S}=mbd(a),VL=n=>n==='Trap'?'Cơ thang':n,W=window.__v190mb||(window.__v190mb={open:false,sel:''});
-/* 19.0 · NHÓM CƠ hướng B: mỗi nhóm 1 dòng, số = set chính + set phụ × hệ số cơ phụ (settings.indirectFactor). Nhóm có bài chính ở trên, nhóm chỉ là cơ phụ ở dưới. Chỉ trình bày, không đổi dữ liệu. */
-const agg=r=>{const m=new Map();r.forEach(([e,c])=>m.set(e,(m.get(e)||0)+c));return [...m];},sum=r=>r.reduce((t,y)=>t+y[1],0);
-const G=new Map();P.forEach(([n,r])=>G.set(n,{n,m:agg(r),s:[]}));S.forEach(([n,r])=>{if(!G.has(n))G.set(n,{n,m:[],s:[]});G.get(n).s=agg(r);});
-const R=[...G.values()].map(x=>({...x,v:sum(x.m)+sum(x.s)*f})).filter(x=>x.m.length||x.v>0);
-R.sort((x,y)=>(y.m.length?1:0)-(x.m.length?1:0)||y.v-x.v);
-if(!R.length)return '';
-const CM=['#c6ff3d','#b2ea34','#9fd62d','#8cc127','#79ad22','#689a1e'],CS=['#a6d8ff','#7fb6e0','#5f98c4','#4d82ad','#406f90'];
-let ci=0,si=0;R.forEach(x=>{x.c=x.m.length?CM[ci++%CM.length]:CS[si++%CS.length];});
-const mx=Math.max(...R.map(x=>x.v))||1,TOP=3,more=R.length>TOP,op=more&&!!W.open;
-const line=(e,c,sub,first)=>`<div class="v190-e${sub?' sub':''}${first?' sp':''}"><span class="v190-en">${sub?'<em>PHỤ</em>':''}${esc(e)}</span><span class="v190-q">${sub?`<small>${fv(c)} × ${fv(f)}</small>`:''}<b>${fv(sub?c*f:c)}</b><u>set</u></span></div>`;
-let h=`<div class="v190-mb${op?' open':''}" data-n="${R.length}"><div class="v190-sh"><b>NHÓM CƠ</b><span>Bấm nhóm xem bài tác động</span></div><div class="v190-rows">`;
-R.forEach((x,i)=>{const hx=i>=TOP?' data-v190-x':'',on=W.sel===x.n;
- if(!x.m.length&&(i===0||R[i-1].m.length))h+=`<div class="v190-lab"${hx}>CƠ PHỤ (TÁC ĐỘNG GIÁN TIẾP)</div>`;
- h+=`<div class="v190-g${on?' on':''}" data-v190-n="${esc(x.n)}"${hx}><button type="button" class="v190-r" aria-expanded="${on?'true':'false'}"><span class="v190-n"><i style="background:${x.c}"></i>${esc(VL(x.n))}</span><span class="v190-t"><i style="width:${Math.max(4,Math.round(x.v/mx*100))}%;background:${x.c}"></i></span><b>${fv(x.v)}</b></button><div class="v190-d" style="--c:${x.c}"${on?'':' hidden'}>${x.m.map(([e,c])=>line(e,c,false,false)).join('')}${x.s.map(([e,c],j)=>line(e,c,true,j===0&&x.m.length>0)).join('')}</div></div>`;});
-h+='</div>';
-if(more)h+=`<button type="button" class="v190-more" aria-expanded="${op?'true':'false'}"><span class="v190-dots">${R.slice(TOP).map(x=>`<i style="background:${x.c}"></i>`).join('')}</span><span class="v190-mt">${op?'Thu gọn':`Xem đủ ${R.length} nhóm cơ`}</span><i class="v190-chev"></i></button>`;
-return h+'</div>';};
+const mbHTML=a=>{const f=fac(),{P,S,tot}=mbd(a);
+const chip=(k,n,v,cls,on)=>`<button type="button" class="v189-gb${cls}" data-v189-k="${k}" aria-expanded="false"><span>${esc(n)}</span><b>${fv(v)}</b></button>`;
+const pan=(k,n,rows,m,lab)=>`<div class="v189-pn" data-v189-k="${k}" hidden><div class="v189-ph"><div><small>${lab}</small><b>${esc(n)}</b></div><div class="v189-pt"><em>${fv(tot(rows)*m)}</em><small>set</small></div></div><div class="v189-pw">${m===1?'Bài nào ghi '+esc(n)+' là cơ chính thì cộng vào, mỗi set tính trọn 1 set.':'Bài nào ghi '+esc(n)+' là cơ phụ thì cộng vào, mỗi set tính '+fv(m)+' set (hệ số cơ phụ).'}</div>${rows.map(([e,c])=>`<div class="v189-pr"><span class="v189-pe">${esc(e)}</span><span class="v189-pf">${c} set × ${fv(m)}</span><b>${fv(c*m)}</b></div>`).join('')}<div class="v189-ps"><span>Tổng ${esc(n)}</span><b>${fv(tot(rows)*m)} set</b></div></div>`;
+const CM=['#c6ff3d','#a9d92f','#8cb826','#76a021','#62871c'],CS=['#9fd8ff','#7fb9df','#609ac0','#4d82a8','#406f90'];
+const seg=[...P.map(([n,r],i)=>({k:'p'+i,v:tot(r),c:CM[i%CM.length]})),...S.map(([n,r],i)=>({k:'s'+i,v:tot(r)*f,c:CS[i%CS.length]}))],sum=seg.reduce((n,x)=>n+x.v,0)||1;
+let h='<div class="v189-mb"><div class="v189-sh"><b>NHÓM CƠ</b><span>Độ dài thanh = số set</span></div>';
+h+=`<div class="v189-bar" aria-hidden="true">${seg.map(x=>`<i data-v189-k="${x.k}" style="width:${(x.v/sum*100).toFixed(1)}%;background:${x.c}"></i>`).join('')}</div>`;
+h+=`<div class="v189-hs">${P.map(([n,r],i)=>chip('p'+i,n,tot(r),'')).join('')}${S.length?'<span class="v189-dv" aria-hidden="true"></span>':''}${S.map(([n,r],i)=>chip('s'+i,n,tot(r)*f,' sec')).join('')}</div>`;
+h+=`<div class="v189-panels">${P.map(([n,r],i)=>pan('p'+i,n,r,1,'Cơ chính')).join('')}${S.map(([n,r],i)=>pan('s'+i,n,r,f,'Cơ phụ')).join('')}</div></div>`;return h;};
 const restOf=x=>Number(x&&x.restSeconds)||0;
 const srOf=x=>`${x.sets??''} set × ${x.reps||''} reps · RIR ${x.rir??''}`;
 const nameOf=(s,a)=>a.length?(s&&s.name&&!/^rest$/i.test(s.name)?s.name:(s&&s.name)||'Buổi tập'):'Nghỉ';
@@ -24414,7 +24581,7 @@ function dayHTML(){
     +`<div class="v1630-title${a.length&&!edit?' v189-card':''}">${kick}<h1>${esc(nameOf(s,a))}</h1>${a.length?(edit?`<p>${esc(`${a.length} bài · ${sets(a)} set${groups(a)?' · '+groups(a):''}`)}</p>`:`<div class="v1b-st"><div><b>${a.length}</b><span>bài</span></div><div><b>${sets(a)}</b><span>set</span></div><div><b>~${mins}</b><span>phút</span></div></div>${a.length?mbHTML(a):''}`):''}</div>`
     +(edit?`<div class="v1630-fields"><label>Tên buổi<input data-v1630-f="name" value="${esc(s.name||'')}" autocomplete="off"></label><label>Focus<input data-v1630-f="focus" value="${esc(s.focus||'')}" autocomplete="off"></label></div>`:'')
     +(!edit&&a.length?'<div class="v1b-lh"><span>Danh sách bài</span><button type="button" data-v1630="edit"><i class="icon-pencil"></i>Sửa buổi</button></div>':'')
-    +(a.length?`<div class="v1630-list">${list}</div>`:`<div class="v1630-empty">${edit?'Chưa có bài. Thêm từ thư viện hoặc tự tạo.':'Ngày nghỉ. Hồi phục là một phần của kế hoạch.'}</div>`)
+    +(a.length?`<div class="v1630-list">${list}</div>${edit&&a.length>1?'<div class="v1630-hint">Giữ tên bài rồi kéo để đổi thứ tự</div>':''}`:`<div class="v1630-empty">${edit?'Chưa có bài. Thêm từ thư viện hoặc tự tạo.':'Ngày nghỉ. Hồi phục là một phần của kế hoạch.'}</div>`)
     +(!edit&&a.length?`<div class="v1b-dock" style="bottom:${off}px"><button type="button" class="v188-sl v189-sl" data-v1630="start" aria-label="Bắt đầu buổi tập. Trượt sang phải hoặc chạm"><span class="v188-th" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="v188-lab">Trượt để bắt đầu</span><span class="v188-chev" aria-hidden="true"><i>›</i><i>›</i><i>›</i></span></button></div>`:'')
     +(!edit&&!a.length?`<button type="button" class="v1630-btn" data-v1630="edit"><i class="icon-plus"></i>Thêm bài cho ngày này</button>`:'')
     +(edit?`<div class="v1630-acts"${tpl?'':' style="grid-template-columns:1fr"'}><button type="button" class="v1630-btn pri" data-v1630="add"><i class="icon-plus"></i>Thêm bài</button>${tpl?'<button type="button" class="v1630-btn" data-v1630="tpl"><i class="icon-layout-template"></i>Template</button>':''}</div>${a.length?'<button type="button" class="v1630-btn dan" data-v1630="clear">Xóa ngày</button>':''}`:'');
@@ -24435,20 +24602,14 @@ function exSheet(){
   const k=sel(),a=exs(k),x=a[sheet.i];if(!x){sheet=null;return '';}
   return `<div class="v1630-ov" data-v1630="close"></div><div class="v1630-sh" role="dialog" aria-label="Sửa bài"><div class="v1630-grab"></div><div><div class="v1630-k p">Sửa bài ${sheet.i+1}</div><h3>${esc(x.name)}</h3><p>${esc(x.group||'')}</p></div>`
     +`<div class="v1630-g4"><label>Set<input id="v1630Sets" inputmode="numeric" value="${esc(x.sets??3)}"></label><label>Reps<input id="v1630Reps" value="${esc(x.reps||'')}"></label><label>RIR<input id="v1630Rir" inputmode="decimal" value="${esc(x.rir??'')}"></label><label>Nghỉ (s)<input id="v1630Rest" inputmode="numeric" value="${restOf(x)||''}" placeholder="Auto"></label></div>`
-    +`<div class="v1630-row4"><button type="button" class="v1630-ib" data-v1630="up" aria-label="Lên"${sheet.i<=0?' disabled':''}><i class="icon-chevron-up"></i></button><button type="button" class="v1630-ib" data-v1630="down" aria-label="Xuống"${sheet.i>=a.length-1?' disabled':''}><i class="icon-chevron-down"></i></button><button type="button" class="v1630-btn dan" data-v1630="delex">Xóa bài</button><button type="button" class="v1630-btn pri" data-v1630="saveex">Xong</button></div></div>`;
+    +`<div class="v1630-r2"><button type="button" class="v1630-btn v1630-sw" data-v1630="swapex"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10h14l-4-4M17 14H3l4 4"/></svg>Đổi bài</button><button type="button" class="v1630-btn dan" data-v1630="delex">Xóa bài</button></div><button type="button" class="v1630-btn pri" data-v1630="saveex">Xong</button></div>`;
 }
-let v190cv=false;const v190VR=/^Vai (trước|giữa|sau)$/;
-const v190Cust=gl=>{const vp=gl.filter(x=>v190VR.test(x)),n=vp.filter(x=>csec.has(x)).length;if(n>0)v190cv=true;const op=v190cv;let vi=false;
- const ch=gl.map(x=>{if(v190VR.test(x)){if(vi)return '';vi=true;return `<button type="button" data-v1630-vai class="${op?'on':''}" aria-expanded="${op?'true':'false'}">Vai${n?' · '+n:''}</button>`;}return `<button type="button" data-v1630-sec="${esc(x)}" class="${x===cgrp?'dis':csec.has(x)?'on':''}"${x===cgrp?' disabled':''}>${esc(x==='Trap'?'Cơ thang':x)}</button>`;}).join('');
- const sub=vp.length?`<div class="v190-vr"${op?'':' hidden'}><span>Vai: chọn phần vai tham gia</span><div class="v1630-chips">${vp.map(x=>`<button type="button" data-v1630-sec="${esc(x)}" class="${x===cgrp?'dis':csec.has(x)?'on':''}"${x===cgrp?' disabled':''}>${esc(x)}</button>`).join('')}</div></div>`:'';
- return `<div class="v1630-chips">${ch}</div>${sub}`;};
-const v190Sync=box=>{const vb=box&&box.querySelector('[data-v1630-vai]');if(!vb)return;const n=[...box.querySelectorAll('.v190-vr [data-v1630-sec]')].filter(b=>csec.has(b.dataset.v1630Sec)).length;vb.textContent='Vai'+(n?' · '+n:'');};
 function pickSheet(){
-  const k=sel(),lib=pickTab==='lib',gl=[...new Set(catalog().map(x=>x.group).filter(Boolean))];if(!cgrp||!gl.includes(cgrp))cgrp=gl[0]||'Khác';
+  const rep=!!(sheet&&sheet.rep!=null),k=sel(),lib=pickTab==='lib',gl=[...new Set(catalog().map(x=>x.group).filter(Boolean))];if(!cgrp||!gl.includes(cgrp))cgrp=gl[0]||'Khác';
   const rest=Number(g(()=>state.settings.restSeconds,90))||90;
   const body=lib?`<div class="v1630-search"><i class="icon-search"></i><input id="v1630Q" placeholder="Tìm bài hoặc nhóm cơ" value="${esc(q)}" autocomplete="off"></div><div class="v1630-lib" id="v1630Lib">${libRows()}</div>`
-    :`<div class="v1630-cust"><label>Tên bài<input id="v1630CName" placeholder="Ví dụ: Landmine Press" maxlength="80" autocomplete="off"></label><div><div class="v1630-lbl">Nhóm cơ chính</div><div class="v1630-chips">${gl.map(x=>`<button type="button" data-v1630-grp="${esc(x)}" class="${x===cgrp?'on':''}">${esc(x==='Trap'?'Cơ thang':x)}</button>`).join('')}</div></div><div><div class="v1630-lbl">Nhóm cơ phụ · chọn nhiều, không bắt buộc</div>${v190Cust(gl)}</div><div class="v1630-g4"><label>Set<input id="v1630CSets" inputmode="numeric" value="3"></label><label>Reps<input id="v1630CReps" value="8–12"></label><label>RIR<input id="v1630CRir" inputmode="decimal" value="2"></label><label>Nghỉ (s)<input id="v1630CRest" inputmode="numeric" value="${rest}"></label></div><div class="v1630-note">Bài tự tạo được lưu vào thư viện để dùng lại.</div></div><button type="button" class="v1630-btn pri" data-v1630="cadd">Thêm vào buổi</button>`;
-  return `<div class="v1630-ov" data-v1630="close"></div><div class="v1630-sh tall" role="dialog" aria-label="Thêm bài"><div class="v1630-grab"></div><div class="v1630-hd"><div><div class="v1630-k">${esc(k)}</div><h3>Thêm bài</h3></div><button type="button" class="v1630-x" data-v1630="close" aria-label="Đóng"><i class="icon-x"></i></button></div><div class="v1630-seg"><button type="button" class="${lib?'on':''}" data-v1630-tab="lib">Thư viện</button><button type="button" class="${lib?'':'on'}" data-v1630-tab="custom">Tự tạo</button></div>${body}</div>`;
+    :`<div class="v1630-cust"><label>Tên bài<input id="v1630CName" placeholder="Ví dụ: Landmine Press" maxlength="80" autocomplete="off"></label><div><div class="v1630-lbl">Nhóm cơ chính</div><div class="v1630-chips">${gl.map(x=>`<button type="button" data-v1630-grp="${esc(x)}" class="${x===cgrp?'on':''}">${esc(x)}</button>`).join('')}</div></div><div><div class="v1630-lbl">Nhóm cơ phụ · chọn nhiều, không bắt buộc</div><div class="v1630-chips">${gl.map(x=>`<button type="button" data-v1630-sec="${esc(x)}" class="${x===cgrp?'dis':csec.has(x)?'on':''}"${x===cgrp?' disabled':''}>${esc(x)}</button>`).join('')}</div></div><div class="v1630-g4"><label>Set<input id="v1630CSets" inputmode="numeric" value="3"></label><label>Reps<input id="v1630CReps" value="8–12"></label><label>RIR<input id="v1630CRir" inputmode="decimal" value="2"></label><label>Nghỉ (s)<input id="v1630CRest" inputmode="numeric" value="${rest}"></label></div><div class="v1630-note">Bài tự tạo được lưu vào thư viện để dùng lại.</div></div><button type="button" class="v1630-btn pri" data-v1630="cadd">${rep?'Đổi sang bài này':'Thêm vào buổi'}</button>`;
+  return `<div class="v1630-ov" data-v1630="close"></div><div class="v1630-sh tall" role="dialog" aria-label="${rep?'Đổi bài':'Thêm bài'}"><div class="v1630-grab"></div><div class="v1630-hd"><div><div class="v1630-k">${esc(k)}</div><h3>${rep?'Đổi bài':'Thêm bài'}</h3></div><button type="button" class="v1630-x" data-v1630="close" aria-label="Đóng"><i class="icon-x"></i></button></div><div class="v1630-seg"><button type="button" class="${lib?'on':''}" data-v1630-tab="lib">Thư viện</button><button type="button" class="${lib?'':'on'}" data-v1630-tab="custom">Tự tạo</button></div>${body}</div>`;
 }
 function renderSheet(){
   let box=document.getElementById('v1630Sheet');
@@ -24464,8 +24625,9 @@ function readEx(x){
   const rest=Math.max(0,Math.min(3600,Number(v('v1630Rest'))||0));
   if(rest>0){x._restAuto=false;x.restSeconds=rest;}else{x._restAuto=true;x.restSeconds=g(()=>v1075DefaultRestByRule(x),Number(g(()=>state.settings.restSeconds,90))||90);}
 }
-function pushEx(ref){
+function pushEx(ref,keep){
   const k=sel(),s=sch(k);if(!s)return;const a=exs(k);
+  if(sheet&&sheet.rep!=null&&a[sheet.rep]){const n=sheet.rep,o=a[n];if(keep){ref.sets=o.sets;ref.reps=o.reps;ref.rir=o.rir;ref.restSeconds=o.restSeconds;if(o._restAuto!=null)ref._restAuto=o._restAuto;}a[n]=ref;commit(k);edit=true;sheet={t:'ex',i:n};renderSheet();paint(true);g(()=>toast('Đã đổi bài'));return;}
   if(!a.length&&/^rest/i.test(s.name||''))s.name='CUSTOM';
   a.push(ref);commit(k);edit=true;sheet={t:'ex',i:a.length-1};renderSheet();paint(true);g(()=>toast('Đã thêm vào buổi'));
 }
@@ -24494,12 +24656,13 @@ function act(a,el){
     case 'edit':edit=!edit;view='day';closeSheet();paint(true);break;
     case 'prev':case 'next':{const j=i+(a==='next'?1:-1);if(j<0||j>=ks.length)return;edit=false;closeSheet();setDay(ks[j]);paint(true);break;}
     case 'start':start();break;
-    case 'add':sheet={t:'pick'};pickTab='lib';q='';csec=new Set();v190cv=false;renderSheet();break;
+    case 'add':sheet={t:'pick'};pickTab='lib';q='';csec=new Set();renderSheet();break;
     case 'tpl':g(()=>openWorkoutTemplatePreview('4'));break;
     case 'clear':g(()=>confirmBox('Xóa tất cả bài',`Xóa toàn bộ ${list.length} bài của ${k}?`,()=>{const s=sch(k);s.exercises=[];s.name='REST';s.focus='Rest & Recovery';commit(k);paint(true);}));break;
     case 'close':closeSheet();break;
     case 'saveex':{const x=list[sheet&&sheet.i];if(x){readEx(x);commit(k);g(()=>toast('Đã cập nhật bài tập'));}closeSheet();paint(true);break;}
     case 'up':case 'down':{const s0=sheet&&sheet.i,j=s0+(a==='down'?1:-1);if(s0==null||j<0||j>=list.length)return;readEx(list[s0]);[list[s0],list[j]]=[list[j],list[s0]];commit(k);sheet={t:'ex',i:j};renderSheet();paint(true);break;}
+    case 'swapex':{const s0=sheet&&sheet.i;if(s0==null||!list[s0])return;readEx(list[s0]);commit(k);sheet={t:'pick',rep:s0};pickTab='lib';q='';csec=new Set();v190cv=false;renderSheet();break;}
     case 'delex':{const s0=sheet&&sheet.i,x=list[s0];if(!x)return;g(()=>confirmBox('Xóa bài tập',`Xóa “${x.name}”?`,()=>{const n=list.indexOf(x);if(n>=0)list.splice(n,1);commit(k);closeSheet();paint(true);}));break;}
     case 'cadd':addCustom();break;
   }
@@ -24514,10 +24677,9 @@ document.addEventListener('click',e=>{
   if((el=t.closest('[data-v1630-day]'))){view='day';edit=false;closeSheet();setDay(el.dataset.v1630Day);paint(true);return;}
   if((el=t.closest('[data-v1630-ex]'))){const n=Number(el.dataset.v1630Ex),x=exs(sel())[n];if(!x)return;if(edit){sheet={t:'ex',i:n};renderSheet();}else if(typeof openExerciseDetail==='function')g(()=>openExerciseDetail(x));return;}
   if((el=t.closest('[data-v1630-tab]'))){pickTab=el.dataset.v1630Tab;renderSheet();return;}
-  if((el=t.closest('[data-v1630-lib]'))){const x=libCache[Number(el.dataset.v1630Lib)];if(!x)return;pushEx(refFrom(x,{sets:3,reps:x.reps||'8–12',rir:'2',rest:Number(g(()=>state.settings.restSeconds,90))||90}));return;}
-  if((el=t.closest('[data-v1630-grp]'))){cgrp=el.dataset.v1630Grp;csec.delete(cgrp);el.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===el));box.querySelectorAll('[data-v1630-sec]').forEach(b=>{const d=b.dataset.v1630Sec===cgrp;b.disabled=d;b.classList.toggle('dis',d);b.classList.toggle('on',!d&&csec.has(b.dataset.v1630Sec));});v190Sync(box);return;}
-  if((el=t.closest('[data-v1630-vai]'))){v190cv=!v190cv;if(!v190cv)box.querySelectorAll('.v190-vr [data-v1630-sec]').forEach(b=>{csec.delete(b.dataset.v1630Sec);b.classList.remove('on');});const vr=box.querySelector('.v190-vr');if(vr)vr.hidden=!v190cv;el.classList.toggle('on',v190cv);el.setAttribute('aria-expanded',v190cv?'true':'false');v190Sync(box);return;}
-  if((el=t.closest('[data-v1630-sec]'))){if(el.disabled)return;const x=el.dataset.v1630Sec;if(csec.has(x))csec.delete(x);else csec.add(x);el.classList.toggle('on',csec.has(x));v190Sync(box);return;}
+  if((el=t.closest('[data-v1630-lib]'))){const x=libCache[Number(el.dataset.v1630Lib)];if(!x)return;pushEx(refFrom(x,{sets:3,reps:x.reps||'8–12',rir:'2',rest:Number(g(()=>state.settings.restSeconds,90))||90}),true);return;}
+  if((el=t.closest('[data-v1630-grp]'))){cgrp=el.dataset.v1630Grp;csec.delete(cgrp);el.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===el));box.querySelectorAll('[data-v1630-sec]').forEach(b=>{const d=b.dataset.v1630Sec===cgrp;b.disabled=d;b.classList.toggle('dis',d);b.classList.toggle('on',!d&&csec.has(b.dataset.v1630Sec));});return;}
+  if((el=t.closest('[data-v1630-sec]'))){if(el.disabled)return;const x=el.dataset.v1630Sec;if(csec.has(x))csec.delete(x);else csec.add(x);el.classList.toggle('on',csec.has(x));return;}
   if((el=t.closest('[data-v1630]'))){if(el.disabled)return;act(el.dataset.v1630,el);}
 });
 document.addEventListener('input',e=>{
@@ -24545,6 +24707,40 @@ if(page)new MutationObserver(queue).observe(page,{childList:true,subtree:true});
 if(mq.addEventListener)mq.addEventListener('change',queue);else if(mq.addListener)mq.addListener(queue);
 document.addEventListener('visibilitychange',queue);
 const base=showPage;showPage=function(id){if(id==='schedule'){view='week';edit=false;}if(sheet)closeSheet();const out=base.apply(this,arguments);queue();return out;};
+/* 18.12 · Sửa buổi: giữ tên bài rồi kéo để đổi thứ tự (thay nút Lên/Xuống). Chỉ chạy khi đang ở chế độ Sửa buổi trên điện thoại. */
+(function(){var HOLD=320,MOVE=8,st=null,sup=0;
+ function items(){return Array.prototype.slice.call(document.querySelectorAll('#page-schedule .v1630-list > .v1630-ex'));}
+ function clear(){if(!st)return;clearTimeout(st.t);cancelAnimationFrame(st.raf||0);st.els.forEach(function(e){e.style.transform='';e.style.transition='';e.classList.remove('v1630-dragging');});document.documentElement.classList.remove('v1630-drag-on');st=null;}
+ function move(){if(!st||!st.on)return;var dy=st.y-st.y0+((window.scrollY||0)-st.sy0),els=st.els,from=st.from,cen=st.c[from]+dy,to=0,j;
+  for(j=0;j<els.length;j++){if(j!==from&&st.c[j]<cen)to++;}
+  st.to=to;els[from].style.transform='translateY('+dy+'px) scale(1.02)';
+  els.forEach(function(e,j){if(j===from)return;var s=0;if(from<to&&j>from&&j<=to)s=-st.h;else if(from>to&&j<from&&j>=to)s=st.h;e.style.transform=s?'translateY('+s+'px)':'';});}
+ function tick(){if(!st||!st.on)return;var y=st.y,h=innerHeight,d=0;if(y<90)d=-Math.ceil((90-y)/9);else if(y>h-130)d=Math.ceil((y-(h-130))/9);if(d){window.scrollBy(0,d);move();}st.raf=requestAnimationFrame(tick);}
+ function begin(){if(!st)return;st.on=true;var els=st.els,r=els.map(function(e){return e.getBoundingClientRect();});
+  st.c=r.map(function(q){return q.top+q.height/2;});st.h=r[st.from].height;st.sy0=window.scrollY||0;
+  els.forEach(function(e,j){if(j!==st.from)e.style.transition='transform .16s ease';});
+  els[st.from].classList.add('v1630-dragging');document.documentElement.classList.add('v1630-drag-on');
+  try{if(navigator.vibrate)navigator.vibrate(12);}catch(_){}
+  move();st.raf=requestAnimationFrame(tick);}
+ document.addEventListener('pointerdown',function(e){
+  if(!mq.matches||!edit||view!=='day'||(e.pointerType==='mouse'&&e.button!==0))return;
+  var b=e.target.closest?e.target.closest('#page-schedule .v1630-list > .v1630-ex'):null;if(!b)return;
+  var els=items(),from=els.indexOf(b);if(from<0||els.length<2)return;
+  clear();st={els:els,from:from,id:e.pointerId,x0:e.clientX,y0:e.clientY,y:e.clientY,on:false,to:from};
+  st.t=setTimeout(begin,HOLD);},true);
+ document.addEventListener('pointermove',function(e){
+  if(!st||e.pointerId!==st.id)return;st.y=e.clientY;
+  if(!st.on){if(Math.abs(e.clientX-st.x0)>MOVE||Math.abs(e.clientY-st.y0)>MOVE)clear();return;}
+  move();},true);
+ function end(e){if(!st||e.pointerId!==st.id)return;var s=st;
+  if(!s.on){clear();return;}
+  sup=Date.now()+500;var from=s.from,to=s.to;clear();
+  if(to!==from){var k=sel(),a=exs(k);if(from<a.length&&to<a.length){var m=a.splice(from,1)[0];a.splice(to,0,m);commit(k);g(function(){toast('Đã đổi thứ tự');});paint(true);}}}
+ document.addEventListener('pointerup',end,true);document.addEventListener('pointercancel',end,true);
+ document.addEventListener('touchmove',function(e){if(st&&st.on&&e.cancelable)e.preventDefault();},{passive:false});
+ document.addEventListener('contextmenu',function(e){if(st)e.preventDefault();},true);
+ document.addEventListener('click',function(e){if(Date.now()<sup){e.stopPropagation();e.preventDefault();}},true);
+})();
 window.TRUE_TRAIN_V1630_SCHED={version:'16.30',paint,open:k=>{view='day';edit=false;setDay(k);paint(true);}};
 queue();
 })();
@@ -24633,6 +24829,8 @@ html body #appShell #page-dashboard#page-dashboard .v1631-dash{gap:12px!importan
 html body #appShell #page-dashboard#page-dashboard .v1631-head{margin-bottom:4px}
 #page-dashboard .v188-hero{position:relative;overflow:hidden;background:#c6ff3d;color:#0c0d0f;border-radius:24px;padding:18px 18px 18px}
 #page-dashboard .v188-rings{position:absolute;right:-70px;top:-70px;width:220px;height:220px;opacity:.14;pointer-events:none}
+#page-dashboard .v188-mark{position:absolute;right:-30px;top:14px;width:230px;height:auto;pointer-events:none}
+#page-dashboard .v188-mark path{fill:#0c0d0f;fill-opacity:.14}
 #page-dashboard .v188-kick{position:relative;font-size:11.5px;font-weight:800;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #page-dashboard .v188-title{position:relative;margin-top:10px;font-size:44px;font-weight:900;line-height:.98;letter-spacing:-.02em;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 #page-dashboard .v188-meta{position:relative;margin-top:8px;font-size:14px;font-weight:600}
@@ -24658,7 +24856,7 @@ html body #appShell #page-dashboard#page-dashboard .v1631-head{margin-bottom:4px
 #page-dashboard .v188-d span{font-size:11px;font-weight:700}
 #page-dashboard .v188-d i{width:32px;height:32px;border-radius:50%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:15px;font-weight:800;border:2px solid #3a3e44}
 #page-dashboard .v188-d.now span{color:#f2f3f1;font-weight:800}
-#page-dashboard .v188-d.s-done i{background:#c6ff3d;border-color:#c6ff3d;color:#0c0d0f}
+#page-dashboard .v188-d.s-done i{background:rgba(198,255,61,.14);border-color:rgba(198,255,61,.4);color:#c6ff3d}
 #page-dashboard .v188-d.s-partial i{border-color:#c9cdd2}
 #page-dashboard .v188-d.s-partial i b{width:12px;height:12px;border-radius:50%;background:#c9cdd2}
 #page-dashboard .v188-d.s-missed span{color:#ff3d8b}
@@ -24809,7 +25007,7 @@ function html(page){
       const td=w.find(r=>r.today),ex=g(()=>state.schedule[td.day].exercises,[])||[];
       const tags=[...new Set(ex.map(x=>String(x&&x.group||'').trim()).filter(Boolean))].slice(0,4);
       const lab=hr.cta==='Tiếp tục'?'Trượt để tiếp tục':'Trượt để bắt đầu';
-      card='<section class="v188-hero"><svg class="v188-rings" viewBox="0 0 220 220" fill="none" stroke="#0c0d0f" stroke-width="2" aria-hidden="true"><circle cx="110" cy="110" r="104"/><circle cx="110" cy="110" r="78"/><circle cx="110" cy="110" r="52"/><circle cx="110" cy="110" r="26"/></svg>'
+      card='<section class="v188-hero"><svg class="v188-mark" viewBox="415 437 425 380" aria-hidden="true"><path d="M415 437 L840 437 L470 817 L575 628 L598 603 L698 492 L541 492 L586 540 L558 580 Z"/></svg>'
         +'<div class="v188-kick">HÔM NAY · '+SHORT[ti]+(tr?' · TUẦN NÀY '+dn+'/'+tr:'')+'</div>'
         +'<div class="v188-title">'+esc(hr.title)+'</div>'
         +'<div class="v188-meta" style="'+S+'">'+esc(meta)+'</div>'
@@ -24822,7 +25020,7 @@ function html(page){
     }
   }
   /* dải tuần */
-  const IC={done:'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>',missed:'!',today:'<b></b>',partial:'<b></b>',planned:'',rest:'<u></u>'};
+  const IC={done:'<svg viewBox="415 437 425 380" width="17" height="15" aria-hidden="true"><path fill="currentColor" d="M415 437 L840 437 L470 817 L575 628 L598 603 L698 492 L541 492 L586 540 L558 580 Z"/></svg>',missed:'!',today:'<b></b>',partial:'<b></b>',planned:'',rest:'<u></u>'};
   const STL={done:'đã tập',partial:'tập một phần',missed:'bỏ lỡ',today:'hôm nay',planned:'chưa tới',rest:'nghỉ'};
   const wk=w.length?'<div class="v188-wk">'+w.map(r=>'<button type="button" class="v188-d s-'+esc(r.st)+(r.today?' now':'')+'" data-v1631-day="'+esc(r.day)+'" aria-label="'+esc(r.day+': '+r.name+', '+(STL[r.st]||''))+'"><span>'+esc(r.short)+'</span><i>'+(IC[r.st]||'')+'</i></button>').join('')+'</div>':'';
   /* calo */
@@ -24958,7 +25156,7 @@ function $(id){return root?root.querySelector('#'+id):null;}
 function render(p,withModel){
   kill();if(root&&root!==p&&root.isConnected)root.innerHTML='';root=p;model=!!withModel;q='';if(fresh){fresh=false;showHid=false;var s0=S();s0.g=ALL;s0.sub=null;}
   var all=getCoachExerciseLibrary();
-  p.innerHTML='<div class="c45 v47 v53"><button class="back mt14" data-v47="back">'+I('back',18)+'More</button><div class="k">Thư viện · '+all.length+' bài</div><div class="hrow"><div class="h1">Bài tập</div><button type="button" class="pb sm" data-v53new="1">+ Bài mới</button></div>'
+  p.innerHTML='<div class="c45 v47 v53"><button class="back mt14" data-v47="back">'+I('back',18)+'More</button><div class="k">Thư viện · '+all.length+' bài</div><div class="h1">Bài tập</div>'
    +(model?'<div class="v53vp" id="v53vp"><canvas id="v53cv"></canvas><div class="v53vw">'+['Trước','Trái','Sau'].map(function(n,i){return '<button data-v53v="'+i+'">'+n+'</button>';}).join('')+'</div></div>':'')
    +'<div class="chips" id="v53chips"></div><div id="v53subs"></div>'
    +'<label class="srch">'+I('search',16)+'<input id="v53q" autocomplete="off" inputmode="search" placeholder="Tìm bài"></label>'
@@ -25131,7 +25329,6 @@ document.addEventListener('click',function(e){
   if((el=e.target.closest('[data-v53g]'))){clearQ();var s=S();s.g=el.dataset.v53g;s.sub=null;saveState({cloudDirty:false});paint(true);return;}
   if((el=e.target.closest('[data-v53s]'))){S().sub=el.dataset.v53s||null;saveState({cloudDirty:false});paint(false);return;}
   if((el=e.target.closest('[data-v53m]'))){e.preventDefault();var xm=arr[Number(el.dataset.v53m)];if(xm&&V7())V7().libMenu(xm,function(){list();});else if(xm)openAddExerciseModal(xm);return;}
-  if((el=e.target.closest('[data-v53new]'))){e.preventDefault();if(V7())V7().newEx(function(){list();var kk=root&&root.querySelector('.k');if(kk)kk.textContent='Thư viện · '+getCoachExerciseLibrary().length+' bài';});return;}
   if((el=e.target.closest('[data-v53hid]'))){showHid=!showHid;list();return;}
   if((el=e.target.closest('[data-v53un]'))){if(V7())V7().unhide(el.dataset.v53un);list();return;}
   if((el=e.target.closest('[data-v53add]'))){e.preventDefault();var x=arr[Number(el.dataset.v53add)];if(x)openAddExerciseModal(x);return;}
@@ -25443,10 +25640,10 @@ window.TRUE_TRAIN_V189_START={version:'18.9',play:play};
 .v1811-cd-num{position:relative;width:240px;height:190px;margin:4px 0 8px}
 .v1811-cd-num b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:160px;font-weight:800;font-stretch:75%;color:#c6ff3d;line-height:1;opacity:0;font-variant-numeric:tabular-nums;animation:v1811cnt 1s linear both}
 .v1811-cd-t{max-width:100%;padding:0 8px;box-sizing:border-box;text-align:center;font-size:30px;font-weight:800;font-stretch:80%;line-height:1.1;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.v1811-cd-row{display:flex;gap:10px;width:100%;max-width:380px;margin-top:20px}
-.v1811-cd-row button{flex:1;height:52px;border-radius:14px;font:800 15px Archivo,system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
-.v1811-cd-row .g1{background:#15171a;border:1px solid #3a3e44;color:#f2f3f1}
-.v1811-cd-row .g2{background:#c6ff3d;border:0;color:#0c0d0f}
+.v1811-cd-row{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:380px;margin-top:20px}
+.v1811-cd-row button{font-family:Archivo,system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
+.v1811-cd-row .g1{height:38px;padding:0 20px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,.14);color:#b7bbc0;font-size:13px;font-weight:700}
+.v1811-cd-row .g2{width:100%;height:58px;border-radius:16px;background:#c6ff3d;border:0;color:#0c0d0f;font-size:17px;font-weight:800;box-shadow:0 8px 24px rgba(198,255,61,.22)}
 .v1811-cd-h{margin-top:8px;font-size:13px;color:#8b9096}
 .v1811-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .v1811-cd.out{animation:v1811out .35s ease-out forwards;pointer-events:none}
@@ -25476,7 +25673,7 @@ function open(){
   +'<svg class="v1811-cd-logo" viewBox="415 437 425 380" aria-hidden="true"><path d="M415 437 L840 437 L470 817 L575 628 L598 603 L698 492 L541 492 L586 540 L558 580 Z"/></svg>'
   +'<div class="v1811-cd-in"><div class="v1811-cd-k">Bắt đầu sau</div><div class="v1811-cd-num" aria-hidden="true">'+nums+'</div>'
   +'<div class="v1811-cd-t" data-cd-t></div>'
-  +'<div class="v1811-cd-row"><button type="button" class="g1" data-cd="plan">Đổi buổi</button><button type="button" class="g2" data-cd="go">Vào ngay</button></div>'
+  +'<div class="v1811-cd-row"><button type="button" class="g2" data-cd="go">Vào ngay</button><button type="button" class="g1" data-cd="plan">Đổi buổi</button></div>'
   +'<div class="v1811-cd-h">Chạm vào chỗ khác để hủy</div><span class="v1811-sr" aria-live="polite" data-cd-sr></span></div>';
  var name=title(),tt=el.querySelector('[data-cd-t]');if(name)tt.textContent=name;else tt.remove();
  var sr=el.querySelector('[data-cd-sr]'),left=SECS;sr.textContent='Bắt đầu sau '+left+' giây';
@@ -25497,65 +25694,5 @@ document.addEventListener('click',function(e){
  if(!cur)open();
 },true);
 window.TRUE_TRAIN_V1811_COUNTDOWN={version:'18.11',open:open,close:close};
-})();
-</script>
-
-<style id="v190-mb-css">
-/* 19.0 · Lịch tập › Buổi › NHÓM CƠ (hướng B thu gọn) + chip Vai có hàng con ở bộ chọn cơ phụ. */
-@media(max-width:760px){
-html body #appShell #page-schedule#page-schedule .v190-sh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:14px 0 6px}
-html body #appShell #page-schedule#page-schedule .v190-sh b{font-size:13px;font-weight:800;letter-spacing:.05em;color:#d9dcdf;white-space:nowrap}
-html body #appShell #page-schedule#page-schedule .v190-sh span{font-size:12px;color:#8b9096;white-space:nowrap}
-html body #appShell #page-schedule#page-schedule .v190-rows{display:flex;flex-direction:column;gap:0}
-html body #appShell #page-schedule#page-schedule .v190-mb:not(.open) [data-v190-x]{display:none!important}
-html body #appShell #page-schedule#page-schedule .v190-lab{font-size:10.5px;font-weight:800;letter-spacing:.08em;color:#8b9096;margin:10px 0 2px;white-space:nowrap}
-html body #appShell #page-schedule#page-schedule .v190-r{all:unset;box-sizing:border-box;cursor:pointer;width:calc(100% + 16px);min-height:40px;margin:0 -8px;padding:6px 8px;border-radius:10px;display:grid;grid-template-columns:104px minmax(0,1fr) 36px;align-items:center;column-gap:10px;-webkit-tap-highlight-color:transparent}
-html body #appShell #page-schedule#page-schedule .v190-g.on .v190-r{background:#22262b}
-html body #appShell #page-schedule#page-schedule .v190-r:focus-visible{outline:2px solid #c6ff3d;outline-offset:-2px}
-html body #appShell #page-schedule#page-schedule .v190-n{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px;font-weight:700;color:#f2f3f1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-html body #appShell #page-schedule#page-schedule .v190-n i{width:8px;height:8px;border-radius:50%;flex:none}
-html body #appShell #page-schedule#page-schedule .v190-t{display:block;height:10px;border-radius:5px;background:#2a2d31;overflow:hidden}
-html body #appShell #page-schedule#page-schedule .v190-t i{display:block;height:100%;border-radius:5px}
-html body #appShell #page-schedule#page-schedule .v190-r b{text-align:right;font-size:16px;font-weight:800;font-stretch:75%;font-variant-numeric:tabular-nums;color:#f2f3f1;white-space:nowrap}
-html body #appShell #page-schedule#page-schedule .v190-d{margin:4px 0 8px 3px;padding-left:13px;border-left:2px solid var(--c,#3a3e44)}
-html body #appShell #page-schedule#page-schedule .v190-d[hidden]{display:none!important}
-html body #appShell #page-schedule#page-schedule .v190-e{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0}
-html body #appShell #page-schedule#page-schedule .v190-e.sp{border-top:1px dashed #33373d}
-html body #appShell #page-schedule#page-schedule .v190-en{min-width:0;font-size:13.5px;color:#f2f3f1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-html body #appShell #page-schedule#page-schedule .v190-e.sub .v190-en{color:#8b9096}
-html body #appShell #page-schedule#page-schedule .v190-en em{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.08em;color:#8b9096;margin-right:6px}
-html body #appShell #page-schedule#page-schedule .v190-q{flex:none;white-space:nowrap}
-html body #appShell #page-schedule#page-schedule .v190-q small{font-size:11px;color:#8b9096;margin-right:6px;font-stretch:75%}
-html body #appShell #page-schedule#page-schedule .v190-q b{font-size:14px;font-weight:800;font-stretch:75%;font-variant-numeric:tabular-nums;color:#f2f3f1}
-html body #appShell #page-schedule#page-schedule .v190-e.sub .v190-q b{color:#8b9096}
-html body #appShell #page-schedule#page-schedule .v190-q u{text-decoration:none;font-size:11px;color:#8b9096;margin-left:3px}
-html body #appShell #page-schedule#page-schedule .v190-more{all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:44px;margin-top:8px;padding-top:8px;border-top:1px solid #26292e;display:flex;align-items:center;gap:10px;-webkit-tap-highlight-color:transparent}
-html body #appShell #page-schedule#page-schedule .v190-dots{display:flex;gap:4px}
-html body #appShell #page-schedule#page-schedule .v190-dots i{width:8px;height:8px;border-radius:50%}
-html body #appShell #page-schedule#page-schedule .v190-mb.open .v190-dots{display:none}
-html body #appShell #page-schedule#page-schedule .v190-mt{flex:1;font-size:13.5px;font-weight:700;color:#c6ff3d;white-space:nowrap}
-html body #appShell #page-schedule#page-schedule .v190-chev{width:8px;height:8px;border-right:2px solid #c6ff3d;border-bottom:2px solid #c6ff3d;transform:rotate(45deg);margin:-4px 6px 0 0}
-html body #appShell #page-schedule#page-schedule .v190-mb.open .v190-chev{transform:rotate(-135deg);margin-top:4px}
-}
-html body .v190-vr{margin-top:8px;padding:10px 12px;border-left:2px solid #c6ff3d;background:#15171a;border-radius:0 12px 12px 0}
-html body .v190-vr[hidden]{display:none!important}
-html body .v190-vr>span{display:block;font-size:12px;color:#8b9096;margin-bottom:8px}
-html body .v150x-secondary-grid .v190-vsub{grid-column:1/-1;flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 10px;border-left:2px solid #c6ff3d;background:#15171a;border-radius:0 10px 10px 0;box-sizing:border-box}
-html body .v150x-secondary-grid .v190-vsub[hidden]{display:none!important}
-html body .v150x-secondary-grid .v190-vsub>span{flex-basis:100%;font-size:12px;color:#8b9096}
-</style>
-<script id="v190-mb-js">
-/* 19.0 · NHÓM CƠ: bấm tên nhóm mở/đóng danh sách bài (mỗi lần 1 nhóm); nút cuối mở rộng/thu gọn. Trạng thái chỉ trong bộ nhớ (window.__v190mb). */
-(function(){
-  function W(){return window.__v190mb||(window.__v190mb={open:false,sel:''});}
-  document.addEventListener('click',function(e){
-    var t=e.target;if(!(t instanceof Element))return;
-    var r=t.closest('#page-schedule .v190-r');
-    if(r){var g=r.closest('.v190-g'),box=r.closest('.v190-mb');if(!g||!box)return;var was=g.classList.contains('on');
-      box.querySelectorAll('.v190-g').forEach(function(x){var on=x===g&&!was;x.classList.toggle('on',on);var b=x.querySelector('.v190-r');if(b)b.setAttribute('aria-expanded',on?'true':'false');var d=x.querySelector('.v190-d');if(d)d.hidden=!on;});
-      W().sel=was?'':(g.getAttribute('data-v190-n')||'');return;}
-    var m=t.closest('#page-schedule .v190-more');
-    if(m){var bx=m.closest('.v190-mb');if(!bx)return;var op=!bx.classList.contains('open');bx.classList.toggle('open',op);m.setAttribute('aria-expanded',op?'true':'false');var s=m.querySelector('.v190-mt');if(s)s.textContent=op?'Thu gọn':'Xem đủ '+(bx.getAttribute('data-n')||'')+' nhóm cơ';W().open=op;}
-  });
 })();
 </script>
