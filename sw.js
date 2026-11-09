@@ -10,7 +10,7 @@
    Giao thức với trang (phải giữ tương thích ở các bản sau, vì service worker mới có thể phục vụ trang cũ):
    - {type:'TT_STATUS'} -> {version, pinned}
    - {type:'TT_PIN'}    -> ghim bản của service worker này, xóa cache cũ -> {ok, version} */
-const VERSION = '18.14';
+const VERSION = '18.15';
 /* 18.10 · Tên cache PHẢI đổi theo từng bản. Trước đây cố định 'true-train-v16-45' nên bản mới tải sẵn ghi đè
    lên chính cache đang ghim: máy tự lên bản mới khi mở lại app, không hiện "Có bản mới", không cần bấm Cập nhật.
    Giờ mỗi bản một cache riêng, bản đang ghim giữ nguyên tới khi người dùng bấm Cập nhật (TT_PIN). */
